@@ -1,0 +1,1684 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>SWAG Control Center</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <style>
+    :root {
+      --bg-main: #f3f5fb;
+      --bg-panel: #ffffff;
+      --bg-hero: #e8f3ff;
+      --border-subtle: #e5e7eb;
+      --accent: #0ea5e9;
+      --accent-2: #22c55e;
+      --danger: #dc2626;
+      --text-main: #111827;
+      --text-muted: #6b7280;
+      --text-soft: #9ca3af;
+      --radius-lg: 16px;
+      --shadow-soft: 0 14px 40px rgba(15,23,42,0.12);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background:
+        radial-gradient(circle at 0% 0%, rgba(59,130,246,0.18) 0, transparent 45%),
+        radial-gradient(circle at 100% 100%, rgba(45,212,191,0.18) 0, transparent 45%),
+        var(--bg-main);
+      color: var(--text-main);
+      font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+    .app-shell {
+      display: grid;
+      grid-template-columns: 250px minmax(0, 1fr);
+      min-height: 100vh;
+    }
+
+    .sidebar {
+      background: #ffffff;
+      border-right: 1px solid #e5e7eb;
+      padding: 1.1rem 1.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.1rem;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+    }
+    .brand-mark {
+      width: 36px;
+      height: 36px;
+      border-radius: 12px;
+      background: linear-gradient(135deg,#0ea5e9,#22c55e);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #f9fafb;
+      font-weight: 700;
+      font-size: 0.9rem;
+      box-shadow: 0 0 18px rgba(59,130,246,0.35);
+    }
+    .brand-text-main {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #111827;
+    }
+    .brand-text-sub {
+      font-size: 0.72rem;
+      color: var(--text-soft);
+    }
+    .sidebar-section-label {
+      margin-top: 0.6rem;
+      font-size: 0.7rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--text-soft);
+    }
+    .nav-list {
+      margin-top: 0.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.15rem;
+    }
+    .nav-item {
+      border-radius: 0.75rem;
+      padding: 0.5rem 0.7rem;
+      border: 1px solid transparent;
+      background: transparent;
+      color: var(--text-muted);
+      font-size: 0.8rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      transition: all 0.16s ease;
+    }
+    .nav-item-main {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .nav-bullet {
+      width: 6px;
+      height: 6px;
+      border-radius: 999px;
+      background: #d1d5db;
+    }
+    .nav-item.active {
+      background: #e0f2fe;
+      border-color: #0ea5e9;
+      color: #0f172a;
+      box-shadow: 0 10px 24px rgba(15,23,42,0.08);
+    }
+    .nav-item.active .nav-bullet { background: #22c55e; }
+    .nav-item:hover:not(.active) {
+      background: #f3f4f6;
+      border-color: #e5e7eb;
+      color: #111827;
+    }
+    .nav-meta-pill {
+      font-size: 0.7rem;
+      padding: 0.18rem 0.55rem;
+      border-radius: 999px;
+      border: 1px solid #e5e7eb;
+      background: #f9fafb;
+      color: var(--text-soft);
+    }
+
+    .sidebar-graph-card {
+      margin-top: 0.6rem;
+      padding: 0.6rem 0.7rem;
+      border-radius: 12px;
+      background: #f9fafb;
+      border: 1px solid #e5e7eb;
+      box-shadow: 0 6px 14px rgba(15,23,42,0.04);
+      font-size: 0.72rem;
+    }
+    .sgc-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.74rem;
+    }
+    .sgc-value {
+      font-weight: 600;
+      color: #16a34a;
+    }
+    .sgc-danger { color: #dc2626; }
+    .sgc-sub {
+      font-size: 0.7rem;
+      color: #9ca3af;
+      margin-top: 0.1rem;
+    }
+    .sgc-bar-row {
+      display: flex;
+      gap: 4px;
+      margin-top: 0.45rem;
+      align-items: flex-end;
+    }
+    .sgc-bar {
+      width: 6px;
+      border-radius: 999px 999px 0 0;
+      background: #bfdbfe;
+    }
+    .sgc-bar-1 { height: 18px; }
+    .sgc-bar-2 { height: 26px; background:#60a5fa; }
+    .sgc-bar-3 { height: 14px; }
+    .sgc-bar-4 { height: 28px; background:#0ea5e9; }
+    .sgc-bar-5 { height: 20px; }
+    .sgc-bar-6 { height: 24px; background:#22c55e; }
+
+    .sgc-pill-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.3rem;
+      margin-top: 0.5rem;
+    }
+    .sgc-pill {
+      padding: 0.18rem 0.5rem;
+      border-radius: 999px;
+      border: 1px solid #e5e7eb;
+      background: #ffffff;
+      font-size: 0.7rem;
+      color: #6b7280;
+    }
+    .sgc-pill-critical {
+      border-color: #fecaca;
+      background: #fee2e2;
+      color: #b91c1c;
+    }
+    .sgc-gauge {
+      margin-top: 0.5rem;
+      width: 100%;
+      height: 8px;
+      border-radius: 999px;
+      background: #e5e7eb;
+      overflow: hidden;
+    }
+    .sgc-gauge-fill {
+      width: 72%;
+      height: 100%;
+      background: linear-gradient(90deg,#22c55e,#0ea5e9);
+    }
+
+    .sidebar-foot-card {
+      margin-top: auto;
+      padding: 0.7rem 0.75rem;
+      border-radius: 14px;
+      background: #eff6ff;
+      border: 1px solid #dbeafe;
+      font-size: 0.74rem;
+      color: var(--text-muted);
+    }
+    .sidebar-foot-title {
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: #0f172a;
+      margin-bottom: 0.25rem;
+    }
+
+    .main {
+      display: flex;
+      flex-direction: column;
+      padding: 1.1rem 1.6rem;
+      gap: 1rem;
+    }
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.3rem;
+    }
+    .topbar-title {
+      font-size: 0.78rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--text-soft);
+    }
+    .topbar-right {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-size: 0.75rem;
+      color: var(--text-soft);
+    }
+    .topbar-badge {
+      padding: 0.18rem 0.55rem;
+      border-radius: 999px;
+      border: 1px solid #e5e7eb;
+      background: #f9fafb;
+    }
+    .user-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.2rem 0.55rem;
+      border-radius: 999px;
+      border: 1px solid #e5e7eb;
+      background: #ffffff;
+    }
+    .user-initial {
+      width: 22px;
+      height: 22px;
+      border-radius: 999px;
+      background: linear-gradient(135deg,#0ea5e9,#22c55e);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: #ffffff;
+    }
+
+    .hero {
+      padding: 1.1rem 1.3rem;
+      border-radius: 18px;
+      background: var(--bg-hero);
+      border: 1px solid #dbeafe;
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      box-shadow: var(--shadow-soft);
+      position: relative;
+    }
+    .hero-left {
+      max-width: 60%;
+    }
+    .hero-heading {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #0f172a;
+    }
+    .hero-sub {
+      margin-top: 0.25rem;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+    .hero-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem;
+      margin-top: 0.6rem;
+    }
+    .hero-tag {
+      font-size: 0.68rem;
+      padding: 0.22rem 0.55rem;
+      border-radius: 999px;
+      border: 1px solid #dbeafe;
+      background: #eff6ff;
+      color: #1d4ed8;
+    }
+    .hero-right {
+      text-align: right;
+      min-width: 210px;
+    }
+    .hero-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.3rem 0.6rem;
+      border-radius: 999px;
+      background: #ecfdf3;
+      border: 1px solid #bbf7d0;
+      font-size: 0.7rem;
+      color: #166534;
+    }
+    .hero-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: #22c55e;
+    }
+    .hero-metrics {
+      margin-top: 0.7rem;
+      display: flex;
+      gap: 0.9rem;
+      justify-content: flex-end;
+      font-size: 0.75rem;
+      color: var(--text-soft);
+    }
+    .hero-metric-value {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: #0f172a;
+    }
+
+    .hero-center-title {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+      font-size: 1.5rem;
+      letter-spacing: 0.30em;
+      text-transform: uppercase;
+      color: rgba(15,23,42,0.55);
+      font-weight: 900;
+      text-shadow: 0 0 22px rgba(15,23,42,0.35);
+      animation: pulseTitle 2.8s ease-in-out infinite;
+      white-space: nowrap;
+    }
+    @keyframes pulseTitle {
+      0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.7; }
+      50% { transform: translate(-50%, -50%) scale(1.06); opacity: 1; }
+    }
+
+    .kpi-row {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0,1fr));
+      gap: 0.75rem;
+      margin-top: 0.1rem;
+    }
+    .kpi-card {
+      border-radius: var(--radius-lg);
+      background: #ffffff;
+      border: 1px solid #e5e7eb;
+      padding: 0.8rem 0.9rem;
+      box-shadow: var(--shadow-soft);
+    }
+    .kpi-label {
+      font-size: 0.68rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--text-soft);
+    }
+    .kpi-value {
+      margin-top: 0.35rem;
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #0f172a;
+    }
+    .kpi-meta {
+      margin-top: 0.12rem;
+      font-size: 0.72rem;
+      color: var(--text-muted);
+    }
+
+    .charts-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0,1fr));
+      gap: 0.9rem;
+      margin-top: 0.5rem;
+    }
+    .chart-panel {
+      border-radius: var(--radius-lg);
+      background: #ffffff;
+      border: 1px solid #e5e7eb;
+      padding: 0.8rem 0.9rem;
+      box-shadow: var(--shadow-soft);
+      min-height: 210px;
+    }
+    .chart-title {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #0f172a;
+      margin-bottom: 0.2rem;
+    }
+    .chart-subtitle {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      margin-bottom: 0.4rem;
+    }
+    .chart-wrapper {
+      position: relative;
+      width: 100%;
+      height: 160px;
+    }
+
+    .content-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.6fr) minmax(0, 1.1fr);
+      gap: 0.9rem;
+      margin-top: 0.7rem;
+    }
+    .panel {
+      border-radius: var(--radius-lg);
+      background: #ffffff;
+      border: 1px solid #e5e7eb;
+      padding: 0.85rem 1rem;
+      box-shadow: var(--shadow-soft);
+    }
+    .panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.6rem;
+    }
+    .panel-title-main {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #0f172a;
+    }
+    .panel-title-sub {
+      font-size: 0.74rem;
+      color: var(--text-muted);
+      margin-top: 0.15rem;
+    }
+
+    .view-tabs {
+      display: inline-flex;
+      border-radius: 999px;
+      background: #f9fafb;
+      border: 1px solid #e5e7eb;
+      padding: 0.14rem;
+      gap: 0.1rem;
+    }
+    .view-tab-btn {
+      border-radius: 999px;
+      border: none;
+      padding: 0.22rem 0.8rem;
+      font-size: 0.72rem;
+      background: transparent;
+      color: var(--text-soft);
+      cursor: pointer;
+    }
+    .view-tab-btn.active {
+      background: #0ea5e9;
+      color: #ffffff;
+      box-shadow: 0 8px 20px rgba(14,165,233,0.6);
+    }
+
+    .filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 0.45rem;
+      margin-top: 0.1rem;
+      font-size: 0.78rem;
+    }
+    .input {
+      min-width: 180px;
+      background: #f9fafb;
+      border-radius: 10px;
+      border: 1px solid #d1d5db;
+      color: var(--text-main);
+      font-size: 0.78rem;
+      padding: 0.32rem 0.7rem;
+      outline: none;
+    }
+    .input::placeholder {
+      color: var(--text-soft);
+    }
+    .checkbox-group {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      color: var(--text-muted);
+      font-size: 0.75rem;
+    }
+    .button-primary {
+      border-radius: 10px;
+      border: none;
+      background: linear-gradient(135deg,#0ea5e9,#2563eb);
+      color: white;
+      padding: 0.35rem 0.9rem;
+      font-size: 0.78rem;
+      cursor: pointer;
+      box-shadow: 0 10px 24px rgba(37,99,235,0.45);
+    }
+    .button-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 14px 30px rgba(37,99,235,0.65);
+    }
+    .info-text {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      margin-bottom: 0.35rem;
+    }
+
+    .table-wrap {
+      max-height: 260px;
+      overflow: auto;
+      border-radius: 12px;
+      border: 1px solid #e5e7eb;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.75rem;
+    }
+    th, td {
+      padding: 0.48rem 0.55rem;
+      border-bottom: 1px solid #e5e7eb;
+    }
+    th {
+      background: #f9fafb;
+      text-align: left;
+      font-size: 0.7rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-soft);
+      position: sticky;
+      top: 0;
+      z-index: 1;
+    }
+    tbody tr:nth-child(even) td {
+      background: #f9fafb;
+    }
+    tbody tr:hover td {
+      background: #eff6ff;
+    }
+    .pill-danger {
+      font-size: 0.7rem;
+      padding: 0.16rem 0.5rem;
+      border-radius: 999px;
+      border: 1px solid rgba(220,38,38,0.8);
+      background: #fee2e2;
+      color: #b91c1c;
+    }
+    .pill-soft {
+      font-size: 0.7rem;
+      padding: 0.16rem 0.5rem;
+      border-radius: 999px;
+      border: 1px solid #e5e7eb;
+      background: #f9fafb;
+      color: var(--text-muted);
+    }
+
+    .mini-grid {
+      display: grid;
+      grid-template-columns: repeat(2,minmax(0,1fr));
+      gap: 0.6rem;
+      margin-top: 0.35rem;
+    }
+    .mini-card {
+      border-radius: 12px;
+      background: #f9fafb;
+      border: 1px solid #e5e7eb;
+      padding: 0.6rem 0.65rem;
+      font-size: 0.72rem;
+    }
+    .mini-label {
+      color: var(--text-soft);
+      font-size: 0.7rem;
+    }
+    .mini-value {
+      margin-top: 0.2rem;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #0f172a;
+    }
+    .mini-meta {
+      margin-top: 0.15rem;
+      font-size: 0.68rem;
+      color: var(--text-muted);
+    }
+
+    @media (max-width: 1040px) {
+      .app-shell { grid-template-columns: 1fr; }
+      .sidebar {
+        flex-direction: row;
+        align-items: flex-start;
+        overflow-x: auto;
+      }
+      .sidebar-section-label,
+      .sidebar-foot-card { display: none; }
+      .hero { flex-direction: column; }
+      .hero-left { max-width: 100%; }
+      .hero-right { text-align: left; }
+      .charts-grid,
+      .content-grid { grid-template-columns: 1fr; }
+      .kpi-row { grid-template-columns: repeat(2,minmax(0,1fr)); }
+      .hero-center-title {
+        position: static;
+        transform: none;
+        text-align: center;
+        margin-top: 0.8rem;
+      }
+    }
+    @media (max-width: 640px) {
+      .kpi-row { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+<div class="app-shell">
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-mark">S</div>
+      <div>
+        <div class="brand-text-main">SWAG Control</div>
+        <div class="brand-text-sub">Inventory Intelligence</div>
+      </div>
+    </div>
+
+    <div class="sidebar-section-label">Workspaces</div>
+    <div class="nav-list">
+      <button class="nav-item active" data-view="stock">
+        <span class="nav-item-main">
+          <span class="nav-bullet"></span>
+          <span>Stock Overview</span>
+        </span>
+        <span class="nav-meta-pill">SWAG</span>
+      </button>
+      <button class="nav-item" data-view="purchase">
+        <span class="nav-item-main">
+          <span class="nav-bullet"></span>
+          <span>Purchase Analytics</span>
+        </span>
+        <span class="nav-meta-pill">PO</span>
+      </button>
+      <button class="nav-item" data-view="sales">
+        <span class="nav-item-main">
+          <span class="nav-bullet"></span>
+          <span>Sales Analytics</span>
+        </span>
+        <span class="nav-meta-pill">SO</span>
+      </button>
+    </div>
+
+    <div class="sidebar-section-label">Snapshots</div>
+
+    <div class="sidebar-graph-card">
+      <div class="sgc-header">
+        <span>Stock trend</span>
+        <span class="sgc-value" id="sidebarStockChange">+0%</span>
+      </div>
+      <div class="sgc-sub">Last 30 days</div>
+      <div class="sgc-bar-row">
+        <div class="sgc-bar sgc-bar-1"></div>
+        <div class="sgc-bar sgc-bar-2"></div>
+        <div class="sgc-bar sgc-bar-3"></div>
+        <div class="sgc-bar sgc-bar-4"></div>
+        <div class="sgc-bar sgc-bar-5"></div>
+        <div class="sgc-bar sgc-bar-6"></div>
+      </div>
+    </div>
+
+    <div class="sidebar-graph-card">
+      <div class="sgc-header">
+        <span>Reorder risk</span>
+        <span class="sgc-value sgc-danger" id="sidebarReorderCount">0 items</span>
+      </div>
+      <div class="sgc-sub">Below threshold</div>
+      <div class="sgc-pill-row">
+        <span class="sgc-pill sgc-pill-critical" id="sidebarCriticalPill">Critical</span>
+        <span class="sgc-pill">Low</span>
+        <span class="sgc-pill">OK</span>
+      </div>
+    </div>
+
+    <div class="sidebar-graph-card">
+      <div class="sgc-header">
+        <span>Sales vs stock</span>
+        <span class="sgc-value" id="sidebarSellThrough">72%</span>
+      </div>
+      <div class="sgc-sub">Sell-through</div>
+      <div class="sgc-gauge">
+        <div class="sgc-gauge-fill" id="sidebarGaugeFill"></div>
+      </div>
+    </div>
+
+    <div class="sidebar-foot-card">
+      <div class="sidebar-foot-title">SWAG connected</div>
+      Dashboard wired to SWAG data source (single system focus).
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="topbar">
+      <div class="topbar-title">Executive overview</div>
+      <div class="topbar-right">
+        <span class="topbar-badge" id="dateBadge"></span>
+        <div class="user-pill">
+          <div class="user-initial">T</div>
+          <span>Inventory Ops</span>
+        </div>
+      </div>
+    </div>
+
+    <section class="hero">
+      <div class="hero-left">
+        <div class="hero-heading" id="heroTitle">SWAG stock overview</div>
+        <div class="hero-sub" id="heroSub">
+          Live picture of SWAG inventory, purchase and sales for fast decisions.
+        </div>
+        <div class="hero-tags">
+          <span class="hero-tag">SWAG ERP</span>
+          <span class="hero-tag">Inventory</span>
+          <span class="hero-tag">Real-time</span>
+        </div>
+      </div>
+      <div class="hero-right">
+        <div class="hero-status">
+          <span class="hero-dot"></span> SWAG connected
+        </div>
+        <div class="hero-metrics" id="systemStatus"></div>
+      </div>
+      <div class="hero-center-title">SWAG DASHBOARD</div>
+    </section>
+
+    <section class="kpi-row" id="kpiRow"></section>
+
+    <section class="charts-grid">
+      <section class="chart-panel">
+        <div class="chart-title" id="chart1Title">Category wise stock</div>
+        <div class="chart-subtitle" id="chart1Sub">On-hand quantity by category.</div>
+        <div class="chart-wrapper">
+          <canvas id="chart1"></canvas>
+        </div>
+      </section>
+      <section class="chart-panel">
+        <div class="chart-title" id="chart2Title">Brand share</div>
+        <div class="chart-subtitle" id="chart2Sub">Stock distribution by brand.</div>
+        <div class="chart-wrapper">
+          <canvas id="chart2"></canvas>
+        </div>
+      </section>
+      <section class="chart-panel">
+        <div class="chart-title" id="chart3Title">Branch coverage</div>
+        <div class="chart-subtitle" id="chart3Sub">Total stock by branch.</div>
+        <div class="chart-wrapper">
+          <canvas id="chart3"></canvas>
+        </div>
+      </section>
+      <section class="chart-panel">
+        <div class="chart-title" id="chart4Title">Sales trend</div>
+        <div class="chart-subtitle" id="chart4Sub">Sales amount over days.</div>
+        <div class="chart-wrapper">
+          <canvas id="chart4"></canvas>
+        </div>
+      </section>
+    </section>
+
+    <section class="content-grid">
+      <section class="panel">
+        <div class="panel-header">
+          <div>
+            <div class="panel-title-main" id="panelTitle">Product search and filters</div>
+            <div class="panel-title-sub" id="panelSub">
+              Search SWAG products, low stock, and reorder suggestions.
+            </div>
+          </div>
+          <div class="view-tabs" id="stockTabs">
+            <button class="view-tab-btn active" data-tab="total">Total stock</button>
+            <button class="view-tab-btn" data-tab="branch">By branch</button>
+            <button class="view-tab-btn" data-tab="reorder">Reorder risk</button>
+          </div>
+        </div>
+
+        <div class="filters" id="filterRow">
+          <input id="modelInput" class="input" placeholder="Model codes e.g. ABC-001, XYZ-002" />
+          <input id="lowStockInput" class="input" type="number" min="0" value="5" />
+          <div class="checkbox-group">
+            <input type="checkbox" id="exactMatch" checked />
+            <label for="exactMatch">Exact match</label>
+          </div>
+          <button class="button-primary" id="searchBtn">Run search</button>
+        </div>
+
+        <div class="info-text" id="infoText">
+          Demo data loaded in browser. Replace with SWAG API calls.
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+            <tr id="tableHeaderRow"></tr>
+            </thead>
+            <tbody id="tableBody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-header">
+          <div>
+            <div class="panel-title-main">Key insights</div>
+            <div class="panel-title-sub">Top highlights from this view.</div>
+          </div>
+        </div>
+        <section class="mini-grid" id="miniGrid"></section>
+      </section>
+    </section>
+  </main>
+</div>
+
+<script>
+  Chart.defaults.animation.duration = 900;
+  Chart.defaults.animation.easing = "easeOutQuart"; // smooth animation [web:73][web:78]
+
+  const mockStock = {
+    total: [
+      { system: "SWAG", brand: "Brand A", category: "T-Shirts", model: "ABC-001", product: "Black T-Shirt", on_hand: 50, sale_price: 59 },
+      { system: "SWAG", brand: "Brand B", category: "Jeans",    model: "XYZ-002", product: "Blue Jeans",    on_hand: 0,  sale_price: 199 },
+      { system: "SWAG", brand: "Brand A", category: "Hoodies",  model: "LMN-777", product: "White Hoodie",  on_hand: 5,  sale_price: 149 },
+    ],
+    branch: [
+      { system: "SWAG", branch: "JEDDAH-01", brand: "Brand A", category: "T-Shirts", model: "ABC-001", on_hand: 30 },
+      { system: "SWAG", branch: "RIYADH-02", brand: "Brand A", category: "T-Shirts", model: "ABC-001", on_hand: 20 },
+      { system: "SWAG", branch: "JEDDAH-01", brand: "Brand B", category: "Jeans",    model: "XYZ-002", on_hand: 0  },
+    ],
+    reorder: [
+      { system: "SWAG", brand: "Brand B", category: "Jeans",   model: "XYZ-002", product: "Blue Jeans",  on_hand: 0,  suggest: 40, priority: "Critical" },
+      { system: "SWAG", brand: "Brand A", category: "Hoodies", model: "LMN-777", product: "White Hoodie",on_hand: 5, suggest: 30, priority: "Low" },
+    ]
+  };
+
+  const mockPurchase = [
+    { date: "2026-04-01", po: "PO0001", vendor: "Vendor A", category: "T-Shirts", model: "ABC-001", qty: 100, subtotal: 5000 },
+    { date: "2026-04-05", po: "PO0002", vendor: "Vendor B", category: "Jeans",    model: "XYZ-002", qty: 50,  subtotal: 2500 },
+    { date: "2026-04-08", po: "PO0003", vendor: "Vendor A", category: "Hoodies",  model: "LMN-777", qty: 20,  subtotal: 2000 },
+  ];
+
+  const mockSales = [
+    { date: "2026-04-01", so: "SO0000", customer: "Customer Z", model: "ABC-001", qty: 2, subtotal: 118 },
+    { date: "2026-04-02", so: "SO0001", customer: "Customer A", model: "ABC-001", qty: 5, subtotal: 295 },
+    { date: "2026-04-03", so: "SO0002", customer: "Customer B", model: "ABC-001", qty: 3, subtotal: 177 },
+    { date: "2026-04-04", so: "SO0003", customer: "Customer C", model: "XYZ-002", qty: 4, subtotal: 796 },
+  ];
+
+  let currentView = "stock";
+  let currentStockTab = "total";
+
+  let chart1, chart2, chart3, chart4;
+
+  function setDateBadge() {
+    const el = document.getElementById("dateBadge");
+    const d = new Date();
+    el.textContent = d.toLocaleString("en-GB", {
+      day: "2-digit", month: "short", year: "numeric",
+      hour: "2-digit", minute: "2-digit"
+    });
+  }
+
+  function renderSystemStatus() {
+    const container = document.getElementById("systemStatus");
+    container.innerHTML = "";
+    const div = document.createElement("div");
+    div.innerHTML = `
+      <div class="hero-metric-value">SWAG</div>
+      <div>Online</div>
+    `;
+    container.appendChild(div);
+  }
+
+  function renderKpiRow(kpis) {
+    const row = document.getElementById("kpiRow");
+    row.innerHTML = "";
+    kpis.forEach(k => {
+      const div = document.createElement("div");
+      div.className = "kpi-card";
+      div.innerHTML = `
+        <div class="kpi-label">${k.label}</div>
+        <div class="kpi-value">${k.value}</div>
+        <div class="kpi-meta">${k.meta}</div>
+      `;
+      row.appendChild(div);
+    });
+  }
+
+  function renderKpisStock() {
+    const total = mockStock.total;
+    let qty = 0, value = 0, zero = 0;
+    const models = new Set();
+    total.forEach(r => {
+      const q = Number(r.on_hand || 0);
+      const p = Number(r.sale_price || 0);
+      qty += q;
+      value += q * p;
+      if (q === 0) zero++;
+      models.add(r.model);
+    });
+    renderKpiRow([
+      { label: "Total on hand", value: qty,              meta: "SWAG inventory" },
+      { label: "Stock value",   value: "SAR " + value.toFixed(0), meta: "Qty × price" },
+      { label: "Zero stock",    value: zero,            meta: "Models at 0 qty" },
+      { label: "Unique models", value: models.size,     meta: "In SWAG" },
+    ]);
+    document.getElementById("sidebarStockChange").textContent = "+12%";
+  }
+
+  function renderKpisPurchase() {
+    const rows = mockPurchase;
+    let spend = 0, qty = 0;
+    const vendors = new Set();
+    rows.forEach(r => {
+      spend += Number(r.subtotal || 0);
+      qty += Number(r.qty || 0);
+      vendors.add(r.vendor);
+    });
+    renderKpiRow([
+      { label: "PO spend",    value: "SAR " + spend.toFixed(0), meta: "Period total" },
+      { label: "Units bought",value: qty,                       meta: "All PO lines" },
+      { label: "Vendors",     value: vendors.size,              meta: "Active vendors" },
+      { label: "PO count",    value: rows.length,               meta: "Purchase orders" },
+    ]);
+  }
+
+  function renderKpisSales() {
+    const rows = mockSales;
+    let rev = 0, qty = 0;
+    const customers = new Set();
+    rows.forEach(r => {
+      rev += Number(r.subtotal || 0);
+      qty += Number(r.qty || 0);
+      customers.add(r.customer);
+    });
+    renderKpiRow([
+      { label: "Revenue",   value: "SAR " + rev.toFixed(0), meta: "Selected period" },
+      { label: "Units sold",value: qty,                     meta: "All SO lines" },
+      { label: "Customers", value: customers.size,          meta: "Unique customers" },
+      { label: "SO count",  value: rows.length,             meta: "Sales orders" },
+    ]);
+    const sellPct = 72;
+    document.getElementById("sidebarSellThrough").textContent = sellPct + "%";
+    document.getElementById("sidebarGaugeFill").style.width = sellPct + "%";
+  }
+
+  function renderStockTable() {
+    const headerRow = document.getElementById("tableHeaderRow");
+    const body = document.getElementById("tableBody");
+    const info = document.getElementById("infoText");
+    const mini = document.getElementById("miniGrid");
+    body.innerHTML = "";
+    mini.innerHTML = "";
+
+    if (currentStockTab === "total") {
+      headerRow.innerHTML = `
+        <th>Model</th><th>Product</th><th>Brand</th><th>Category</th>
+        <th>On&nbsp;hand</th><th>Sale&nbsp;price</th><th>Status</th>
+      `;
+      let zero = 0;
+      mockStock.total.forEach(r => {
+        const q = Number(r.on_hand || 0);
+        if (q === 0) zero++;
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td>${r.model}</td>
+          <td>${r.product}</td>
+          <td>${r.brand}</td>
+          <td>${r.category}</td>
+          <td>${q}</td>
+          <td>${r.sale_price}</td>
+          <td>${q === 0 ? '<span class="pill-danger">Out of stock</span>' :
+                           '<span class="pill-soft">Healthy</span>'}</td>
+        `;
+        body.appendChild(tr);
+      });
+      info.textContent = `Loaded ${mockStock.total.length} SWAG product rows (demo).`;
+
+      mini.innerHTML = `
+        <div class="mini-card">
+          <div class="mini-label">Zero-stock models</div>
+          <div class="mini-value">${zero}</div>
+          <div class="mini-meta">Need purchase / transfer</div>
+        </div>
+        <div class="mini-card">
+          <div class="mini-label">Tracked models</div>
+          <div class="mini-value">${mockStock.total.length}</div>
+          <div class="mini-meta">In this sample</div>
+        </div>
+      `;
+      document.getElementById("sidebarReorderCount").textContent =
+        mockStock.reorder.length + " items";
+    } else if (currentStockTab === "branch") {
+      headerRow.innerHTML = `
+        <th>Branch</th><th>Model</th><th>Brand</th><th>Category</th><th>On&nbsp;hand</th>
+      `;
+      mockStock.branch.forEach(r => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td>${r.branch}</td>
+          <td>${r.model}</td>
+          <td>${r.brand}</td>
+          <td>${r.category}</td>
+          <td>${r.on_hand}</td>
+        `;
+        body.appendChild(tr);
+      });
+      info.textContent = `Loaded ${mockStock.branch.length} SWAG branch rows (demo).`;
+
+      const perBranch = {};
+      mockStock.branch.forEach(r => {
+        perBranch[r.branch] = (perBranch[r.branch] || 0) + Number(r.on_hand || 0);
+      });
+      const arr = Object.entries(perBranch).sort((a,b)=>b[1]-a[1]);
+      const top = arr[0] || ["–",0];
+      mini.innerHTML = `
+        <div class="mini-card">
+          <div class="mini-label">Top branch</div>
+          <div class="mini-value">${top[0]}</div>
+          <div class="mini-meta">Qty ${top[1]}</div>
+        </div>
+        <div class="mini-card">
+          <div class="mini-label">Branches</div>
+          <div class="mini-value">${arr.length}</div>
+          <div class="mini-meta">Active in sample</div>
+        </div>
+      `;
+    } else {
+      headerRow.innerHTML = `
+        <th>Model</th><th>Product</th><th>Brand</th><th>On&nbsp;hand</th>
+        <th>Suggest</th><th>Priority</th>
+      `;
+      let crit = 0;
+      mockStock.reorder.forEach(r => {
+        if (r.priority === "Critical") crit++;
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td>${r.model}</td>
+          <td>${r.product}</td>
+          <td>${r.brand}</td>
+          <td>${r.on_hand}</td>
+          <td>${r.suggest}</td>
+          <td>${r.priority === "Critical"
+               ? '<span class="pill-danger">Critical</span>'
+               : '<span class="pill-soft">'+r.priority+'</span>'}</td>
+        `;
+        body.appendChild(tr);
+      });
+      info.textContent = `Loaded ${mockStock.reorder.length} reorder candidates (demo).`;
+      mini.innerHTML = `
+        <div class="mini-card">
+          <div class="mini-label">Items to reorder</div>
+          <div class="mini-value">${mockStock.reorder.length}</div>
+          <div class="mini-meta">Based on sample rule</div>
+        </div>
+        <div class="mini-card">
+          <div class="mini-label">Critical priority</div>
+          <div class="mini-value">${crit}</div>
+          <div class="mini-meta">Immediate PO suggestion</div>
+        </div>
+      `;
+      document.getElementById("sidebarReorderCount").textContent =
+        mockStock.reorder.length + " items";
+    }
+  }
+
+  function destroyCharts() {
+    [chart1, chart2, chart3, chart4].forEach(c => c && c.destroy());
+    chart1 = chart2 = chart3 = chart4 = null;
+  }
+
+  function buildStockCharts() {
+    destroyCharts();
+    const ctx1 = document.getElementById("chart1").getContext("2d");
+    const ctx2 = document.getElementById("chart2").getContext("2d");
+    const ctx3 = document.getElementById("chart3").getContext("2d");
+    const ctx4 = document.getElementById("chart4").getContext("2d");
+
+    document.getElementById("chart1Title").textContent = "Category wise stock";
+    document.getElementById("chart1Sub").textContent = "On-hand quantity by category.";
+    document.getElementById("chart2Title").textContent = "Brand share";
+    document.getElementById("chart2Sub").textContent = "Stock distribution by brand.";
+    document.getElementById("chart3Title").textContent = "Branch coverage";
+    document.getElementById("chart3Sub").textContent = "Total stock by branch.";
+    document.getElementById("chart4Title").textContent = "Sales trend";
+    document.getElementById("chart4Sub").textContent = "Sales amount over days.";
+
+    const totalsByCat = {};
+    mockStock.total.forEach(r => {
+      totalsByCat[r.category] = (totalsByCat[r.category] || 0) + Number(r.on_hand || 0);
+    });
+    const catLabels = Object.keys(totalsByCat);
+    const catData = catLabels.map(l => totalsByCat[l]);
+
+    chart1 = new Chart(ctx1, {
+      type: "bar",
+      data: {
+        labels: catLabels,
+        datasets: [{
+          label: "On hand",
+          data: catData,
+          backgroundColor: ["#60a5fa","#34d399","#fbbf24","#f97316"],
+          borderRadius: 6,
+          maxBarThickness: 40,
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: {
+          x: { ticks: { color: "#6b7280", font: { size: 11 } }, grid: { display: false } },
+          y: { ticks: { color: "#9ca3af", font: { size: 10 } }, grid: { color: "#e5e7eb" } }
+        }
+      }
+    });
+
+    const totalsByBrand = {};
+    mockStock.total.forEach(r => {
+      totalsByBrand[r.brand] = (totalsByBrand[r.brand] || 0) + Number(r.on_hand || 0);
+    });
+    const brandLabels = Object.keys(totalsByBrand);
+    const brandData = brandLabels.map(l => totalsByBrand[l]);
+
+    chart2 = new Chart(ctx2, {
+      type: "doughnut",
+      data: {
+        labels: brandLabels,
+        datasets: [{
+          data: brandData,
+          backgroundColor: ["#3b82f6","#22c55e","#f97316","#a855f7"],
+          borderWidth: 1,
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { position: "bottom", labels: { font: { size: 10 } } }
+        },
+        cutout: "60%"
+      }
+    });
+
+    const totalsByBranch = {};
+    mockStock.branch.forEach(r => {
+      totalsByBranch[r.branch] = (totalsByBranch[r.branch] || 0) + Number(r.on_hand || 0);
+    });
+    const branchLabels = Object.keys(totalsByBranch);
+    const branchData = branchLabels.map(l => totalsByBranch[l]);
+
+    chart3 = new Chart(ctx3, {
+      type: "bar",
+      data: {
+        labels: branchLabels,
+        datasets: [{
+          label: "On hand",
+          data: branchData,
+          backgroundColor: "#0ea5e9",
+          borderRadius: 6,
+          maxBarThickness: 40,
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: {
+          x: { ticks: { color: "#6b7280", font: { size: 11 } }, grid: { display: false } },
+          y: { ticks: { color: "#9ca3af", font: { size: 10 } }, grid: { color: "#e5e7eb" } }
+        }
+      }
+    });
+
+    const labels = mockSales.map(r => r.date);
+    const data = mockSales.map(r => Number(r.subtotal || 0));
+
+    chart4 = new Chart(ctx4, {
+      type: "line",
+      data: {
+        labels,
+        datasets: [{
+          label: "Sales",
+          data,
+          borderColor: "#22c55e",
+          backgroundColor: "rgba(34,197,94,0.15)",
+          tension: 0.3,
+          fill: true,
+          pointRadius: 3,
+          pointBackgroundColor: "#22c55e",
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: {
+          x: { ticks: { color: "#6b7280", font: { size: 11 } }, grid: { display: false } },
+          y: { ticks: { color: "#9ca3af", font: { size: 10 } }, grid: { color: "#e5e7eb" } }
+        }
+      }
+    });
+  }
+
+  function buildPurchaseCharts() {
+    destroyCharts();
+    const ctx1 = document.getElementById("chart1").getContext("2d");
+    const ctx2 = document.getElementById("chart2").getContext("2d");
+    const ctx3 = document.getElementById("chart3").getContext("2d");
+    const ctx4 = document.getElementById("chart4").getContext("2d");
+
+    document.getElementById("chart1Title").textContent = "Vendor wise purchases";
+    document.getElementById("chart1Sub").textContent = "Total PO quantity by vendor.";
+    document.getElementById("chart2Title").textContent = "Purchase by category";
+    document.getElementById("chart2Sub").textContent = "Qty purchased per category.";
+    document.getElementById("chart3Title").textContent = "PO amount over time";
+    document.getElementById("chart3Sub").textContent = "Daily purchase value.";
+    document.getElementById("chart4Title").textContent = "PO mix (qty vs value)";
+    document.getElementById("chart4Sub").textContent = "Compare quantity and amount.";
+
+    const qtyByVendor = {};
+    mockPurchase.forEach(r => {
+      qtyByVendor[r.vendor] = (qtyByVendor[r.vendor] || 0) + Number(r.qty || 0);
+    });
+    const vendorLabels = Object.keys(qtyByVendor);
+    const vendorData = vendorLabels.map(l => qtyByVendor[l]);
+
+    chart1 = new Chart(ctx1, {
+      type: "bar",
+      data: {
+        labels: vendorLabels,
+        datasets: [{
+          label: "Qty purchased",
+          data: vendorData,
+          backgroundColor: ["#3b82f6","#22c55e","#f97316"],
+          borderRadius: 6,
+          maxBarThickness: 40,
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: {
+          x: { ticks: { color: "#6b7280", font: { size: 11 } }, grid: { display: false } },
+          y: { ticks: { color: "#9ca3af", font: { size: 10 } }, grid: { color: "#e5e7eb" } }
+        }
+      }
+    });
+
+    const qtyByCat = {};
+    mockPurchase.forEach(r => {
+      qtyByCat[r.category] = (qtyByCat[r.category] || 0) + Number(r.qty || 0);
+    });
+    const catLabels = Object.keys(qtyByCat);
+    const catData = catLabels.map(l => qtyByCat[l]);
+
+    chart2 = new Chart(ctx2, {
+      type: "doughnut",
+      data: {
+        labels: catLabels,
+        datasets: [{
+          data: catData,
+          backgroundColor: ["#60a5fa","#34d399","#fbbf24"],
+          borderWidth: 1,
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { position: "bottom", labels: { font: { size: 10 } } }
+        },
+        cutout: "60%"
+      }
+    });
+
+    const dailySpend = {};
+    mockPurchase.forEach(r => {
+      dailySpend[r.date] = (dailySpend[r.date] || 0) + Number(r.subtotal || 0);
+    });
+    const poDateLabels = Object.keys(dailySpend);
+    const poAmountData = poDateLabels.map(l => dailySpend[l]);
+
+    chart3 = new Chart(ctx3, {
+      type: "line",
+      data: {
+        labels: poDateLabels,
+        datasets: [{
+          label: "PO amount",
+          data: poAmountData,
+          borderColor: "#0ea5e9",
+          backgroundColor: "rgba(14,165,233,0.15)",
+          tension: 0.3,
+          fill: true,
+          pointRadius: 3,
+          pointBackgroundColor: "#0ea5e9",
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: {
+          x: { ticks: { color: "#6b7280", font: { size: 11 } }, grid: { display: false } },
+          y: { ticks: { color: "#9ca3af", font: { size: 10 } }, grid: { color: "#e5e7eb" } }
+        }
+      }
+    });
+
+    const qtyByDate = {};
+    mockPurchase.forEach(r => {
+      qtyByDate[r.date] = (qtyByDate[r.date] || 0) + Number(r.qty || 0);
+    });
+    const poQtyData = poDateLabels.map(l => qtyByDate[l]);
+
+    chart4 = new Chart(ctx4, {
+      type: "bar",
+      data: {
+        labels: poDateLabels,
+        datasets: [
+          {
+            label: "Qty",
+            data: poQtyData,
+            backgroundColor: "rgba(34,197,94,0.7)",
+            borderRadius: 5,
+            maxBarThickness: 28,
+          },
+          {
+            label: "Amount",
+            data: poAmountData,
+            backgroundColor: "rgba(59,130,246,0.7)",
+            borderRadius: 5,
+            maxBarThickness: 28,
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { position: "bottom" } },
+        scales: {
+          x: { ticks: { color: "#6b7280", font: { size: 11 } }, grid: { display: false } },
+          y: { ticks: { color: "#9ca3af", font: { size: 10 } }, grid: { color: "#e5e7eb" } }
+        }
+      }
+    });
+  }
+
+  function buildSalesCharts() {
+    destroyCharts();
+    const ctx1 = document.getElementById("chart1").getContext("2d");
+    const ctx2 = document.getElementById("chart2").getContext("2d");
+    const ctx3 = document.getElementById("chart3").getContext("2d");
+    const ctx4 = document.getElementById("chart4").getContext("2d");
+
+    document.getElementById("chart1Title").textContent = "Top models by sales";
+    document.getElementById("chart1Sub").textContent = "Qty sold per model.";
+    document.getElementById("chart2Title").textContent = "Sales by day";
+    document.getElementById("chart2Sub").textContent = "Daily revenue line chart.";
+    document.getElementById("chart3Title").textContent = "Customer mix";
+    document.getElementById("chart3Sub").textContent = "Revenue by customer.";
+    document.getElementById("chart4Title").textContent = "Units vs amount";
+    document.getElementById("chart4Sub").textContent = "Compare sales quantity and value.";
+
+    const qtyByModel = {};
+    mockSales.forEach(r => {
+      qtyByModel[r.model] = (qtyByModel[r.model] || 0) + Number(r.qty || 0);
+    });
+    const modelLabels = Object.keys(qtyByModel);
+    const modelQty = modelLabels.map(l => qtyByModel[l]);
+
+    chart1 = new Chart(ctx1, {
+      type: "bar",
+      data: {
+        labels: modelLabels,
+        datasets: [{
+          label: "Qty sold",
+          data: modelQty,
+          backgroundColor: ["#f97316","#22c55e"],
+          borderRadius: 6,
+          maxBarThickness: 40,
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: {
+          x: { ticks: { color: "#6b7280", font: { size: 11 } }, grid: { display: false } },
+          y: { ticks: { color: "#9ca3af", font: { size: 10 } }, grid: { color: "#e5e7eb" } }
+        }
+      }
+    });
+
+    const dailySales = {};
+    mockSales.forEach(r => {
+      dailySales[r.date] = (dailySales[r.date] || 0) + Number(r.subtotal || 0);
+    });
+    const dateLabels = Object.keys(dailySales);
+    const revData = dateLabels.map(l => dailySales[l]);
+
+    chart2 = new Chart(ctx2, {
+      type: "line",
+      data: {
+        labels: dateLabels,
+        datasets: [{
+          label: "Revenue",
+          data: revData,
+          borderColor: "#22c55e",
+          backgroundColor: "rgba(34,197,94,0.15)",
+          tension: 0.3,
+          fill: true,
+          pointRadius: 3,
+          pointBackgroundColor: "#22c55e",
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: {
+          x: { ticks: { color: "#6b7280", font: { size: 11 } }, grid: { display: false } },
+          y: { ticks: { color: "#9ca3af", font: { size: 10 } }, grid: { color: "#e5e7eb" } }
+        }
+      }
+    });
+
+    const revByCustomer = {};
+    mockSales.forEach(r => {
+      revByCustomer[r.customer] = (revByCustomer[r.customer] || 0) + Number(r.subtotal || 0);
+    });
+    const custLabels = Object.keys(revByCustomer);
+    const custData = custLabels.map(l => revByCustomer[l]);
+
+    chart3 = new Chart(ctx3, {
+      type: "doughnut",
+      data: {
+        labels: custLabels,
+        datasets: [{
+          data: custData,
+          backgroundColor: ["#3b82f6","#22c55e","#f97316","#a855f7"],
+          borderWidth: 1,
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { position: "bottom", labels: { font: { size: 10 } } }
+        },
+        cutout: "60%"
+      }
+    });
+
+    const qtyByDate = {};
+    mockSales.forEach(r => {
+      qtyByDate[r.date] = (qtyByDate[r.date] || 0) + Number(r.qty || 0);
+    });
+    const qtyData = dateLabels.map(l => qtyByDate[l]);
+
+    chart4 = new Chart(ctx4, {
+      type: "bar",
+      data: {
+        labels: dateLabels,
+        datasets: [
+          {
+            label: "Qty",
+            data: qtyData,
+            backgroundColor: "rgba(14,165,233,0.8)",
+            borderRadius: 5,
+            maxBarThickness: 28,
+          },
+          {
+            label: "Amount",
+            data: revData,
+            backgroundColor: "rgba(234,179,8,0.8)",
+            borderRadius: 5,
+            maxBarThickness: 28,
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { position: "bottom" } },
+        scales: {
+          x: { ticks: { color: "#6b7280", font: { size: 11 } }, grid: { display: false } },
+          y: { ticks: { color: "#9ca3af", font: { size: 10 } }, grid: { color: "#e5e7eb" } }
+        }
+      }
+    });
+  }
+
+  function renderPurchaseTable() {
+    const headerRow = document.getElementById("tableHeaderRow");
+    const body = document.getElementById("tableBody");
+    const info = document.getElementById("infoText");
+    const mini = document.getElementById("miniGrid");
+    headerRow.innerHTML = `
+      <th>Date</th><th>PO</th><th>Vendor</th><th>Category</th><th>Model</th><th>Qty</th><th>Subtotal</th>
+    `;
+    body.innerHTML = "";
+    mini.innerHTML = "";
+    let spend = 0;
+    const byVendor = {};
+    mockPurchase.forEach(r => {
+      spend += Number(r.subtotal || 0);
+      byVendor[r.vendor] = (byVendor[r.vendor] || 0) + Number(r.subtotal || 0);
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td>${r.date}</td>
+        <td>${r.po}</td>
+        <td>${r.vendor}</td>
+        <td>${r.category}</td>
+        <td>${r.model}</td>
+        <td>${r.qty}</td>
+        <td>${r.subtotal}</td>
+      `;
+      body.appendChild(tr);
+    });
+    info.textContent = `Loaded ${mockPurchase.length} SWAG purchase lines (demo).`;
+    const topVendor = Object.entries(byVendor).sort((a,b)=>b[1]-a[1])[0] || ["–",0];
+    mini.innerHTML = `
+      <div class="mini-card">
+        <div class="mini-label">Total PO spend</div>
+        <div class="mini-value">SAR ${spend.toFixed(0)}</div>
+        <div class="mini-meta">Current selection</div>
+      </div>
+      <div class="mini-card">
+        <div class="mini-label">Top vendor</div>
+        <div class="mini-value">${topVendor[0]}</div>
+        <div class="mini-meta">Spend SAR ${topVendor[1].toFixed(0)}</div>
+      </div>
+    `;
+  }
+
+  function renderSalesTable() {
+    const headerRow = document.getElementById("tableHeaderRow");
+    const body = document.getElementById("tableBody");
+    const info = document.getElementById("infoText");
+    const mini = document.getElementById("miniGrid");
+    headerRow.innerHTML = `
+      <th>Date</th><th>SO</th><th>Customer</th><th>Model</th><th>Qty</th><th>Subtotal</th>
+    `;
+    body.innerHTML = "";
+    mini.innerHTML = "";
+    let rev = 0;
+    mockSales.forEach(r => {
+      rev += Number(r.subtotal || 0);
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td>${r.date}</td>
+        <td>${r.so}</td>
+        <td>${r.customer}</td>
+        <td>${r.model}</td>
+        <td>${r.qty}</td>
+        <td>${r.subtotal}</td>
+      `;
+      body.appendChild(tr);
+    });
+    info.textContent = `Loaded ${mockSales.length} SWAG sales lines (demo).`;
+    mini.innerHTML = `
+      <div class="mini-card">
+        <div class="mini-label">Revenue</div>
+        <div class="mini-value">SAR ${rev.toFixed(0)}</div>
+        <div class="mini-meta">Selected period</div>
+      </div>
+      <div class="mini-card">
+        <div class="mini-label">Sales lines</div>
+        <div class="mini-value">${mockSales.length}</div>
+        <div class="mini-meta">Across models</div>
+      </div>
+    `;
+  }
+
+  document.querySelectorAll(".nav-item").forEach(btn => {
+    btn.addEventListener("click", () => {
+      document.querySelectorAll(".nav-item").forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+      currentView = btn.dataset.view;
+
+      const tabs = document.getElementById("stockTabs");
+      const filters = document.getElementById("filterRow");
+      const heroTitle = document.getElementById("heroTitle");
+      const heroSub = document.getElementById("heroSub");
+      const panelTitle = document.getElementById("panelTitle");
+      const panelSub = document.getElementById("panelSub");
+
+      if (currentView === "stock") {
+        tabs.style.display = "inline-flex";
+        filters.style.display = "flex";
+        heroTitle.textContent = "SWAG stock overview";
+        heroSub.textContent = "Live picture of SWAG inventory health and low stock.";
+        panelTitle.textContent = "Product search and filters";
+        panelSub.textContent = "Search SWAG models and review stock / reorder.";
+        renderKpisStock();
+        renderStockTable();
+        buildStockCharts();
+      } else if (currentView === "purchase") {
+        tabs.style.display = "none";
+        filters.style.display = "none";
+        heroTitle.textContent = "SWAG purchase analytics";
+        heroSub.textContent = "See how much you’re buying, from whom, and in which categories.";
+        panelTitle.textContent = "Purchase detail";
+        panelSub.textContent = "Sample PO data. Replace with SWAG purchase feed.";
+        renderKpisPurchase();
+        renderPurchaseTable();
+        buildPurchaseCharts();
+      } else {
+        tabs.style.display = "none";
+        filters.style.display = "none";
+        heroTitle.textContent = "SWAG sales analytics";
+        heroSub.textContent = "Understand which models and customers drive revenue.";
+        panelTitle.textContent = "Sales detail";
+        panelSub.textContent = "Sample SO data. Replace with SWAG sales feed.";
+        renderKpisSales();
+        renderSalesTable();
+        buildSalesCharts();
+      }
+    });
+  });
+
+  document.querySelectorAll(".view-tab-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      document.querySelectorAll(".view-tab-btn").forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+      currentStockTab = btn.dataset.tab;
+      if (currentView === "stock") renderStockTable();
+    });
+  });
+
+  document.getElementById("searchBtn").addEventListener("click", () => {
+    if (currentView === "stock") {
+      renderStockTable();
+      buildStockCharts();
+    } else if (currentView === "purchase") {
+      renderPurchaseTable();
+      buildPurchaseCharts();
+    } else {
+      renderSalesTable();
+      buildSalesCharts();
+    }
+  });
+
+  setDateBadge();
+  renderSystemStatus();
+  renderKpisStock();
+  renderStockTable();
+  buildStockCharts();
+</script>
+</body>
+</html>
