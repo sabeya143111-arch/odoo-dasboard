@@ -4,10 +4,10 @@ from pydantic import BaseModel
 import xmlrpc.client  # Odoo XML-RPC [web:115]
 
 # ---------- ODOO CONFIG ----------
-ODOO_URL = "http://YOUR_ODOO_HOST:8069"
-ODOO_DB = "YOUR_DB_NAME"
-ODOO_USER = "your_user@example.com"
-ODOO_PASSWORD = "YOUR_PASSWORD_OR_API_KEY"
+ODOO_URL = "https://db.swag.com.sa"
+ODOO_DB = "db2"
+ODOO_USER = "ziad.m@swag.com.sa"
+ODOO_PASSWORD = "7cda7ec6fccb6afc78fd1968d93b09240572ee2b"
 
 common = xmlrpc.client.ServerProxy(f"{ODOO_URL}/xmlrpc/2/common")
 uid = common.authenticate(ODOO_DB, ODOO_USER, ODOO_PASSWORD, {})
