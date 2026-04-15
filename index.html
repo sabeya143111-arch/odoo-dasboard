@@ -56,9 +56,7 @@
             --input-bg: #263045;
         }
 
-        * {
-            box-sizing: border-box;
-        }
+        * { box-sizing: border-box; }
 
         body {
             margin: 0;
@@ -86,1842 +84,1047 @@
             gap: 1.1rem;
         }
 
-        .brand {
-            display: flex;
-            align-items: center;
-            gap: 0.7rem;
-        }
-
+        .brand { display: flex; align-items: center; gap: 0.7rem; }
         .brand-mark {
-            width: 36px;
-            height: 36px;
-            border-radius: 12px;
+            width: 36px; height: 36px; border-radius: 12px;
             background: linear-gradient(135deg, #0ea5e9, #22c55e);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #f9fafb;
-            font-weight: 700;
-            font-size: 0.9rem;
+            display: flex; align-items: center; justify-content: center;
+            color: #f9fafb; font-weight: 700; font-size: 0.9rem;
             box-shadow: 0 0 18px rgba(59, 130, 246, 0.35);
         }
-
-        .brand-text-main {
-            font-size: 0.95rem;
-            font-weight: 700;
-            color: var(--text-main);
-        }
-
-        .brand-text-sub {
-            font-size: 0.72rem;
-            color: var(--text-soft);
-        }
+        .brand-text-main { font-size: 0.95rem; font-weight: 700; color: var(--text-main); }
+        .brand-text-sub { font-size: 0.72rem; color: var(--text-soft); }
 
         .sidebar-section-label {
-            margin-top: 0.6rem;
-            font-size: 0.7rem;
-            letter-spacing: 0.16em;
-            text-transform: uppercase;
-            color: var(--text-soft);
+            margin-top: 0.6rem; font-size: 0.7rem; letter-spacing: 0.16em;
+            text-transform: uppercase; color: var(--text-soft);
         }
 
-        .nav-list {
-            margin-top: 0.25rem;
-            display: flex;
-            flex-direction: column;
-            gap: 0.15rem;
-        }
-
+        .nav-list { margin-top: 0.25rem; display: flex; flex-direction: column; gap: 0.15rem; }
         .nav-item {
-            border-radius: 0.75rem;
-            padding: 0.5rem 0.7rem;
-            border: 1px solid transparent;
-            background: transparent;
-            color: var(--text-muted);
-            font-size: 0.8rem;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            cursor: pointer;
-            transition: all 0.16s ease;
+            border-radius: 0.75rem; padding: 0.5rem 0.7rem;
+            border: 1px solid transparent; background: transparent;
+            color: var(--text-muted); font-size: 0.8rem;
+            display: flex; align-items: center; justify-content: space-between;
+            cursor: pointer; transition: all 0.16s ease;
         }
-
-        .nav-item-main {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.4rem;
-        }
-
-        .nav-bullet {
-            width: 6px;
-            height: 6px;
-            border-radius: 999px;
-            background: #d1d5db;
-        }
-
+        .nav-item-main { display: inline-flex; align-items: center; gap: 0.4rem; }
+        .nav-bullet { width: 6px; height: 6px; border-radius: 999px; background: #d1d5db; }
         .nav-item.active {
-            background: #e0f2fe;
-            border-color: #0ea5e9;
-            color: #0f172a;
+            background: #e0f2fe; border-color: #0ea5e9; color: #0f172a;
             box-shadow: 0 10px 24px rgba(15, 23, 42, 0.08);
         }
-
-        .nav-item.active .nav-bullet {
-            background: #22c55e;
-        }
-
-        .nav-item:hover:not(.active) {
-            background: #f3f4f6;
-            border-color: #e5e7eb;
-            color: #111827;
-        }
-
+        .nav-item.active .nav-bullet { background: #22c55e; }
+        .nav-item:hover:not(.active) { background: #f3f4f6; border-color: #e5e7eb; color: #111827; }
         .nav-meta-pill {
-            font-size: 0.7rem;
-            padding: 0.18rem 0.55rem;
-            border-radius: 999px;
-            border: 1px solid #e5e7eb;
-            background: #f9fafb;
-            color: var(--text-soft);
+            font-size: 0.7rem; padding: 0.18rem 0.55rem; border-radius: 999px;
+            border: 1px solid #e5e7eb; background: #f9fafb; color: var(--text-soft);
         }
 
         .sidebar-graph-card {
-            margin-top: 0.6rem;
-            padding: 0.6rem 0.7rem;
-            border-radius: 12px;
-            background: #f9fafb;
-            border: 1px solid #e5e7eb;
-            box-shadow: 0 6px 14px rgba(15, 23, 42, 0.04);
-            font-size: 0.72rem;
+            margin-top: 0.6rem; padding: 0.6rem 0.7rem; border-radius: 12px;
+            background: #f9fafb; border: 1px solid #e5e7eb;
+            box-shadow: 0 6px 14px rgba(15, 23, 42, 0.04); font-size: 0.72rem;
         }
-
-        .sgc-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 0.74rem;
-            color: #111827;
-        }
-
-        .sgc-value {
-            font-weight: 600;
-            color: #16a34a;
-        }
-
-        .sgc-danger {
-            color: #dc2626;
-        }
-
-        .sgc-sub {
-            font-size: 0.7rem;
-            color: #9ca3af;
-            margin-top: 0.1rem;
-        }
-
-        .sgc-bar-row {
-            display: flex;
-            gap: 4px;
-            margin-top: 0.45rem;
-            align-items: flex-end;
-        }
-
-        .sgc-bar {
-            width: 6px;
-            border-radius: 999px 999px 0 0;
-            background: #bfdbfe;
-        }
-
-        .sgc-bar-1 {
-            height: 18px;
-        }
-
-        .sgc-bar-2 {
-            height: 26px;
-            background: #60a5fa;
-        }
-
-        .sgc-bar-3 {
-            height: 14px;
-        }
-
-        .sgc-bar-4 {
-            height: 28px;
-            background: #0ea5e9;
-        }
-
-        .sgc-bar-5 {
-            height: 20px;
-        }
-
-        .sgc-bar-6 {
-            height: 24px;
-            background: #22c55e;
-        }
-
-        .sgc-pill-row {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.3rem;
-            margin-top: 0.5rem;
-        }
-
+        .sgc-header { display: flex; justify-content: space-between; align-items: center; font-size: 0.74rem; color: #111827; }
+        .sgc-value { font-weight: 600; color: #16a34a; }
+        .sgc-danger { color: #dc2626; }
+        .sgc-sub { font-size: 0.7rem; color: #9ca3af; margin-top: 0.1rem; }
+        .sgc-bar-row { display: flex; gap: 4px; margin-top: 0.45rem; align-items: flex-end; }
+        .sgc-bar { width: 6px; border-radius: 999px 999px 0 0; background: #bfdbfe; }
+        .sgc-bar-1 { height: 18px; }
+        .sgc-bar-2 { height: 26px; background: #60a5fa; }
+        .sgc-bar-3 { height: 14px; }
+        .sgc-bar-4 { height: 28px; background: #0ea5e9; }
+        .sgc-bar-5 { height: 20px; }
+        .sgc-bar-6 { height: 24px; background: #22c55e; }
+        .sgc-pill-row { display: flex; flex-wrap: wrap; gap: 0.3rem; margin-top: 0.5rem; }
         .sgc-pill {
-            padding: 0.18rem 0.5rem;
-            border-radius: 999px;
-            border: 1px solid #e5e7eb;
-            background: #ffffff;
-            font-size: 0.7rem;
-            color: #6b7280;
+            padding: 0.18rem 0.5rem; border-radius: 999px; border: 1px solid #e5e7eb;
+            background: #ffffff; font-size: 0.7rem; color: #6b7280;
         }
-
-        .sgc-pill-critical {
-            border-color: #fecaca;
-            background: #fee2e2;
-            color: #b91c1c;
-        }
-
-        .sgc-gauge {
-            margin-top: 0.5rem;
-            width: 100%;
-            height: 8px;
-            border-radius: 999px;
-            background: #e5e7eb;
-            overflow: hidden;
-        }
-
-        .sgc-gauge-fill {
-            width: 72%;
-            height: 100%;
-            background: linear-gradient(90deg, #22c55e, #0ea5e9);
-        }
+        .sgc-pill-critical { border-color: #fecaca; background: #fee2e2; color: #b91c1c; }
+        .sgc-gauge { margin-top: 0.5rem; width: 100%; height: 8px; border-radius: 999px; background: #e5e7eb; overflow: hidden; }
+        .sgc-gauge-fill { width: 72%; height: 100%; background: linear-gradient(90deg, #22c55e, #0ea5e9); }
 
         .sidebar-foot-card {
-            margin-top: auto;
-            padding: 0.7rem 0.75rem;
-            border-radius: 14px;
-            background: #eff6ff;
-            border: 1px solid #dbeafe;
-            font-size: 0.74rem;
-            color: var(--text-muted);
+            margin-top: auto; padding: 0.7rem 0.75rem; border-radius: 14px;
+            background: #eff6ff; border: 1px solid #dbeafe; font-size: 0.74rem; color: var(--text-muted);
         }
+        .sidebar-foot-title { font-size: 0.78rem; font-weight: 600; color: #0f172a; margin-bottom: 0.25rem; }
 
-        .sidebar-foot-title {
-            font-size: 0.78rem;
-            font-weight: 600;
-            color: #0f172a;
-            margin-bottom: 0.25rem;
-        }
+        .main { display: flex; flex-direction: column; padding: 1.1rem 1.6rem; gap: 1rem; }
 
-        .main {
-            display: flex;
-            flex-direction: column;
-            padding: 1.1rem 1.6rem;
-            gap: 1rem;
-        }
-
-        .topbar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 0.3rem;
-        }
-
-        .topbar-title {
-            font-size: 0.78rem;
-            letter-spacing: 0.15em;
-            text-transform: uppercase;
-            color: var(--text-soft);
-        }
-
-        .topbar-right {
-            display: flex;
-            align-items: center;
-            gap: 0.6rem;
-            font-size: 0.75rem;
-            color: var(--text-soft);
-        }
-
-        .topbar-badge {
-            padding: 0.18rem 0.55rem;
-            border-radius: 999px;
-            border: 1px solid #e5e7eb;
-            background: #f9fafb;
-        }
-
-        .user-pill {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.4rem;
-            padding: 0.2rem 0.55rem;
-            border-radius: 999px;
-            border: 1px solid #e5e7eb;
-            background: #ffffff;
-        }
-
-        .user-initial {
-            width: 22px;
-            height: 22px;
-            border-radius: 999px;
-            background: linear-gradient(135deg, #0ea5e9, #22c55e);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.78rem;
-            font-weight: 600;
-            color: #ffffff;
-        }
+        .topbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.3rem; }
+        .topbar-title { font-size: 0.78rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--text-soft); }
+        .topbar-right { display: flex; align-items: center; gap: 0.6rem; font-size: 0.75rem; color: var(--text-soft); }
+        .topbar-badge { padding: 0.18rem 0.55rem; border-radius: 999px; border: 1px solid #e5e7eb; background: #f9fafb; }
+        .user-pill { display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.2rem 0.55rem; border-radius: 999px; border: 1px solid #e5e7eb; background: #ffffff; }
+        .user-initial { width: 22px; height: 22px; border-radius: 999px; background: linear-gradient(135deg, #0ea5e9, #22c55e); display: flex; align-items: center; justify-content: center; font-size: 0.78rem; font-weight: 600; color: #ffffff; }
 
         .hero {
-            padding: 1.1rem 1.3rem;
-            border-radius: 18px;
-            background: var(--bg-hero);
-            border: 1px solid #dbeafe;
-            display: flex;
-            justify-content: space-between;
-            gap: 1rem;
-            box-shadow: var(--shadow-soft);
-            position: relative;
+            padding: 1.1rem 1.3rem; border-radius: 18px; background: var(--bg-hero);
+            border: 1px solid #dbeafe; display: flex; justify-content: space-between;
+            gap: 1rem; box-shadow: var(--shadow-soft); position: relative;
         }
-
-        .hero-left {
-            max-width: 60%;
-        }
-
-        .hero-heading {
-            font-size: 1.1rem;
-            font-weight: 700;
-            color: #0f172a;
-        }
-
-        .hero-sub {
-            margin-top: 0.25rem;
-            font-size: 0.8rem;
-            color: var(--text-muted);
-        }
-
-        .hero-tags {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.35rem;
-            margin-top: 0.6rem;
-        }
-
-        .hero-tag {
-            font-size: 0.68rem;
-            padding: 0.22rem 0.55rem;
-            border-radius: 999px;
-            border: 1px solid #dbeafe;
-            background: #eff6ff;
-            color: #1d4ed8;
-        }
-
-        .hero-right {
-            text-align: right;
-            min-width: 210px;
-        }
-
-        .hero-status {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.35rem;
-            padding: 0.3rem 0.6rem;
-            border-radius: 999px;
-            background: #ecfdf3;
-            border: 1px solid #bbf7d0;
-            font-size: 0.7rem;
-            color: #166534;
-        }
-
-        .hero-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 999px;
-            background: #22c55e;
-        }
-
-        .hero-metrics {
-            margin-top: 0.7rem;
-            display: flex;
-            gap: 0.9rem;
-            justify-content: flex-end;
-            font-size: 0.75rem;
-            color: var(--text-soft);
-        }
-
-        .hero-metric-value {
-            font-size: 0.95rem;
-            font-weight: 600;
-            color: #0f172a;
-        }
-
+        .hero-left { max-width: 60%; }
+        .hero-heading { font-size: 1.1rem; font-weight: 700; color: #0f172a; }
+        .hero-sub { margin-top: 0.25rem; font-size: 0.8rem; color: var(--text-muted); }
+        .hero-tags { display: flex; flex-wrap: wrap; gap: 0.35rem; margin-top: 0.6rem; }
+        .hero-tag { font-size: 0.68rem; padding: 0.22rem 0.55rem; border-radius: 999px; border: 1px solid #dbeafe; background: #eff6ff; color: #1d4ed8; }
+        .hero-right { text-align: right; min-width: 210px; }
+        .hero-status { display: inline-flex; align-items: center; gap: 0.35rem; padding: 0.3rem 0.6rem; border-radius: 999px; background: #ecfdf3; border: 1px solid #bbf7d0; font-size: 0.7rem; color: #166534; }
+        .hero-dot { width: 8px; height: 8px; border-radius: 999px; background: #22c55e; }
+        .hero-metrics { margin-top: 0.7rem; display: flex; gap: 0.9rem; justify-content: flex-end; font-size: 0.75rem; color: var(--text-soft); }
+        .hero-metric-value { font-size: 0.95rem; font-weight: 600; color: #0f172a; }
         .hero-center-title {
-            position: absolute;
-            left: 50%;
-            top: 50%;
-            transform: translate(-50%, -50%);
-            pointer-events: none;
-            font-size: 1.5rem;
-            letter-spacing: 0.30em;
-            text-transform: uppercase;
-            color: rgba(15, 23, 42, 0.55);
-            font-weight: 900;
-            text-shadow: 0 0 22px rgba(15, 23, 42, 0.35);
-            animation: pulseTitle 2.8s ease-in-out infinite;
-            white-space: nowrap;
+            position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
+            pointer-events: none; font-size: 1.5rem; letter-spacing: 0.30em;
+            text-transform: uppercase; color: rgba(15, 23, 42, 0.55);
+            font-weight: 900; text-shadow: 0 0 22px rgba(15, 23, 42, 0.35);
+            animation: pulseTitle 2.8s ease-in-out infinite; white-space: nowrap;
         }
-
         @keyframes pulseTitle {
-
-            0%,
-            100% {
-                transform: translate(-50%, -50%) scale(1);
-                opacity: 0.7;
-            }
-
-            50% {
-                transform: translate(-50%, -50%) scale(1.06);
-                opacity: 1;
-            }
+            0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.7; }
+            50% { transform: translate(-50%, -50%) scale(1.06); opacity: 1; }
         }
 
-        .kpi-row {
-            display: grid;
-            grid-template-columns: repeat(4, minmax(0, 1fr));
-            gap: 0.75rem;
-            margin-top: 0.1rem;
-        }
+        .kpi-row { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0.75rem; margin-top: 0.1rem; }
+        .kpi-card { border-radius: var(--radius-lg); background: var(--bg-panel); border: 1px solid var(--border-subtle); padding: 0.8rem 0.9rem; box-shadow: var(--shadow-soft); }
+        .kpi-label { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--text-soft); }
+        .kpi-value { margin-top: 0.35rem; font-size: 1.15rem; font-weight: 700; color: #0f172a; }
+        .kpi-meta { margin-top: 0.12rem; font-size: 0.72rem; color: var(--text-muted); }
 
-        .kpi-card {
-            border-radius: var(--radius-lg);
-            background: var(--bg-panel);
-            border: 1px solid var(--border-subtle);
-            padding: 0.8rem 0.9rem;
-            box-shadow: var(--shadow-soft);
-        }
+        .charts-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.9rem; margin-top: 0.5rem; }
+        .chart-panel { border-radius: var(--radius-lg); background: var(--bg-panel); border: 1px solid var(--border-subtle); padding: 0.8rem 0.9rem; box-shadow: var(--shadow-soft); min-height: 210px; }
+        .chart-title { font-size: 0.85rem; font-weight: 600; color: #0f172a; margin-bottom: 0.2rem; }
+        .chart-subtitle { font-size: 0.72rem; color: var(--text-muted); margin-bottom: 0.4rem; }
+        .chart-wrapper { position: relative; width: 100%; height: 160px; }
 
-        .kpi-label {
-            font-size: 0.68rem;
-            text-transform: uppercase;
-            letter-spacing: 0.12em;
-            color: var(--text-soft);
-        }
+        .content-grid { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(0, 1.1fr); gap: 0.9rem; margin-top: 0.7rem; }
+        .panel { border-radius: var(--radius-lg); background: var(--bg-panel); border: 1px solid var(--border-subtle); padding: 0.85rem 1rem; box-shadow: var(--shadow-soft); }
+        .panel-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.6rem; }
+        .panel-title-main { font-size: 0.9rem; font-weight: 600; color: #0f172a; }
+        .panel-title-sub { font-size: 0.74rem; color: var(--text-muted); margin-top: 0.15rem; }
 
-        .kpi-value {
-            margin-top: 0.35rem;
-            font-size: 1.15rem;
-            font-weight: 700;
-            color: #0f172a;
-        }
+        .view-tabs { display: inline-flex; border-radius: 999px; background: #f9fafb; border: 1px solid #e5e7eb; padding: 0.14rem; gap: 0.1rem; }
+        .view-tab-btn { border-radius: 999px; border: none; padding: 0.22rem 0.8rem; font-size: 0.72rem; background: transparent; color: var(--text-soft); cursor: pointer; }
+        .view-tab-btn.active { background: #0ea5e9; color: #ffffff; box-shadow: 0 8px 20px rgba(14, 165, 233, 0.6); }
 
-        .kpi-meta {
-            margin-top: 0.12rem;
-            font-size: 0.72rem;
-            color: var(--text-muted);
-        }
+        .filters { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.45rem; margin-top: 0.1rem; font-size: 0.78rem; }
+        .input { min-width: 180px; background: var(--input-bg); border-radius: 10px; border: 1px solid var(--border-subtle); color: var(--text-main); font-size: 0.78rem; padding: 0.32rem 0.7rem; outline: none; }
+        .input::placeholder { color: var(--text-soft); }
+        .checkbox-group { display: inline-flex; align-items: center; gap: 0.25rem; color: var(--text-muted); font-size: 0.75rem; }
 
-        .charts-grid {
-            display: grid;
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-            gap: 0.9rem;
-            margin-top: 0.5rem;
-        }
+        .button-primary { border-radius: 10px; border: none; background: linear-gradient(135deg, #0ea5e9, #2563eb); color: white; padding: 0.35rem 0.9rem; font-size: 0.78rem; cursor: pointer; box-shadow: 0 10px 24px rgba(37, 99, 235, 0.45); }
+        .button-primary:hover { transform: translateY(-1px); box-shadow: 0 14px 30px rgba(37, 99, 235, 0.65); }
 
-        .chart-panel {
-            border-radius: var(--radius-lg);
-            background: var(--bg-panel);
-            border: 1px solid var(--border-subtle);
-            padding: 0.8rem 0.9rem;
-            box-shadow: var(--shadow-soft);
-            min-height: 210px;
-        }
+        .info-text { font-size: 0.72rem; color: var(--text-muted); margin-bottom: 0.35rem; }
 
-        .chart-title {
-            font-size: 0.85rem;
-            font-weight: 600;
-            color: #0f172a;
-            margin-bottom: 0.2rem;
-        }
+        .table-wrap { max-height: 260px; overflow: auto; border-radius: 12px; border: 1px solid var(--border-subtle); }
+        table { width: 100%; border-collapse: collapse; font-size: 0.75rem; }
+        th, td { padding: 0.48rem 0.55rem; border-bottom: 1px solid var(--border-subtle); }
+        th { background: var(--th-bg); text-align: left; font-size: 0.7rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-soft); position: sticky; top: 0; z-index: 1; }
+        tbody tr:nth-child(even) td { background: var(--table-even); }
+        tbody tr:hover td { background: var(--table-hover); }
 
-        .chart-subtitle {
-            font-size: 0.72rem;
-            color: var(--text-muted);
-            margin-bottom: 0.4rem;
-        }
+        /* Pill styles */
+        .pill-danger { font-size: 0.7rem; padding: 0.16rem 0.5rem; border-radius: 999px; border: 1px solid rgba(220, 38, 38, 0.8); background: #fee2e2; color: #b91c1c; }
+        .pill-warning { font-size: 0.7rem; padding: 0.16rem 0.5rem; border-radius: 999px; border: 1px solid rgba(245, 158, 11, 0.8); background: #fef3c7; color: #92400e; }
+        .pill-ok { font-size: 0.7rem; padding: 0.16rem 0.5rem; border-radius: 999px; border: 1px solid rgba(34, 197, 94, 0.8); background: #dcfce7; color: #166534; }
+        .pill-soft { font-size: 0.7rem; padding: 0.16rem 0.5rem; border-radius: 999px; border: 1px solid #e5e7eb; background: #f9fafb; color: var(--text-muted); }
 
-        .chart-wrapper {
-            position: relative;
-            width: 100%;
-            height: 160px;
-        }
+        .mini-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.6rem; margin-top: 0.35rem; }
+        .mini-card { border-radius: 12px; background: var(--mini-card-bg); border: 1px solid var(--border-subtle); padding: 0.6rem 0.65rem; font-size: 0.72rem; }
+        .mini-label { color: var(--text-soft); font-size: 0.7rem; }
+        .mini-value { margin-top: 0.2rem; font-size: 0.9rem; font-weight: 600; color: #0f172a; }
+        .mini-meta { margin-top: 0.15rem; font-size: 0.68rem; color: var(--text-muted); }
 
-        .content-grid {
-            display: grid;
-            grid-template-columns: minmax(0, 1.6fr) minmax(0, 1.1fr);
-            gap: 0.9rem;
-            margin-top: 0.7rem;
-        }
-
-        .panel {
-            border-radius: var(--radius-lg);
-            background: var(--bg-panel);
-            border: 1px solid var(--border-subtle);
-            padding: 0.85rem 1rem;
-            box-shadow: var(--shadow-soft);
-        }
-
-        .panel-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 0.6rem;
-        }
-
-        .panel-title-main {
-            font-size: 0.9rem;
-            font-weight: 600;
-            color: #0f172a;
-        }
-
-        .panel-title-sub {
-            font-size: 0.74rem;
-            color: var(--text-muted);
-            margin-top: 0.15rem;
-        }
-
-        .view-tabs {
-            display: inline-flex;
-            border-radius: 999px;
-            background: #f9fafb;
-            border: 1px solid #e5e7eb;
-            padding: 0.14rem;
-            gap: 0.1rem;
-        }
-
-        .view-tab-btn {
-            border-radius: 999px;
-            border: none;
-            padding: 0.22rem 0.8rem;
-            font-size: 0.72rem;
-            background: transparent;
-            color: var(--text-soft);
-            cursor: pointer;
-        }
-
-        .view-tab-btn.active {
-            background: #0ea5e9;
-            color: #ffffff;
-            box-shadow: 0 8px 20px rgba(14, 165, 233, 0.6);
-        }
-
-        .filters {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-            margin-bottom: 0.45rem;
-            margin-top: 0.1rem;
-            font-size: 0.78rem;
-        }
-
-        .input {
-            min-width: 180px;
-            background: var(--input-bg);
-            border-radius: 10px;
-            border: 1px solid var(--border-subtle);
-            color: var(--text-main);
-            font-size: 0.78rem;
-            padding: 0.32rem 0.7rem;
-            outline: none;
-        }
-
-        .input::placeholder {
-            color: var(--text-soft);
-        }
-
-        .checkbox-group {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.25rem;
-            color: var(--text-muted);
-            font-size: 0.75rem;
-        }
-
-        .button-primary {
-            border-radius: 10px;
-            border: none;
-            background: linear-gradient(135deg, #0ea5e9, #2563eb);
-            color: white;
-            padding: 0.35rem 0.9rem;
-            font-size: 0.78rem;
-            cursor: pointer;
-            box-shadow: 0 10px 24px rgba(37, 99, 235, 0.45);
-        }
-
-        .button-primary:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 14px 30px rgba(37, 99, 235, 0.65);
-        }
-
-        .info-text {
-            font-size: 0.72rem;
-            color: var(--text-muted);
-            margin-bottom: 0.35rem;
-        }
-
-        .table-wrap {
-            max-height: 260px;
-            overflow: auto;
-            border-radius: 12px;
-            border: 1px solid var(--border-subtle);
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 0.75rem;
-        }
-
-        th,
-        td {
-            padding: 0.48rem 0.55rem;
-            border-bottom: 1px solid var(--border-subtle);
-        }
-
-        th {
-            background: var(--th-bg);
-            text-align: left;
-            font-size: 0.7rem;
-            letter-spacing: 0.08em;
-            text-transform: uppercase;
-            color: var(--text-soft);
-            position: sticky;
-            top: 0;
-            z-index: 1;
-        }
-
-        tbody tr:nth-child(even) td {
-            background: var(--table-even);
-        }
-
-        tbody tr:hover td {
-            background: var(--table-hover);
-        }
-
-        .pill-danger {
-            font-size: 0.7rem;
-            padding: 0.16rem 0.5rem;
-            border-radius: 999px;
-            border: 1px solid rgba(220, 38, 38, 0.8);
-            background: #fee2e2;
-            color: #b91c1c;
-        }
-
-        .pill-soft {
-            font-size: 0.7rem;
-            padding: 0.16rem 0.5rem;
-            border-radius: 999px;
-            border: 1px solid #e5e7eb;
-            background: #f9fafb;
-            color: var(--text-muted);
-        }
-
-        .mini-grid {
-            display: grid;
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-            gap: 0.6rem;
-            margin-top: 0.35rem;
-        }
-
-        .mini-card {
-            border-radius: 12px;
-            background: var(--mini-card-bg);
-            border: 1px solid var(--border-subtle);
-            padding: 0.6rem 0.65rem;
-            font-size: 0.72rem;
-        }
-
-        /* ── Theme toggle button ── */
-        .theme-toggle {
-            border-radius: 999px;
-            border: 1px solid var(--border-subtle);
-            background: var(--bg-panel);
-            color: var(--text-muted);
-            font-size: 0.72rem;
-            font-weight: 600;
-            padding: 0.22rem 0.75rem;
-            cursor: pointer;
-            transition: all 0.18s ease;
-            letter-spacing: 0.08em;
-        }
-        .theme-toggle:hover {
-            border-color: var(--accent);
-            color: var(--accent);
-        }
-
-        .mini-label {
-            color: var(--text-soft);
-            font-size: 0.7rem;
-        }
-
-        .mini-value {
-            margin-top: 0.2rem;
-            font-size: 0.9rem;
-            font-weight: 600;
-            color: #0f172a;
-        }
-
-        .mini-meta {
-            margin-top: 0.15rem;
-            font-size: 0.68rem;
-            color: var(--text-muted);
-        }
+        .theme-toggle { border-radius: 999px; border: 1px solid var(--border-subtle); background: var(--bg-panel); color: var(--text-muted); font-size: 0.72rem; font-weight: 600; padding: 0.22rem 0.75rem; cursor: pointer; transition: all 0.18s ease; letter-spacing: 0.08em; }
+        .theme-toggle:hover { border-color: var(--accent); color: var(--accent); }
 
         @media (max-width: 1040px) {
-            .app-shell {
-                grid-template-columns: 1fr;
-            }
-
-            .sidebar {
-                flex-direction: row;
-                align-items: flex-start;
-                overflow-x: auto;
-            }
-
-            .sidebar-section-label,
-            .sidebar-foot-card {
-                display: none;
-            }
-
-            .hero {
-                flex-direction: column;
-            }
-
-            .hero-left {
-                max-width: 100%;
-            }
-
-            .hero-right {
-                text-align: left;
-            }
-
-            .charts-grid,
-            .content-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .kpi-row {
-                grid-template-columns: repeat(2, minmax(0, 1fr));
-            }
-
-            .hero-center-title {
-                position: static;
-                transform: none;
-                text-align: center;
-                margin-top: 0.8rem;
-            }
+            .app-shell { grid-template-columns: 1fr; }
+            .sidebar { flex-direction: row; align-items: flex-start; overflow-x: auto; }
+            .sidebar-section-label, .sidebar-foot-card { display: none; }
+            .hero { flex-direction: column; }
+            .hero-left { max-width: 100%; }
+            .hero-right { text-align: left; }
+            .charts-grid, .content-grid { grid-template-columns: 1fr; }
+            .kpi-row { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+            .hero-center-title { position: static; transform: none; text-align: center; margin-top: 0.8rem; }
         }
-
-        @media (max-width: 640px) {
-            .kpi-row {
-                grid-template-columns: 1fr;
-            }
-        }
+        @media (max-width: 640px) { .kpi-row { grid-template-columns: 1fr; } }
     </style>
 </head>
 
 <body>
-    <div class="app-shell">
-        <aside class="sidebar">
-            <div class="brand">
-                <div class="brand-mark">S</div>
-                <div>
-                    <div class="brand-text-main">SWAG Control</div>
-                    <div class="brand-text-sub">Inventory Intelligence</div>
+<div class="app-shell">
+    <aside class="sidebar">
+        <div class="brand">
+            <div class="brand-mark">S</div>
+            <div>
+                <div class="brand-text-main">SWAG Control</div>
+                <div class="brand-text-sub">Inventory Intelligence</div>
+            </div>
+        </div>
+
+        <div class="sidebar-section-label">Workspaces</div>
+        <div class="nav-list">
+            <button class="nav-item active" data-view="stock">
+                <span class="nav-item-main"><span class="nav-bullet"></span><span>Stock Overview</span></span>
+                <span class="nav-meta-pill">SWAG</span>
+            </button>
+            <button class="nav-item" data-view="purchase">
+                <span class="nav-item-main"><span class="nav-bullet"></span><span>Purchase Analytics</span></span>
+                <span class="nav-meta-pill">PO</span>
+            </button>
+            <button class="nav-item" data-view="sales">
+                <span class="nav-item-main"><span class="nav-bullet"></span><span>Sales Analytics</span></span>
+                <span class="nav-meta-pill">SO</span>
+            </button>
+        </div>
+
+        <div class="sidebar-section-label">Snapshots</div>
+
+        <div class="sidebar-graph-card">
+            <div class="sgc-header"><span>Stock trend</span><span class="sgc-value" id="sidebarStockChange">+0%</span></div>
+            <div class="sgc-sub">Last 30 days</div>
+            <div class="sgc-bar-row">
+                <div class="sgc-bar sgc-bar-1"></div><div class="sgc-bar sgc-bar-2"></div>
+                <div class="sgc-bar sgc-bar-3"></div><div class="sgc-bar sgc-bar-4"></div>
+                <div class="sgc-bar sgc-bar-5"></div><div class="sgc-bar sgc-bar-6"></div>
+            </div>
+        </div>
+
+        <div class="sidebar-graph-card">
+            <div class="sgc-header"><span>Reorder risk</span><span class="sgc-value sgc-danger" id="sidebarReorderCount">0 items</span></div>
+            <div class="sgc-sub">Below threshold</div>
+            <div class="sgc-pill-row">
+                <span class="sgc-pill sgc-pill-critical" id="sidebarCriticalPill">Critical</span>
+                <span class="sgc-pill">Low</span><span class="sgc-pill">OK</span>
+            </div>
+        </div>
+
+        <div class="sidebar-graph-card">
+            <div class="sgc-header"><span>Sales vs stock</span><span class="sgc-value" id="sidebarSellThrough">72%</span></div>
+            <div class="sgc-sub">Sell-through</div>
+            <div class="sgc-gauge"><div class="sgc-gauge-fill" id="sidebarGaugeFill"></div></div>
+        </div>
+
+        <div class="sidebar-foot-card">
+            <div class="sidebar-foot-title">SWAG connected</div>
+            Dashboard wired to SWAG backend API.
+        </div>
+    </aside>
+
+    <main class="main">
+        <div class="topbar">
+            <div class="topbar-title">Executive overview</div>
+            <div class="topbar-right">
+                <span class="topbar-badge" id="dateBadge"></span>
+                <button id="themeToggle" class="theme-toggle" aria-label="Toggle theme">LIGHT</button>
+                <div class="user-pill">
+                    <div class="user-initial">T</div>
+                    <span>Inventory Ops</span>
                 </div>
             </div>
+        </div>
 
-            <div class="sidebar-section-label">Workspaces</div>
-            <div class="nav-list">
-                <button class="nav-item active" data-view="stock">
-                    <span class="nav-item-main">
-                        <span class="nav-bullet"></span>
-                        <span>Stock Overview</span>
-                    </span>
-                    <span class="nav-meta-pill">SWAG</span>
-                </button>
-                <button class="nav-item" data-view="purchase">
-                    <span class="nav-item-main">
-                        <span class="nav-bullet"></span>
-                        <span>Purchase Analytics</span>
-                    </span>
-                    <span class="nav-meta-pill">PO</span>
-                </button>
-                <button class="nav-item" data-view="sales">
-                    <span class="nav-item-main">
-                        <span class="nav-bullet"></span>
-                        <span>Sales Analytics</span>
-                    </span>
-                    <span class="nav-meta-pill">SO</span>
-                </button>
-            </div>
-
-            <div class="sidebar-section-label">Snapshots</div>
-
-            <div class="sidebar-graph-card">
-                <div class="sgc-header">
-                    <span>Stock trend</span>
-                    <span class="sgc-value" id="sidebarStockChange">+0%</span>
-                </div>
-                <div class="sgc-sub">Last 30 days</div>
-                <div class="sgc-bar-row">
-                    <div class="sgc-bar sgc-bar-1"></div>
-                    <div class="sgc-bar sgc-bar-2"></div>
-                    <div class="sgc-bar sgc-bar-3"></div>
-                    <div class="sgc-bar sgc-bar-4"></div>
-                    <div class="sgc-bar sgc-bar-5"></div>
-                    <div class="sgc-bar sgc-bar-6"></div>
+        <section class="hero">
+            <div class="hero-left">
+                <div class="hero-heading" id="heroTitle">SWAG stock overview</div>
+                <div class="hero-sub" id="heroSub">Live picture of SWAG inventory, purchase and sales for fast decisions.</div>
+                <div class="hero-tags">
+                    <span class="hero-tag">SWAG ERP</span>
+                    <span class="hero-tag">Inventory</span>
+                    <span class="hero-tag">Real-time</span>
                 </div>
             </div>
-
-            <div class="sidebar-graph-card">
-                <div class="sgc-header">
-                    <span>Reorder risk</span>
-                    <span class="sgc-value sgc-danger" id="sidebarReorderCount">0 items</span>
-                </div>
-                <div class="sgc-sub">Below threshold</div>
-                <div class="sgc-pill-row">
-                    <span class="sgc-pill sgc-pill-critical" id="sidebarCriticalPill">Critical</span>
-                    <span class="sgc-pill">Low</span>
-                    <span class="sgc-pill">OK</span>
-                </div>
+            <div class="hero-right">
+                <div class="hero-status"><span class="hero-dot"></span> SWAG connected</div>
+                <div class="hero-metrics" id="systemStatus"></div>
             </div>
+            <div class="hero-center-title">SWAG DASHBOARD</div>
+        </section>
 
-            <div class="sidebar-graph-card">
-                <div class="sgc-header">
-                    <span>Sales vs stock</span>
-                    <span class="sgc-value" id="sidebarSellThrough">72%</span>
-                </div>
-                <div class="sgc-sub">Sell-through</div>
-                <div class="sgc-gauge">
-                    <div class="sgc-gauge-fill" id="sidebarGaugeFill"></div>
-                </div>
-            </div>
+        <section class="kpi-row" id="kpiRow"></section>
 
-            <div class="sidebar-foot-card">
-                <div class="sidebar-foot-title">SWAG connected</div>
-                Dashboard wired to SWAG backend API.
-            </div>
-        </aside>
+        <section class="charts-grid">
+            <section class="chart-panel">
+                <div class="chart-title" id="chart1Title">Category wise stock</div>
+                <div class="chart-subtitle" id="chart1Sub">On-hand quantity by category.</div>
+                <div class="chart-wrapper"><canvas id="chart1"></canvas></div>
+            </section>
+            <section class="chart-panel">
+                <div class="chart-title" id="chart2Title">Brand share</div>
+                <div class="chart-subtitle" id="chart2Sub">Stock distribution by brand.</div>
+                <div class="chart-wrapper"><canvas id="chart2"></canvas></div>
+            </section>
+            <section class="chart-panel">
+                <div class="chart-title" id="chart3Title">Branch coverage</div>
+                <div class="chart-subtitle" id="chart3Sub">Total stock by branch.</div>
+                <div class="chart-wrapper"><canvas id="chart3"></canvas></div>
+            </section>
+            <section class="chart-panel">
+                <div class="chart-title" id="chart4Title">Sales trend</div>
+                <div class="chart-subtitle" id="chart4Sub">Sales amount over days.</div>
+                <div class="chart-wrapper"><canvas id="chart4"></canvas></div>
+            </section>
+        </section>
 
-        <main class="main">
-            <div class="topbar">
-                <div class="topbar-title">Executive overview</div>
-                <div class="topbar-right">
-                    <span class="topbar-badge" id="dateBadge"></span>
-                    <button id="themeToggle" class="theme-toggle" aria-label="Toggle theme">LIGHT</button>
-                    <div class="user-pill">
-                        <div class="user-initial">T</div>
-                        <span>Inventory Ops</span>
+        <section class="content-grid">
+            <section class="panel">
+                <div class="panel-header">
+                    <div>
+                        <div class="panel-title-main" id="panelTitle">Product search and filters</div>
+                        <div class="panel-title-sub" id="panelSub">Search SWAG products, low stock, and reorder suggestions.</div>
+                    </div>
+                    <div class="view-tabs" id="stockTabs">
+                        <button class="view-tab-btn active" data-tab="total">Total stock</button>
+                        <button class="view-tab-btn" data-tab="branch">By branch</button>
+                        <button class="view-tab-btn" data-tab="reorder">Reorder risk</button>
                     </div>
                 </div>
-            </div>
 
-            <section class="hero">
-                <div class="hero-left">
-                    <div class="hero-heading" id="heroTitle">SWAG stock overview</div>
-                    <div class="hero-sub" id="heroSub">
-                        Live picture of SWAG inventory, purchase and sales for fast decisions.
+                <div class="filters" id="filterRow">
+                    <input id="modelInput" class="input" placeholder="Model codes e.g. ABC-001, XYZ-002" />
+                    <input id="lowStockInput" class="input" type="number" min="0" value="5" />
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="exactMatch" checked />
+                        <label for="exactMatch">Exact match</label>
                     </div>
-                    <div class="hero-tags">
-                        <span class="hero-tag">SWAG ERP</span>
-                        <span class="hero-tag">Inventory</span>
-                        <span class="hero-tag">Real-time</span>
-                    </div>
+                    <button class="button-primary" id="searchBtn">Run search</button>
                 </div>
-                <div class="hero-right">
-                    <div class="hero-status">
-                        <span class="hero-dot"></span> SWAG connected
-                    </div>
-                    <div class="hero-metrics" id="systemStatus"></div>
+
+                <div class="info-text" id="infoText">Data loaded from SWAG FastAPI backend.</div>
+
+                <div class="table-wrap">
+                    <table>
+                        <thead><tr id="tableHeaderRow"></tr></thead>
+                        <tbody id="tableBody"></tbody>
+                    </table>
                 </div>
-                <div class="hero-center-title">SWAG DASHBOARD</div>
             </section>
 
-            <section class="kpi-row" id="kpiRow"></section>
-
-            <section class="charts-grid">
-                <section class="chart-panel">
-                    <div class="chart-title" id="chart1Title">Category wise stock</div>
-                    <div class="chart-subtitle" id="chart1Sub">On-hand quantity by category.</div>
-                    <div class="chart-wrapper">
-                        <canvas id="chart1"></canvas>
+            <section class="panel">
+                <div class="panel-header">
+                    <div>
+                        <div class="panel-title-main">Key insights</div>
+                        <div class="panel-title-sub">Top highlights from this view.</div>
                     </div>
-                </section>
-                <section class="chart-panel">
-                    <div class="chart-title" id="chart2Title">Brand share</div>
-                    <div class="chart-subtitle" id="chart2Sub">Stock distribution by brand.</div>
-                    <div class="chart-wrapper">
-                        <canvas id="chart2"></canvas>
-                    </div>
-                </section>
-                <section class="chart-panel">
-                    <div class="chart-title" id="chart3Title">Branch coverage</div>
-                    <div class="chart-subtitle" id="chart3Sub">Total stock by branch.</div>
-                    <div class="chart-wrapper">
-                        <canvas id="chart3"></canvas>
-                    </div>
-                </section>
-                <section class="chart-panel">
-                    <div class="chart-title" id="chart4Title">Sales trend</div>
-                    <div class="chart-subtitle" id="chart4Sub">Sales amount over days.</div>
-                    <div class="chart-wrapper">
-                        <canvas id="chart4"></canvas>
-                    </div>
-                </section>
+                </div>
+                <section class="mini-grid" id="miniGrid"></section>
             </section>
+        </section>
+    </main>
+</div>
 
-            <section class="content-grid">
-                <section class="panel">
-                    <div class="panel-header">
-                        <div>
-                            <div class="panel-title-main" id="panelTitle">Product search and filters</div>
-                            <div class="panel-title-sub" id="panelSub">
-                                Search SWAG products, low stock, and reorder suggestions.
-                            </div>
-                        </div>
-                        <div class="view-tabs" id="stockTabs">
-                            <button class="view-tab-btn active" data-tab="total">Total stock</button>
-                            <button class="view-tab-btn" data-tab="branch">By branch</button>
-                            <button class="view-tab-btn" data-tab="reorder">Reorder risk</button>
-                        </div>
-                    </div>
+<script>
+    const API_BASE = "https://odoo-dasboard-production.up.railway.app";
 
-                    <div class="filters" id="filterRow">
-                        <input id="modelInput" class="input" placeholder="Model codes e.g. ABC-001, XYZ-002" />
-                        <input id="lowStockInput" class="input" type="number" min="0" value="5" />
-                        <div class="checkbox-group">
-                            <input type="checkbox" id="exactMatch" checked />
-                            <label for="exactMatch">Exact match</label>
-                        </div>
-                        <button class="button-primary" id="searchBtn">Run search</button>
-                    </div>
+    const PALETTE = ["#3b82f6","#22c55e","#f97316","#a855f7","#0ea5e9","#f59e0b","#ef4444","#10b981"];
 
-                    <div class="info-text" id="infoText">
-                        Data loaded from SWAG FastAPI backend.
-                    </div>
-
-                    <div class="table-wrap">
-                        <table>
-                            <thead>
-                                <tr id="tableHeaderRow"></tr>
-                            </thead>
-                            <tbody id="tableBody"></tbody>
-                        </table>
-                    </div>
-                </section>
-
-                <section class="panel">
-                    <div class="panel-header">
-                        <div>
-                            <div class="panel-title-main">Key insights</div>
-                            <div class="panel-title-sub">Top highlights from this view.</div>
-                        </div>
-                    </div>
-                    <section class="mini-grid" id="miniGrid"></section>
-                </section>
-            </section>
-        </main>
-    </div>
-
-    <script>
-        const API_BASE = "https://odoo-dasboard-production.up.railway.app"; // FastAPI URL
-
-        // ── Colour palette used by Purchase charts ──
-        const PALETTE = [
-            "#3b82f6", "#22c55e", "#f97316", "#a855f7",
-            "#0ea5e9", "#f59e0b", "#ef4444", "#10b981"
-        ];
-
-        // ── Shared light-mode chart option helpers ──
-        function lightBarOptions() {
-            return {
-                responsive: true,
-                maintainAspectRatio: false,
-                animation: { duration: 1000, easing: "easeOutQuart" },
-                plugins: { legend: { display: false } },
-                scales: {
-                    x: { ticks: { color: "#6b7280", font: { size: 11 } }, grid: { display: false } },
-                    y: { ticks: { color: "#9ca3af", font: { size: 10 } }, grid: { color: "#e5e7eb" } }
-                }
-            };
-        }
-        function lightLineOptions() {
-            return {
-                responsive: true,
-                maintainAspectRatio: false,
-                animation: { duration: 1100, easing: "easeOutQuart" },
-                plugins: { legend: { display: false } },
-                scales: {
-                    x: { ticks: { color: "#6b7280", font: { size: 11 } }, grid: { display: false } },
-                    y: { ticks: { color: "#9ca3af", font: { size: 10 } }, grid: { color: "#e5e7eb" } }
-                }
-            };
-        }
-        function lightDoughnutOptions() {
-            return {
-                responsive: true,
-                maintainAspectRatio: false,
-                animation: { duration: 900, easing: "easeOutQuart" },
-                plugins: {
-                    legend: { position: "bottom", labels: { font: { size: 10 }, color: "#6b7280" } }
-                },
-                cutout: "60%"
-            };
-        }
-
-        // Aliases used inside buildPurchaseCharts (keeps backward compat)
-        const darkBarOptions = () => lightBarOptions();
-        const darkLineOptions = () => lightLineOptions();
-        const darkDoughnutOptions = () => lightDoughnutOptions();
-
-        Chart.defaults.animation.duration = 900;
-        Chart.defaults.animation.easing = "easeOutQuart";
-
-        let mockStock = { total: [], branch: [], reorder: [] };
-        let mockPurchase = [];
-        let mockSales = [];
-
-        let currentView = "stock";
-        let currentStockTab = "total";
-
-        let chart1, chart2, chart3, chart4;
-
-        // ── Theme toggle ──
-        const root = document.documentElement;
-        let currentTheme = "light";
-        root.removeAttribute("data-theme");
-        const themeToggleBtn = document.getElementById("themeToggle");
-        if (themeToggleBtn) {
-            themeToggleBtn.textContent = "LIGHT";
-            themeToggleBtn.onclick = () => {
-                if (currentTheme === "light") {
-                    currentTheme = "dark";
-                    root.setAttribute("data-theme", "dark");
-                    themeToggleBtn.textContent = "DARK";
-                } else {
-                    currentTheme = "light";
-                    root.removeAttribute("data-theme");
-                    themeToggleBtn.textContent = "LIGHT";
-                }
-            };
-        }
-
-        async function fetchJson(url) {
-            const res = await fetch(url);
-            if (!res.ok) throw new Error("Request failed: " + res.status);
-            return await res.json();
-        }
-
-        async function loadDataFromApi() {
-            try {
-                const [stockRes, purchaseRes, salesRes] = await Promise.all([
-                    fetchJson(`${API_BASE}/api/stock`),
-                    fetchJson(`${API_BASE}/api/purchase`),
-                    fetchJson(`${API_BASE}/api/sales`),
-                ]);
-
-                mockStock = stockRes;
-                mockPurchase = purchaseRes.purchases;
-                mockSales = salesRes.sales;
-
-                initWithStock();
-            } catch (err) {
-                console.error("API load error:", err);
-                alert("Failed to load data from backend. Check console.");
+    function lightBarOptions() {
+        return {
+            responsive: true, maintainAspectRatio: false,
+            animation: { duration: 1000, easing: "easeOutQuart" },
+            plugins: { legend: { display: false } },
+            scales: {
+                x: { ticks: { color: "#6b7280", font: { size: 11 } }, grid: { display: false } },
+                y: { ticks: { color: "#9ca3af", font: { size: 10 } }, grid: { color: "#e5e7eb" } }
             }
-        }
+        };
+    }
+    function lightLineOptions() {
+        return {
+            responsive: true, maintainAspectRatio: false,
+            animation: { duration: 1100, easing: "easeOutQuart" },
+            plugins: { legend: { display: false } },
+            scales: {
+                x: { ticks: { color: "#6b7280", font: { size: 11 } }, grid: { display: false } },
+                y: { ticks: { color: "#9ca3af", font: { size: 10 } }, grid: { color: "#e5e7eb" } }
+            }
+        };
+    }
+    function lightDoughnutOptions() {
+        return {
+            responsive: true, maintainAspectRatio: false,
+            animation: { duration: 900, easing: "easeOutQuart" },
+            plugins: { legend: { position: "bottom", labels: { font: { size: 10 }, color: "#6b7280" } } },
+            cutout: "60%"
+        };
+    }
+    const darkBarOptions = () => lightBarOptions();
+    const darkLineOptions = () => lightLineOptions();
+    const darkDoughnutOptions = () => lightDoughnutOptions();
 
-        function setDateBadge() {
-            const el = document.getElementById("dateBadge");
-            const d = new Date();
-            el.textContent = d.toLocaleString("en-GB", {
-                day: "2-digit", month: "short", year: "numeric",
-                hour: "2-digit", minute: "2-digit"
-            });
-        }
+    Chart.defaults.animation.duration = 900;
+    Chart.defaults.animation.easing = "easeOutQuart";
 
-        function renderSystemStatus() {
-            const container = document.getElementById("systemStatus");
-            container.innerHTML = "";
-            const div = document.createElement("div");
-            div.innerHTML = `
-      <div class="hero-metric-value">SWAG</div>
-      <div>Online</div>
-    `;
-            container.appendChild(div);
-        }
+    let mockStock = { total: [], branch: [], reorder: [] };
+    let mockPurchase = { purchases: [], summary: {} };
+    let mockSales = { sales: [], summary: {} };
 
-        function renderKpiRow(kpis) {
-            const row = document.getElementById("kpiRow");
-            row.innerHTML = "";
-            kpis.forEach(k => {
-                const div = document.createElement("div");
-                div.className = "kpi-card";
-                div.innerHTML = `
-        <div class="kpi-label">${k.label}</div>
-        <div class="kpi-value">${k.value}</div>
-        <div class="kpi-meta">${k.meta}</div>
-      `;
-                row.appendChild(div);
-            });
-        }
+    let currentView = "stock";
+    let currentStockTab = "total";
+    let chart1, chart2, chart3, chart4;
 
-        function renderKpisStock() {
-            const total = mockStock.total || [];
-            let qty = 0, value = 0, zero = 0;
-            const models = new Set();
-            total.forEach(r => {
-                const q = Number(r.on_hand || 0);
-                const p = Number(r.sale_price || 0);
-                qty += q;
-                value += q * p;
-                if (q === 0) zero++;
-                models.add(r.model);
-            });
-            renderKpiRow([
-                { label: "Total on hand", value: qty, meta: "SWAG inventory" },
-                { label: "Stock value", value: "SAR " + value.toFixed(0), meta: "Qty × price" },
-                { label: "Zero stock", value: zero, meta: "Models at 0 qty" },
-                { label: "Unique models", value: models.size, meta: "In SWAG" },
-            ]);
-            document.getElementById("sidebarStockChange").textContent = "+12%";
-        }
-
-        function renderKpisPurchase() {
-            const rows = mockPurchase || [];
-            let spend = 0, qty = 0;
-            const vendors = new Set();
-            rows.forEach(r => {
-                spend += Number(r.subtotal || 0);
-                qty += Number(r.qty || 0);
-                vendors.add(r.vendor);
-            });
-            renderKpiRow([
-                { label: "PO spend", value: "SAR " + spend.toFixed(0), meta: "Period total" },
-                { label: "Units bought", value: qty, meta: "All PO lines" },
-                { label: "Vendors", value: vendors.size, meta: "Active vendors" },
-                { label: "PO count", value: rows.length, meta: "Purchase orders" },
-            ]);
-        }
-
-        function renderKpisSales() {
-            const rows = mockSales || [];
-            let rev = 0, qty = 0;
-            const customers = new Set();
-            rows.forEach(r => {
-                rev += Number(r.subtotal || 0);
-                qty += Number(r.qty || 0);
-                customers.add(r.customer);
-            });
-            renderKpiRow([
-                { label: "Revenue", value: "SAR " + rev.toFixed(0), meta: "Selected period" },
-                { label: "Units sold", value: qty, meta: "All SO lines" },
-                { label: "Customers", value: customers.size, meta: "Unique customers" },
-                { label: "SO count", value: rows.length, meta: "Sales orders" },
-            ]);
-            const sellPct = 72;
-            document.getElementById("sidebarSellThrough").textContent = sellPct + "%";
-            document.getElementById("sidebarGaugeFill").style.width = sellPct + "%";
-        }
-
-        function renderStockTable() {
-            const headerRow = document.getElementById("tableHeaderRow");
-            const body = document.getElementById("tableBody");
-            const info = document.getElementById("infoText");
-            const mini = document.getElementById("miniGrid");
-            body.innerHTML = "";
-            mini.innerHTML = "";
-
-            if (currentStockTab === "total") {
-                headerRow.innerHTML = `
-        <th>Model</th><th>Product</th><th>Brand</th><th>Category</th>
-        <th>On&nbsp;hand</th><th>Sale&nbsp;price</th><th>Status</th>
-      `;
-                let zero = 0;
-                (mockStock.total || []).forEach(r => {
-                    const q = Number(r.on_hand || 0);
-                    if (q === 0) zero++;
-                    const tr = document.createElement("tr");
-                    tr.innerHTML = `
-          <td>${r.model}</td>
-          <td>${r.product}</td>
-          <td>${r.brand}</td>
-          <td>${r.category}</td>
-          <td>${q}</td>
-          <td>${r.sale_price}</td>
-          <td>${q === 0 ? '<span class="pill-danger">Out of stock</span>' :
-                            '<span class="pill-soft">Healthy</span>'}</td>
-        `;
-                    body.appendChild(tr);
-                });
-                info.textContent = `Loaded ${(mockStock.total || []).length} SWAG product rows.`;
-                mini.innerHTML = `
-        <div class="mini-card">
-          <div class="mini-label">Zero-stock models</div>
-          <div class="mini-value">${zero}</div>
-          <div class="mini-meta">Need purchase / transfer</div>
-        </div>
-        <div class="mini-card">
-          <div class="mini-label">Tracked models</div>
-          <div class="mini-value">${(mockStock.total || []).length}</div>
-          <div class="mini-meta">In current view</div>
-        </div>
-      `;
-                document.getElementById("sidebarReorderCount").textContent =
-                    (mockStock.reorder || []).length + " items";
-            } else if (currentStockTab === "branch") {
-                headerRow.innerHTML = `
-        <th>Branch</th><th>Model</th><th>Brand</th><th>Category</th><th>On&nbsp;hand</th>
-      `;
-                (mockStock.branch || []).forEach(r => {
-                    const tr = document.createElement("tr");
-                    tr.innerHTML = `
-          <td>${r.branch}</td>
-          <td>${r.model}</td>
-          <td>${r.brand}</td>
-          <td>${r.category}</td>
-          <td>${r.on_hand}</td>
-        `;
-                    body.appendChild(tr);
-                });
-                info.textContent = `Loaded ${(mockStock.branch || []).length} SWAG branch rows.`;
-                const perBranch = {};
-                (mockStock.branch || []).forEach(r => {
-                    perBranch[r.branch] = (perBranch[r.branch] || 0) + Number(r.on_hand || 0);
-                });
-                const arr = Object.entries(perBranch).sort((a, b) => b[1] - a[1]);
-                const top = arr[0] || ["–", 0];
-                mini.innerHTML = `
-        <div class="mini-card">
-          <div class="mini-label">Top branch</div>
-          <div class="mini-value">${top[0]}</div>
-          <div class="mini-meta">Qty ${top[1]}</div>
-        </div>
-        <div class="mini-card">
-          <div class="mini-label">Branches</div>
-          <div class="mini-value">${arr.length}</div>
-          <div class="mini-meta">Active in sample</div>
-        </div>
-      `;
+    // ── Theme toggle ──
+    const root = document.documentElement;
+    let currentTheme = "light";
+    root.removeAttribute("data-theme");
+    const themeToggleBtn = document.getElementById("themeToggle");
+    if (themeToggleBtn) {
+        themeToggleBtn.textContent = "LIGHT";
+        themeToggleBtn.onclick = () => {
+            if (currentTheme === "light") {
+                currentTheme = "dark";
+                root.setAttribute("data-theme", "dark");
+                themeToggleBtn.textContent = "DARK";
             } else {
-                headerRow.innerHTML = `
-        <th>Model</th><th>Product</th><th>Brand</th><th>On&nbsp;hand</th>
-        <th>Suggest</th><th>Priority</th>
-      `;
-                let crit = 0;
-                (mockStock.reorder || []).forEach(r => {
-                    if (r.priority === "Critical") crit++;
-                    const tr = document.createElement("tr");
-                    tr.innerHTML = `
-          <td>${r.model}</td>
-          <td>${r.product}</td>
-          <td>${r.brand}</td>
-          <td>${r.on_hand}</td>
-          <td>${r.suggest}</td>
-          <td>${r.priority === "Critical"
-                            ? '<span class="pill-danger">Critical</span>'
-                            : '<span class="pill-soft">' + r.priority + '</span>'}</td>
-        `;
-                    body.appendChild(tr);
-                });
-                info.textContent = `Loaded ${(mockStock.reorder || []).length} reorder candidates.`;
-                mini.innerHTML = `
-        <div class="mini-card">
-          <div class="mini-label">Items to reorder</div>
-          <div class="mini-value">${(mockStock.reorder || []).length}</div>
-          <div class="mini-meta">Based on current rule</div>
-        </div>
-        <div class="mini-card">
-          <div class="mini-label">Critical priority</div>
-          <div class="mini-value">${crit}</div>
-          <div class="mini-meta">Immediate PO suggestion</div>
-        </div>
-      `;
-                document.getElementById("sidebarReorderCount").textContent =
-                    (mockStock.reorder || []).length + " items";
+                currentTheme = "light";
+                root.removeAttribute("data-theme");
+                themeToggleBtn.textContent = "LIGHT";
             }
-        }
+        };
+    }
 
-        function renderPurchaseTable() {
-            const headerRow = document.getElementById("tableHeaderRow");
-            const body = document.getElementById("tableBody");
-            const info = document.getElementById("infoText");
-            const mini = document.getElementById("miniGrid");
+    async function fetchJson(url) {
+        const res = await fetch(url);
+        if (!res.ok) throw new Error("Request failed: " + res.status);
+        return await res.json();
+    }
+
+    async function loadDataFromApi() {
+        try {
+            const [stockRes, purchaseRes, salesRes] = await Promise.all([
+                fetchJson(`${API_BASE}/api/stock`),
+                fetchJson(`${API_BASE}/api/purchase`),
+                fetchJson(`${API_BASE}/api/sales`),
+            ]);
+            mockStock = stockRes;
+            mockPurchase = purchaseRes;
+            mockSales = salesRes;
+            initWithStock();
+        } catch (err) {
+            console.error("API load error:", err);
+            alert("Failed to load data from backend. Check console.");
+        }
+    }
+
+    // ── Estimate pill helper ──
+    function daysLeftPill(daysLeft) {
+        if (daysLeft === "∞" || daysLeft === null || daysLeft === undefined) {
+            return '<span class="pill-soft">∞ days</span>';
+        }
+        const d = parseFloat(daysLeft);
+        if (d < 7) return `<span class="pill-danger">🔴 ${d}d left</span>`;
+        if (d < 14) return `<span class="pill-warning">🟡 ${d}d left</span>`;
+        return `<span class="pill-ok">🟢 ${d}d left</span>`;
+    }
+
+    function setDateBadge() {
+        const el = document.getElementById("dateBadge");
+        const d = new Date();
+        el.textContent = d.toLocaleString("en-GB", { day: "2-digit", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" });
+    }
+
+    function renderSystemStatus() {
+        const container = document.getElementById("systemStatus");
+        container.innerHTML = "";
+        const div = document.createElement("div");
+        div.innerHTML = `<div class="hero-metric-value">SWAG</div><div>Online</div>`;
+        container.appendChild(div);
+    }
+
+    function renderKpiRow(kpis) {
+        const row = document.getElementById("kpiRow");
+        row.innerHTML = "";
+        kpis.forEach(k => {
+            const div = document.createElement("div");
+            div.className = "kpi-card";
+            div.innerHTML = `<div class="kpi-label">${k.label}</div><div class="kpi-value">${k.value}</div><div class="kpi-meta">${k.meta}</div>`;
+            row.appendChild(div);
+        });
+    }
+
+    function renderKpisStock() {
+        const total = mockStock.total || [];
+        let qty = 0, value = 0, zero = 0;
+        const models = new Set();
+        total.forEach(r => {
+            const q = Number(r.on_hand || 0);
+            const p = Number(r.sale_price || 0);
+            qty += q; value += q * p;
+            if (q === 0) zero++;
+            models.add(r.model);
+        });
+        renderKpiRow([
+            { label: "Total on hand", value: qty.toLocaleString(), meta: "SWAG inventory" },
+            { label: "Stock value", value: "SAR " + value.toFixed(0), meta: "Qty × price" },
+            { label: "Zero stock", value: zero, meta: "Models at 0 qty" },
+            { label: "Unique models", value: models.size, meta: "In SWAG" },
+        ]);
+        document.getElementById("sidebarStockChange").textContent = "+12%";
+    }
+
+    function renderKpisPurchase() {
+        const summary = mockPurchase.summary || {};
+        const rows = mockPurchase.purchases || [];
+        renderKpiRow([
+            { label: "PO spend", value: "SAR " + (summary.total_spend || 0).toFixed(0), meta: "Period total" },
+            { label: "Units bought", value: (summary.total_qty || 0).toLocaleString(), meta: "All PO lines" },
+            { label: "Vendors", value: summary.vendor_count || 0, meta: "Active vendors" },
+            { label: "PO lines", value: summary.po_line_count || rows.length, meta: "Purchase orders" },
+        ]);
+    }
+
+    function renderKpisSales() {
+        const summary = mockSales.summary || {};
+        const rows = mockSales.sales || [];
+        renderKpiRow([
+            { label: "Revenue", value: "SAR " + (summary.total_revenue || 0).toFixed(0), meta: "Selected period" },
+            { label: "Units sold", value: (summary.total_qty || 0).toLocaleString(), meta: "All SO lines" },
+            { label: "Customers", value: summary.customer_count || 0, meta: "Unique customers" },
+            { label: "SO lines", value: summary.so_line_count || rows.length, meta: "Sales orders" },
+        ]);
+        const sellPct = 72;
+        document.getElementById("sidebarSellThrough").textContent = sellPct + "%";
+        document.getElementById("sidebarGaugeFill").style.width = sellPct + "%";
+    }
+
+    // ═══════════════════════════════════════════════════════
+    // STOCK TABLE
+    // ═══════════════════════════════════════════════════════
+    function renderStockTable() {
+        const headerRow = document.getElementById("tableHeaderRow");
+        const body = document.getElementById("tableBody");
+        const info = document.getElementById("infoText");
+        const mini = document.getElementById("miniGrid");
+        body.innerHTML = ""; mini.innerHTML = "";
+
+        if (currentStockTab === "total") {
             headerRow.innerHTML = `
-      <th>Date</th><th>PO</th><th>Vendor</th><th>Category</th><th>Model</th><th>Qty</th><th>Subtotal</th>
-    `;
-            body.innerHTML = "";
-            mini.innerHTML = "";
-            let spend = 0;
-            const byVendor = {};
-            (mockPurchase || []).forEach(r => {
-                spend += Number(r.subtotal || 0);
-                byVendor[r.vendor] = (byVendor[r.vendor] || 0) + Number(r.subtotal || 0);
+                <th>Model</th><th>Product</th><th>Brand</th><th>Category</th>
+                <th>On&nbsp;hand</th><th>Sold 30d</th><th>Vel/day</th>
+                <th>Days&nbsp;left</th><th>Status</th>`;
+            let zero = 0;
+            (mockStock.total || []).forEach(r => {
+                const q = Number(r.on_hand || 0);
+                if (q === 0) zero++;
                 const tr = document.createElement("tr");
                 tr.innerHTML = `
-        <td>${r.date}</td>
-        <td>${r.po}</td>
-        <td>${r.vendor}</td>
-        <td>${r.category}</td>
-        <td>${r.model}</td>
-        <td>${r.qty}</td>
-        <td>${r.subtotal}</td>
-      `;
+                    <td>${r.model}</td>
+                    <td>${r.product}</td>
+                    <td>${r.brand}</td>
+                    <td>${r.category}</td>
+                    <td>${q}</td>
+                    <td>${r.sold_30d ?? 0}</td>
+                    <td>${r.daily_velocity ?? 0}</td>
+                    <td>${daysLeftPill(r.days_left)}</td>
+                    <td>${q === 0
+                        ? '<span class="pill-danger">Out of stock</span>'
+                        : '<span class="pill-ok">Healthy</span>'}</td>`;
                 body.appendChild(tr);
             });
-            info.textContent = `Loaded ${(mockPurchase || []).length} SWAG purchase lines.`;
-            const topVendor = Object.entries(byVendor).sort((a, b) => b[1] - a[1])[0] || ["–", 0];
+            info.textContent = `Loaded ${(mockStock.total || []).length} SWAG product rows.`;
             mini.innerHTML = `
-      <div class="mini-card">
-        <div class="mini-label">Total PO spend</div>
-        <div class="mini-value">SAR ${spend.toFixed(0)}</div>
-        <div class="mini-meta">Current selection</div>
-      </div>
-      <div class="mini-card">
-        <div class="mini-label">Top vendor</div>
-        <div class="mini-value">${topVendor[0]}</div>
-        <div class="mini-meta">Spend SAR ${topVendor[1].toFixed(0)}</div>
-      </div>
-    `;
-        }
+                <div class="mini-card"><div class="mini-label">Zero-stock models</div><div class="mini-value">${zero}</div><div class="mini-meta">Need purchase / transfer</div></div>
+                <div class="mini-card"><div class="mini-label">Tracked models</div><div class="mini-value">${(mockStock.total || []).length}</div><div class="mini-meta">In current view</div></div>`;
+            document.getElementById("sidebarReorderCount").textContent = (mockStock.reorder || []).length + " items";
 
-        function renderSalesTable() {
-            const headerRow = document.getElementById("tableHeaderRow");
-            const body = document.getElementById("tableBody");
-            const info = document.getElementById("infoText");
-            const mini = document.getElementById("miniGrid");
-            headerRow.innerHTML = `
-      <th>Date</th><th>SO</th><th>Customer</th><th>Model</th><th>Qty</th><th>Subtotal</th>
-    `;
-            body.innerHTML = "";
-            mini.innerHTML = "";
-            let rev = 0;
-            (mockSales || []).forEach(r => {
-                rev += Number(r.subtotal || 0);
-                const tr = document.createElement("tr");
-                tr.innerHTML = `
-        <td>${r.date}</td>
-        <td>${r.so}</td>
-        <td>${r.customer}</td>
-        <td>${r.model}</td>
-        <td>${r.qty}</td>
-        <td>${r.subtotal}</td>
-      `;
-                body.appendChild(tr);
-            });
-            info.textContent = `Loaded ${(mockSales || []).length} SWAG sales lines.`;
-            mini.innerHTML = `
-      <div class="mini-card">
-        <div class="mini-label">Revenue</div>
-        <div class="mini-value">SAR ${rev.toFixed(0)}</div>
-        <div class="mini-meta">Selected period</div>
-      </div>
-      <div class="mini-card">
-        <div class="mini-label">Sales lines</div>
-        <div class="mini-value">${(mockSales || []).length}</div>
-        <div class="mini-meta">Across models</div>
-      </div>
-    `;
-        }
-
-        function destroyCharts() {
-            [chart1, chart2, chart3, chart4].forEach(c => c && c.destroy());
-            chart1 = chart2 = chart3 = chart4 = null;
-        }
-
-        function buildStockCharts() {
-            destroyCharts();
-            const ctx1 = document.getElementById("chart1").getContext("2d");
-            const ctx2 = document.getElementById("chart2").getContext("2d");
-            const ctx3 = document.getElementById("chart3").getContext("2d");
-            const ctx4 = document.getElementById("chart4").getContext("2d");
-
-            document.getElementById("chart1Title").textContent = "Category wise stock";
-            document.getElementById("chart1Sub").textContent = "On-hand quantity by category.";
-            document.getElementById("chart2Title").textContent = "Brand share";
-            document.getElementById("chart2Sub").textContent = "Stock distribution by brand.";
-            document.getElementById("chart3Title").textContent = "Branch coverage";
-            document.getElementById("chart3Sub").textContent = "Total stock by branch.";
-            document.getElementById("chart4Title").textContent = "Sales trend";
-            document.getElementById("chart4Sub").textContent = "Sales amount over days.";
-
-            const totalsByCat = {};
-            (mockStock.total || []).forEach(r => {
-                totalsByCat[r.category] = (totalsByCat[r.category] || 0) + Number(r.on_hand || 0);
-            });
-            const catLabels = Object.keys(totalsByCat);
-            const catData = catLabels.map(l => totalsByCat[l]);
-
-            chart1 = new Chart(ctx1, {
-                type: "bar",
-                data: {
-                    labels: catLabels,
-                    datasets: [{
-                        label: "On hand",
-                        data: catData,
-                        backgroundColor: ["#60a5fa", "#34d399", "#fbbf24", "#f97316"],
-                        borderRadius: 6,
-                        maxBarThickness: 40,
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: { legend: { display: false } },
-                    scales: {
-                        x: { ticks: { color: "#6b7280", font: { size: 11 } }, grid: { display: false } },
-                        y: { ticks: { color: "#9ca3af", font: { size: 10 } }, grid: { color: "#e5e7eb" } }
-                    }
-                }
-            });
-
-            const totalsByBrand = {};
-            (mockStock.total || []).forEach(r => {
-                totalsByBrand[r.brand] = (totalsByBrand[r.brand] || 0) + Number(r.on_hand || 0);
-            });
-            const brandLabels = Object.keys(totalsByBrand);
-            const brandData = brandLabels.map(l => totalsByBrand[l]);
-
-            chart2 = new Chart(ctx2, {
-                type: "doughnut",
-                data: {
-                    labels: brandLabels,
-                    datasets: [{
-                        data: brandData,
-                        backgroundColor: ["#3b82f6", "#22c55e", "#f97316", "#a855f7"],
-                        borderWidth: 1,
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: { position: "bottom", labels: { font: { size: 10 } } }
-                    },
-                    cutout: "60%"
-                }
-            });
-
-            const totalsByBranch = {};
+        } else if (currentStockTab === "branch") {
+            headerRow.innerHTML = `<th>Branch</th><th>Model</th><th>Brand</th><th>Category</th><th>On&nbsp;hand</th>`;
             (mockStock.branch || []).forEach(r => {
-                totalsByBranch[r.branch] = (totalsByBranch[r.branch] || 0) + Number(r.on_hand || 0);
+                const tr = document.createElement("tr");
+                tr.innerHTML = `<td>${r.branch}</td><td>${r.model}</td><td>${r.brand}</td><td>${r.category}</td><td>${r.on_hand}</td>`;
+                body.appendChild(tr);
             });
-            const branchLabels = Object.keys(totalsByBranch);
-            const branchData = branchLabels.map(l => totalsByBranch[l]);
-
-            chart3 = new Chart(ctx3, {
-                type: "bar",
-                data: {
-                    labels: branchLabels,
-                    datasets: [{
-                        label: "On hand",
-                        data: branchData,
-                        backgroundColor: "#0ea5e9",
-                        borderRadius: 6,
-                        maxBarThickness: 40,
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: { legend: { display: false } },
-                    scales: {
-                        x: { ticks: { color: "#6b7280", font: { size: 11 } }, grid: { display: false } },
-                        y: { ticks: { color: "#9ca3af", font: { size: 10 } }, grid: { color: "#e5e7eb" } }
-                    }
-                }
+            info.textContent = `Loaded ${(mockStock.branch || []).length} SWAG branch rows.`;
+            const perBranch = {};
+            (mockStock.branch || []).forEach(r => {
+                perBranch[r.branch] = (perBranch[r.branch] || 0) + Number(r.on_hand || 0);
             });
+            const arr = Object.entries(perBranch).sort((a, b) => b[1] - a[1]);
+            const top = arr[0] || ["–", 0];
+            mini.innerHTML = `
+                <div class="mini-card"><div class="mini-label">Top branch</div><div class="mini-value">${top[0]}</div><div class="mini-meta">Qty ${top[1]}</div></div>
+                <div class="mini-card"><div class="mini-label">Branches</div><div class="mini-value">${arr.length}</div><div class="mini-meta">Active in sample</div></div>`;
 
-            const labels = (mockSales || []).map(r => r.date);
-            const data = (mockSales || []).map(r => Number(r.subtotal || 0));
-
-            chart4 = new Chart(ctx4, {
-                type: "line",
-                data: {
-                    labels,
-                    datasets: [{
-                        label: "Sales",
-                        data,
-                        borderColor: "#22c55e",
-                        backgroundColor: "rgba(34,197,94,0.15)",
-                        tension: 0.3,
-                        fill: true,
-                        pointRadius: 3,
-                        pointBackgroundColor: "#22c55e",
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: { legend: { display: false } },
-                    scales: {
-                        x: { ticks: { color: "#6b7280", font: { size: 11 } }, grid: { display: false } },
-                        y: { ticks: { color: "#9ca3af", font: { size: 10 } }, grid: { color: "#e5e7eb" } }
-                    }
-                }
+        } else {
+            // Reorder tab — with estimate columns
+            headerRow.innerHTML = `
+                <th>Model</th><th>Product</th><th>Brand</th><th>On&nbsp;hand</th>
+                <th>Sold&nbsp;30d</th><th>Vel/day</th><th>Days&nbsp;left</th>
+                <th>Suggest</th><th>Priority</th>`;
+            let crit = 0;
+            (mockStock.reorder || []).forEach(r => {
+                if (r.priority === "Critical") crit++;
+                const tr = document.createElement("tr");
+                tr.innerHTML = `
+                    <td>${r.model}</td>
+                    <td>${r.product}</td>
+                    <td>${r.brand}</td>
+                    <td>${r.on_hand}</td>
+                    <td>${r.sold_30d ?? 0}</td>
+                    <td>${r.daily_velocity ?? 0}</td>
+                    <td>${daysLeftPill(r.days_left)}</td>
+                    <td>${r.suggest}</td>
+                    <td>${r.priority === "Critical"
+                        ? '<span class="pill-danger">Critical</span>'
+                        : '<span class="pill-soft">' + r.priority + '</span>'}</td>`;
+                body.appendChild(tr);
             });
+            info.textContent = `Loaded ${(mockStock.reorder || []).length} reorder candidates.`;
+            mini.innerHTML = `
+                <div class="mini-card"><div class="mini-label">Items to reorder</div><div class="mini-value">${(mockStock.reorder || []).length}</div><div class="mini-meta">Based on current rule</div></div>
+                <div class="mini-card"><div class="mini-label">Critical priority</div><div class="mini-value">${crit}</div><div class="mini-meta">Immediate PO suggestion</div></div>`;
+            document.getElementById("sidebarReorderCount").textContent = (mockStock.reorder || []).length + " items";
         }
+    }
 
-        function buildPurchaseCharts() {
-            destroyCharts();
+    // ═══════════════════════════════════════════════════════
+    // PURCHASE TABLE — WITH ESTIMATE COLUMNS (same as stock)
+    // ═══════════════════════════════════════════════════════
+    function renderPurchaseTable() {
+        const headerRow = document.getElementById("tableHeaderRow");
+        const body = document.getElementById("tableBody");
+        const info = document.getElementById("infoText");
+        const mini = document.getElementById("miniGrid");
+        body.innerHTML = ""; mini.innerHTML = "";
 
-            document.getElementById("chart1Title").textContent = "Top vendors";
-            document.getElementById("chart1Sub").textContent = "Purchase subtotal by vendor.";
-            document.getElementById("chart2Title").textContent = "Purchase category";
-            document.getElementById("chart2Sub").textContent = "Quantity by category.";
-            document.getElementById("chart3Title").textContent = "Daily purchase spend";
-            document.getElementById("chart3Sub").textContent = "Date wise purchase amount.";
-            document.getElementById("chart4Title").textContent = "Top PO models";
-            document.getElementById("chart4Sub").textContent = "Most purchased models by qty.";
+        // Headers now include estimate fields
+        headerRow.innerHTML = `
+            <th>Date</th><th>PO</th><th>Vendor</th><th>Brand</th><th>Category</th>
+            <th>Model</th><th>Qty</th><th>Subtotal</th>
+            <th>On&nbsp;hand</th><th>Sold&nbsp;30d</th><th>Vel/day</th>
+            <th>Days&nbsp;left</th><th>PO&nbsp;covers</th>`;
 
-            const rows = mockPurchase || [];
+        const rows = mockPurchase.purchases || [];
+        let spend = 0;
+        const byVendor = {};
+        let criticalCount = 0;
 
-            const byVendor = {};
-            const byCat = {};
-            const spendByDate = {};
-            const qtyByModel = {};
+        rows.forEach(r => {
+            spend += Number(r.subtotal || 0);
+            byVendor[r.vendor] = (byVendor[r.vendor] || 0) + Number(r.subtotal || 0);
 
-            rows.forEach(r => {
-                const vendor = r.vendor || "Unknown";
-                const cat = r.category || "Unknown";
-                const date = r.date || "Unknown";
-                const model = r.model || "Unknown";
-                const qty = Number(r.qty || 0);
-                const amount = Number(r.subtotal || 0);
+            const daysLeft = r.days_left;
+            const dNum = (daysLeft !== "∞" && daysLeft != null) ? parseFloat(daysLeft) : 9999;
+            if (dNum < 7) criticalCount++;
 
-                byVendor[vendor] = (byVendor[vendor] || 0) + amount;
-                byCat[cat] = (byCat[cat] || 0) + qty;
-                spendByDate[date] = (spendByDate[date] || 0) + amount;
-                qtyByModel[model] = (qtyByModel[model] || 0) + qty;
-            });
-
-            const vendorEntries = Object.entries(byVendor).sort((a, b) => b[1] - a[1]).slice(0, 6);
-            const vendorLabels = vendorEntries.map(v => v[0]);
-            const vendorData = vendorEntries.map(v => v[1]);
-
-            chart1 = new Chart(document.getElementById("chart1").getContext("2d"), {
-                type: "bar",
-                data: {
-                    labels: vendorLabels,
-                    datasets: [{
-                        label: "PO amount",
-                        data: vendorData,
-                        backgroundColor: PALETTE.map(c => c + "99"),
-                        borderColor: PALETTE,
-                        borderWidth: 1,
-                        borderRadius: 6,
-                        maxBarThickness: 40,
-                    }]
-                },
-                options: darkBarOptions(false)
-            });
-
-            const catEntries = Object.entries(byCat).sort((a, b) => b[1] - a[1]).slice(0, 6);
-            const catLabels = catEntries.map(c => c[0]);
-            const catData = catEntries.map(c => c[1]);
-
-            chart2 = new Chart(document.getElementById("chart2").getContext("2d"), {
-                type: "doughnut",
-                data: {
-                    labels: catLabels,
-                    datasets: [{
-                        data: catData,
-                        backgroundColor: PALETTE.map(c => c + "bb"),
-                        borderColor: PALETTE,
-                        borderWidth: 1,
-                        hoverOffset: 10,
-                    }]
-                },
-                options: darkDoughnutOptions()
-            });
-
-            const dateLabels = Object.keys(spendByDate).sort();
-            const spendData = dateLabels.map(d => spendByDate[d]);
-
-            chart3 = new Chart(document.getElementById("chart3").getContext("2d"), {
-                type: "line",
-                data: {
-                    labels: dateLabels,
-                    datasets: [{
-                        label: "PO amount",
-                        data: spendData,
-                        borderColor: "#10b981",
-                        backgroundColor: "rgba(16,185,129,0.14)",
-                        tension: 0.35,
-                        fill: true,
-                        pointRadius: 3,
-                        pointBackgroundColor: "#10b981",
-                        pointBorderColor: "#0b1120",
-                        pointBorderWidth: 2,
-                    }]
-                },
-                options: darkLineOptions()
-            });
-
-            const modelEntries = Object.entries(qtyByModel).sort((a, b) => b[1] - a[1]).slice(0, 8);
-            const modelLabels = modelEntries.map(m => m[0]);
-            const modelData = modelEntries.map(m => m[1]);
-
-            chart4 = new Chart(document.getElementById("chart4").getContext("2d"), {
-                type: "bar",
-                data: {
-                    labels: modelLabels,
-                    datasets: [{
-                        label: "Qty",
-                        data: modelData,
-                        backgroundColor: "rgba(245,158,11,0.6)",
-                        borderColor: "#f59e0b",
-                        borderWidth: 1,
-                        borderRadius: 6,
-                        maxBarThickness: 36,
-                    }]
-                },
-                options: darkBarOptions(false)
-            });
-        }
-
-        function buildSalesCharts() {
-            destroyCharts();
-            const ctx1 = document.getElementById("chart1").getContext("2d");
-            const ctx2 = document.getElementById("chart2").getContext("2d");
-            const ctx3 = document.getElementById("chart3").getContext("2d");
-            const ctx4 = document.getElementById("chart4").getContext("2d");
-
-            document.getElementById("chart1Title").textContent = "Top models by sales";
-            document.getElementById("chart1Sub").textContent = "Qty sold per model.";
-            document.getElementById("chart2Title").textContent = "Sales by day";
-            document.getElementById("chart2Sub").textContent = "Daily revenue line chart.";
-            document.getElementById("chart3Title").textContent = "Customer mix";
-            document.getElementById("chart3Sub").textContent = "Revenue by customer.";
-            document.getElementById("chart4Title").textContent = "Units vs amount";
-            document.getElementById("chart4Sub").textContent = "Compare sales quantity and value.";
-
-            const qtyByModel = {};
-            (mockSales || []).forEach(r => {
-                qtyByModel[r.model] = (qtyByModel[r.model] || 0) + Number(r.qty || 0);
-            });
-            const modelLabels = Object.keys(qtyByModel);
-            const modelQty = modelLabels.map(l => qtyByModel[l]);
-
-            chart1 = new Chart(ctx1, {
-                type: "bar",
-                data: {
-                    labels: modelLabels,
-                    datasets: [{
-                        label: "Qty sold",
-                        data: modelQty,
-                        backgroundColor: ["#f97316", "#22c55e"],
-                        borderRadius: 6,
-                        maxBarThickness: 40,
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: { legend: { display: false } },
-                    scales: {
-                        x: { ticks: { color: "#6b7280", font: { size: 11 } }, grid: { display: false } },
-                        y: { ticks: { color: "#9ca3af", font: { size: 10 } }, grid: { color: "#e5e7eb" } }
-                    }
-                }
-            });
-
-            const dailySales = {};
-            (mockSales || []).forEach(r => {
-                dailySales[r.date] = (dailySales[r.date] || 0) + Number(r.subtotal || 0);
-            });
-            const dateLabels = Object.keys(dailySales);
-            const revData = dateLabels.map(l => dailySales[l]);
-
-            chart2 = new Chart(ctx2, {
-                type: "line",
-                data: {
-                    labels: dateLabels,
-                    datasets: [{
-                        label: "Revenue",
-                        data: revData,
-                        borderColor: "#22c55e",
-                        backgroundColor: "rgba(34,197,94,0.15)",
-                        tension: 0.3,
-                        fill: true,
-                        pointRadius: 3,
-                        pointBackgroundColor: "#22c55e",
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: { legend: { display: false } },
-                    scales: {
-                        x: { ticks: { color: "#6b7280", font: { size: 11 } }, grid: { display: false } },
-                        y: { ticks: { color: "#9ca3af", font: { size: 10 } }, grid: { color: "#e5e7eb" } }
-                    }
-                }
-            });
-
-            const revByCustomer = {};
-            (mockSales || []).forEach(r => {
-                revByCustomer[r.customer] = (revByCustomer[r.customer] || 0) + Number(r.subtotal || 0);
-            });
-            const custLabels = Object.keys(revByCustomer);
-            const custData = custLabels.map(l => revByCustomer[l]);
-
-            chart3 = new Chart(ctx3, {
-                type: "doughnut",
-                data: {
-                    labels: custLabels,
-                    datasets: [{
-                        data: custData,
-                        backgroundColor: ["#3b82f6", "#22c55e", "#f97316", "#a855f7"],
-                        borderWidth: 1,
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: { position: "bottom", labels: { font: { size: 10 } } }
-                    },
-                    cutout: "60%"
-                }
-            });
-
-            const qtyByDate = {};
-            (mockSales || []).forEach(r => {
-                qtyByDate[r.date] = (qtyByDate[r.date] || 0) + Number(r.qty || 0);
-            });
-            const qtyData = dateLabels.map(l => qtyByDate[l]);
-
-            chart4 = new Chart(ctx4, {
-                type: "bar",
-                data: {
-                    labels: dateLabels,
-                    datasets: [
-                        {
-                            label: "Qty",
-                            data: qtyData,
-                            backgroundColor: "rgba(14,165,233,0.8)",
-                            borderRadius: 5,
-                            maxBarThickness: 28,
-                        },
-                        {
-                            label: "Amount",
-                            data: revData,
-                            backgroundColor: "rgba(234,179,8,0.8)",
-                            borderRadius: 5,
-                            maxBarThickness: 28,
-                        }
-                    ]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: { legend: { position: "bottom" } },
-                    scales: {
-                        x: { ticks: { color: "#6b7280", font: { size: 11 } }, grid: { display: false } },
-                        y: { ticks: { color: "#9ca3af", font: { size: 10 } }, grid: { color: "#e5e7eb" } }
-                    }
-                }
-            });
-        }
-
-        function initWithStock() {
-            renderKpisStock();
-            renderStockTable();
-            buildStockCharts();
-        }
-
-        document.querySelectorAll(".nav-item").forEach(btn => {
-            btn.addEventListener("click", () => {
-                document.querySelectorAll(".nav-item").forEach(b => b.classList.remove("active"));
-                btn.classList.add("active");
-                currentView = btn.dataset.view;
-
-                const tabs = document.getElementById("stockTabs");
-                const filters = document.getElementById("filterRow");
-                const heroTitle = document.getElementById("heroTitle");
-                const heroSub = document.getElementById("heroSub");
-                const panelTitle = document.getElementById("panelTitle");
-                const panelSub = document.getElementById("panelSub");
-
-                if (currentView === "stock") {
-                    tabs.style.display = "inline-flex";
-                    filters.style.display = "flex";
-                    heroTitle.textContent = "SWAG stock overview";
-                    heroSub.textContent = "Live picture of SWAG inventory health and low stock.";
-                    panelTitle.textContent = "Product search and filters";
-                    panelSub.textContent = "Search SWAG models and review stock / reorder.";
-                    renderKpisStock();
-                    renderStockTable();
-                    buildStockCharts();
-                } else if (currentView === "purchase") {
-                    tabs.style.display = "none";
-                    filters.style.display = "none";
-                    heroTitle.textContent = "SWAG purchase analytics";
-                    heroSub.textContent = "See how much you’re buying, from whom, and in which categories.";
-                    panelTitle.textContent = "Purchase detail";
-                    panelSub.textContent = "PO data via SWAG backend.";
-                    renderKpisPurchase();
-                    renderPurchaseTable();
-                    buildPurchaseCharts();
-                } else {
-                    tabs.style.display = "none";
-                    filters.style.display = "none";
-                    heroTitle.textContent = "SWAG sales analytics";
-                    heroSub.textContent = "Understand which models and customers drive revenue.";
-                    panelTitle.textContent = "Sales detail";
-                    panelSub.textContent = "SO data via SWAG backend.";
-                    renderKpisSales();
-                    renderSalesTable();
-                    buildSalesCharts();
-                }
-            });
+            const tr = document.createElement("tr");
+            tr.innerHTML = `
+                <td>${r.date}</td>
+                <td>${r.po}</td>
+                <td>${r.vendor}</td>
+                <td>${r.brand}</td>
+                <td>${r.category}</td>
+                <td>${r.model}</td>
+                <td>${r.qty}</td>
+                <td>SAR ${Number(r.subtotal || 0).toFixed(0)}</td>
+                <td>${r.on_hand ?? 0}</td>
+                <td>${r.sold_30d ?? 0}</td>
+                <td>${r.daily_velocity ?? 0}</td>
+                <td>${daysLeftPill(r.days_left)}</td>
+                <td>${r.days_cover_by_po === "∞" || r.days_cover_by_po == null
+                    ? '<span class="pill-soft">∞ days</span>'
+                    : `<span class="pill-ok">${r.days_cover_by_po}d</span>`}</td>`;
+            body.appendChild(tr);
         });
 
-        document.querySelectorAll(".view-tab-btn").forEach(btn => {
-            btn.addEventListener("click", () => {
-                document.querySelectorAll(".view-tab-btn").forEach(b => b.classList.remove("active"));
-                btn.classList.add("active");
-                currentStockTab = btn.dataset.tab;
-                if (currentView === "stock") renderStockTable();
-            });
+        info.textContent = `Loaded ${rows.length} SWAG purchase lines.`;
+        const topVendor = Object.entries(byVendor).sort((a, b) => b[1] - a[1])[0] || ["–", 0];
+        mini.innerHTML = `
+            <div class="mini-card">
+                <div class="mini-label">Total PO spend</div>
+                <div class="mini-value">SAR ${spend.toFixed(0)}</div>
+                <div class="mini-meta">Current selection</div>
+            </div>
+            <div class="mini-card">
+                <div class="mini-label">Top vendor</div>
+                <div class="mini-value">${topVendor[0]}</div>
+                <div class="mini-meta">Spend SAR ${Number(topVendor[1]).toFixed(0)}</div>
+            </div>
+            <div class="mini-card">
+                <div class="mini-label">Critical stock items</div>
+                <div class="mini-value" style="color:#dc2626">${criticalCount}</div>
+                <div class="mini-meta">Days left &lt; 7</div>
+            </div>
+            <div class="mini-card">
+                <div class="mini-label">Top vendor</div>
+                <div class="mini-value">${mockPurchase.summary?.top_vendor || "—"}</div>
+                <div class="mini-meta">By spend</div>
+            </div>`;
+    }
+
+    // ═══════════════════════════════════════════════════════
+    // SALES TABLE — WITH ESTIMATE COLUMNS (same as stock)
+    // ═══════════════════════════════════════════════════════
+    function renderSalesTable() {
+        const headerRow = document.getElementById("tableHeaderRow");
+        const body = document.getElementById("tableBody");
+        const info = document.getElementById("infoText");
+        const mini = document.getElementById("miniGrid");
+        body.innerHTML = ""; mini.innerHTML = "";
+
+        // Headers now include estimate fields
+        headerRow.innerHTML = `
+            <th>Date</th><th>SO</th><th>Customer</th><th>Brand</th><th>Category</th>
+            <th>Model</th><th>Qty</th><th>Subtotal</th>
+            <th>On&nbsp;hand</th><th>Sold&nbsp;30d</th><th>Vel/day</th>
+            <th>Days&nbsp;left</th>`;
+
+        const rows = mockSales.sales || [];
+        let rev = 0;
+        let criticalCount = 0;
+        const byCustomer = {};
+
+        rows.forEach(r => {
+            rev += Number(r.subtotal || 0);
+            byCustomer[r.customer] = (byCustomer[r.customer] || 0) + Number(r.subtotal || 0);
+
+            const daysLeft = r.days_left;
+            const dNum = (daysLeft !== "∞" && daysLeft != null) ? parseFloat(daysLeft) : 9999;
+            if (dNum < 7) criticalCount++;
+
+            const tr = document.createElement("tr");
+            tr.innerHTML = `
+                <td>${r.date}</td>
+                <td>${r.so}</td>
+                <td>${r.customer}</td>
+                <td>${r.brand}</td>
+                <td>${r.category}</td>
+                <td>${r.model}</td>
+                <td>${r.qty}</td>
+                <td>SAR ${Number(r.subtotal || 0).toFixed(0)}</td>
+                <td>${r.on_hand ?? 0}</td>
+                <td>${r.sold_30d ?? 0}</td>
+                <td>${r.daily_velocity ?? 0}</td>
+                <td>${daysLeftPill(r.days_left)}</td>`;
+            body.appendChild(tr);
         });
 
-        document.getElementById("searchBtn").addEventListener("click", () => {
+        info.textContent = `Loaded ${rows.length} SWAG sales lines.`;
+        const topCustomer = Object.entries(byCustomer).sort((a, b) => b[1] - a[1])[0] || ["–", 0];
+        mini.innerHTML = `
+            <div class="mini-card">
+                <div class="mini-label">Revenue</div>
+                <div class="mini-value">SAR ${rev.toFixed(0)}</div>
+                <div class="mini-meta">Selected period</div>
+            </div>
+            <div class="mini-card">
+                <div class="mini-label">Top customer</div>
+                <div class="mini-value">${topCustomer[0]}</div>
+                <div class="mini-meta">SAR ${Number(topCustomer[1]).toFixed(0)}</div>
+            </div>
+            <div class="mini-card">
+                <div class="mini-label">Critical stock items</div>
+                <div class="mini-value" style="color:#dc2626">${criticalCount}</div>
+                <div class="mini-meta">Days left &lt; 7</div>
+            </div>
+            <div class="mini-card">
+                <div class="mini-label">Sales lines</div>
+                <div class="mini-value">${rows.length}</div>
+                <div class="mini-meta">Across models</div>
+            </div>`;
+    }
+
+    function destroyCharts() {
+        [chart1, chart2, chart3, chart4].forEach(c => c && c.destroy());
+        chart1 = chart2 = chart3 = chart4 = null;
+    }
+
+    // ═══════════════════════════════════════════════════════
+    // STOCK CHARTS
+    // ═══════════════════════════════════════════════════════
+    function buildStockCharts() {
+        destroyCharts();
+        const ctx1 = document.getElementById("chart1").getContext("2d");
+        const ctx2 = document.getElementById("chart2").getContext("2d");
+        const ctx3 = document.getElementById("chart3").getContext("2d");
+        const ctx4 = document.getElementById("chart4").getContext("2d");
+
+        document.getElementById("chart1Title").textContent = "Category wise stock";
+        document.getElementById("chart1Sub").textContent = "On-hand quantity by category.";
+        document.getElementById("chart2Title").textContent = "Brand share";
+        document.getElementById("chart2Sub").textContent = "Stock distribution by brand.";
+        document.getElementById("chart3Title").textContent = "Branch coverage";
+        document.getElementById("chart3Sub").textContent = "Total stock by branch.";
+        document.getElementById("chart4Title").textContent = "Days left by brand";
+        document.getElementById("chart4Sub").textContent = "Avg days remaining per brand.";
+
+        const totalsByCat = {};
+        (mockStock.total || []).forEach(r => {
+            totalsByCat[r.category] = (totalsByCat[r.category] || 0) + Number(r.on_hand || 0);
+        });
+        const catLabels = Object.keys(totalsByCat);
+        const catData = catLabels.map(l => totalsByCat[l]);
+
+        chart1 = new Chart(ctx1, {
+            type: "bar",
+            data: { labels: catLabels, datasets: [{ label: "On hand", data: catData, backgroundColor: ["#60a5fa","#34d399","#fbbf24","#f97316"], borderRadius: 6, maxBarThickness: 40 }] },
+            options: lightBarOptions()
+        });
+
+        const totalsByBrand = {};
+        (mockStock.total || []).forEach(r => {
+            totalsByBrand[r.brand] = (totalsByBrand[r.brand] || 0) + Number(r.on_hand || 0);
+        });
+        chart2 = new Chart(ctx2, {
+            type: "doughnut",
+            data: { labels: Object.keys(totalsByBrand), datasets: [{ data: Object.values(totalsByBrand), backgroundColor: ["#3b82f6","#22c55e","#f97316","#a855f7"], borderWidth: 1 }] },
+            options: lightDoughnutOptions()
+        });
+
+        const totalsByBranch = {};
+        (mockStock.branch || []).forEach(r => {
+            totalsByBranch[r.branch] = (totalsByBranch[r.branch] || 0) + Number(r.on_hand || 0);
+        });
+        chart3 = new Chart(ctx3, {
+            type: "bar",
+            data: { labels: Object.keys(totalsByBranch), datasets: [{ label: "On hand", data: Object.values(totalsByBranch), backgroundColor: "#0ea5e9", borderRadius: 6, maxBarThickness: 40 }] },
+            options: lightBarOptions()
+        });
+
+        // Chart 4: Days left by brand (estimate chart)
+        const daysByBrand = {};
+        const countByBrand = {};
+        (mockStock.total || []).forEach(r => {
+            const d = r.days_left;
+            if (d !== "∞" && d != null) {
+                daysByBrand[r.brand] = (daysByBrand[r.brand] || 0) + parseFloat(d);
+                countByBrand[r.brand] = (countByBrand[r.brand] || 0) + 1;
+            }
+        });
+        const brandAvgDays = Object.keys(daysByBrand).map(b => ({ brand: b, avg: daysByBrand[b] / countByBrand[b] }));
+        brandAvgDays.sort((a, b) => a.avg - b.avg);
+        chart4 = new Chart(ctx4, {
+            type: "bar",
+            data: {
+                labels: brandAvgDays.map(b => b.brand),
+                datasets: [{ label: "Avg days left", data: brandAvgDays.map(b => b.avg.toFixed(1)),
+                    backgroundColor: brandAvgDays.map(b => b.avg < 7 ? "#ef4444" : b.avg < 14 ? "#f59e0b" : "#22c55e"),
+                    borderRadius: 6, maxBarThickness: 40 }]
+            },
+            options: lightBarOptions()
+        });
+    }
+
+    // ═══════════════════════════════════════════════════════
+    // PURCHASE CHARTS — estimate-aware
+    // ═══════════════════════════════════════════════════════
+    function buildPurchaseCharts() {
+        destroyCharts();
+        document.getElementById("chart1Title").textContent = "Top vendors";
+        document.getElementById("chart1Sub").textContent = "Purchase subtotal by vendor.";
+        document.getElementById("chart2Title").textContent = "Purchase category";
+        document.getElementById("chart2Sub").textContent = "Quantity by category.";
+        document.getElementById("chart3Title").textContent = "Daily purchase spend";
+        document.getElementById("chart3Sub").textContent = "Date wise purchase amount.";
+        document.getElementById("chart4Title").textContent = "Stock days left (purchased items)";
+        document.getElementById("chart4Sub").textContent = "Days of stock remaining per model.";
+
+        const rows = mockPurchase.purchases || [];
+        const byVendor = {}, byCat = {}, spendByDate = {}, daysByModel = {};
+
+        rows.forEach(r => {
+            const vendor = r.vendor || "Unknown";
+            const cat = r.category || "Unknown";
+            const date = r.date || "Unknown";
+            const model = r.model || "Unknown";
+            byVendor[vendor] = (byVendor[vendor] || 0) + Number(r.subtotal || 0);
+            byCat[cat] = (byCat[cat] || 0) + Number(r.qty || 0);
+            spendByDate[date] = (spendByDate[date] || 0) + Number(r.subtotal || 0);
+            // Estimate: days left per model (take first seen value)
+            if (r.days_left !== "∞" && r.days_left != null && !daysByModel[model]) {
+                daysByModel[model] = parseFloat(r.days_left);
+            }
+        });
+
+        const vendorEntries = Object.entries(byVendor).sort((a, b) => b[1] - a[1]).slice(0, 6);
+        chart1 = new Chart(document.getElementById("chart1").getContext("2d"), {
+            type: "bar",
+            data: { labels: vendorEntries.map(v => v[0]), datasets: [{ label: "PO amount", data: vendorEntries.map(v => v[1]), backgroundColor: PALETTE.map(c => c + "99"), borderColor: PALETTE, borderWidth: 1, borderRadius: 6, maxBarThickness: 40 }] },
+            options: darkBarOptions()
+        });
+
+        const catEntries = Object.entries(byCat).sort((a, b) => b[1] - a[1]).slice(0, 6);
+        chart2 = new Chart(document.getElementById("chart2").getContext("2d"), {
+            type: "doughnut",
+            data: { labels: catEntries.map(c => c[0]), datasets: [{ data: catEntries.map(c => c[1]), backgroundColor: PALETTE.map(c => c + "bb"), borderColor: PALETTE, borderWidth: 1, hoverOffset: 10 }] },
+            options: darkDoughnutOptions()
+        });
+
+        const dateLabels = Object.keys(spendByDate).sort();
+        chart3 = new Chart(document.getElementById("chart3").getContext("2d"), {
+            type: "line",
+            data: { labels: dateLabels, datasets: [{ label: "PO amount", data: dateLabels.map(d => spendByDate[d]), borderColor: "#10b981", backgroundColor: "rgba(16,185,129,0.14)", tension: 0.35, fill: true, pointRadius: 3, pointBackgroundColor: "#10b981" }] },
+            options: darkLineOptions()
+        });
+
+        // Chart 4: Days left by model (estimate) — color-coded same as stock
+        const modelDaysEntries = Object.entries(daysByModel).sort((a, b) => a[1] - b[1]).slice(0, 10);
+        chart4 = new Chart(document.getElementById("chart4").getContext("2d"), {
+            type: "bar",
+            data: {
+                labels: modelDaysEntries.map(m => m[0]),
+                datasets: [{
+                    label: "Days left",
+                    data: modelDaysEntries.map(m => m[1]),
+                    backgroundColor: modelDaysEntries.map(m => m[1] < 7 ? "#ef4444" : m[1] < 14 ? "#f59e0b" : "#22c55e"),
+                    borderRadius: 6, maxBarThickness: 36
+                }]
+            },
+            options: darkBarOptions()
+        });
+    }
+
+    // ═══════════════════════════════════════════════════════
+    // SALES CHARTS — estimate-aware
+    // ═══════════════════════════════════════════════════════
+    function buildSalesCharts() {
+        destroyCharts();
+        document.getElementById("chart1Title").textContent = "Top models by sales";
+        document.getElementById("chart1Sub").textContent = "Qty sold per model.";
+        document.getElementById("chart2Title").textContent = "Sales by day";
+        document.getElementById("chart2Sub").textContent = "Daily revenue line chart.";
+        document.getElementById("chart3Title").textContent = "Customer mix";
+        document.getElementById("chart3Sub").textContent = "Revenue by customer.";
+        document.getElementById("chart4Title").textContent = "Stock days left (sold items)";
+        document.getElementById("chart4Sub").textContent = "Days of stock remaining per model.";
+
+        const rows = mockSales.sales || [];
+        const qtyByModel = {}, dailySales = {}, revByCustomer = {}, qtyByDate = {}, daysByModel = {};
+
+        rows.forEach(r => {
+            qtyByModel[r.model] = (qtyByModel[r.model] || 0) + Number(r.qty || 0);
+            dailySales[r.date] = (dailySales[r.date] || 0) + Number(r.subtotal || 0);
+            revByCustomer[r.customer] = (revByCustomer[r.customer] || 0) + Number(r.subtotal || 0);
+            qtyByDate[r.date] = (qtyByDate[r.date] || 0) + Number(r.qty || 0);
+            if (r.days_left !== "∞" && r.days_left != null && !daysByModel[r.model]) {
+                daysByModel[r.model] = parseFloat(r.days_left);
+            }
+        });
+
+        const modelLabels = Object.keys(qtyByModel);
+        chart1 = new Chart(document.getElementById("chart1").getContext("2d"), {
+            type: "bar",
+            data: { labels: modelLabels, datasets: [{ label: "Qty sold", data: modelLabels.map(l => qtyByModel[l]), backgroundColor: ["#f97316","#22c55e"], borderRadius: 6, maxBarThickness: 40 }] },
+            options: lightBarOptions()
+        });
+
+        const dateLabels = Object.keys(dailySales).sort();
+        const revData = dateLabels.map(l => dailySales[l]);
+        chart2 = new Chart(document.getElementById("chart2").getContext("2d"), {
+            type: "line",
+            data: { labels: dateLabels, datasets: [{ label: "Revenue", data: revData, borderColor: "#22c55e", backgroundColor: "rgba(34,197,94,0.15)", tension: 0.3, fill: true, pointRadius: 3, pointBackgroundColor: "#22c55e" }] },
+            options: lightLineOptions()
+        });
+
+        const custLabels = Object.keys(revByCustomer);
+        chart3 = new Chart(document.getElementById("chart3").getContext("2d"), {
+            type: "doughnut",
+            data: { labels: custLabels, datasets: [{ data: custLabels.map(l => revByCustomer[l]), backgroundColor: ["#3b82f6","#22c55e","#f97316","#a855f7"], borderWidth: 1 }] },
+            options: lightDoughnutOptions()
+        });
+
+        // Chart 4: Days left by model (estimate) — same logic as stock/purchase
+        const modelDaysEntries = Object.entries(daysByModel).sort((a, b) => a[1] - b[1]).slice(0, 10);
+        chart4 = new Chart(document.getElementById("chart4").getContext("2d"), {
+            type: "bar",
+            data: {
+                labels: modelDaysEntries.map(m => m[0]),
+                datasets: [{
+                    label: "Days left",
+                    data: modelDaysEntries.map(m => m[1]),
+                    backgroundColor: modelDaysEntries.map(m => m[1] < 7 ? "#ef4444" : m[1] < 14 ? "#f59e0b" : "#22c55e"),
+                    borderRadius: 6, maxBarThickness: 36
+                }]
+            },
+            options: lightBarOptions()
+        });
+    }
+
+    function initWithStock() {
+        renderKpisStock();
+        renderStockTable();
+        buildStockCharts();
+    }
+
+    // Navigation
+    document.querySelectorAll(".nav-item").forEach(btn => {
+        btn.addEventListener("click", () => {
+            document.querySelectorAll(".nav-item").forEach(b => b.classList.remove("active"));
+            btn.classList.add("active");
+            currentView = btn.dataset.view;
+
+            const tabs = document.getElementById("stockTabs");
+            const filters = document.getElementById("filterRow");
+            const heroTitle = document.getElementById("heroTitle");
+            const heroSub = document.getElementById("heroSub");
+            const panelTitle = document.getElementById("panelTitle");
+            const panelSub = document.getElementById("panelSub");
+
             if (currentView === "stock") {
+                tabs.style.display = "inline-flex";
+                filters.style.display = "flex";
+                heroTitle.textContent = "SWAG stock overview";
+                heroSub.textContent = "Live picture of SWAG inventory health and low stock.";
+                panelTitle.textContent = "Product search and filters";
+                panelSub.textContent = "Search SWAG models and review stock / reorder.";
+                renderKpisStock();
                 renderStockTable();
                 buildStockCharts();
             } else if (currentView === "purchase") {
+                tabs.style.display = "none";
+                filters.style.display = "none";
+                heroTitle.textContent = "SWAG purchase analytics";
+                heroSub.textContent = "See how much you're buying, from whom, and days of coverage per PO.";
+                panelTitle.textContent = "Purchase detail";
+                panelSub.textContent = "PO data with stock estimates via SWAG backend.";
+                renderKpisPurchase();
                 renderPurchaseTable();
                 buildPurchaseCharts();
             } else {
+                tabs.style.display = "none";
+                filters.style.display = "none";
+                heroTitle.textContent = "SWAG sales analytics";
+                heroSub.textContent = "Understand which models drive revenue and how many days of stock remain.";
+                panelTitle.textContent = "Sales detail";
+                panelSub.textContent = "SO data with stock estimates via SWAG backend.";
+                renderKpisSales();
                 renderSalesTable();
                 buildSalesCharts();
             }
         });
+    });
 
-        function initStatic() {
-            const el = document.getElementById("dateBadge");
-            const d = new Date();
-            el.textContent = d.toLocaleString("en-GB", {
-                day: "2-digit", month: "short", year: "numeric",
-                hour: "2-digit", minute: "2-digit"
-            });
-            renderSystemStatus();
-        }
+    document.querySelectorAll(".view-tab-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+            document.querySelectorAll(".view-tab-btn").forEach(b => b.classList.remove("active"));
+            btn.classList.add("active");
+            currentStockTab = btn.dataset.tab;
+            if (currentView === "stock") renderStockTable();
+        });
+    });
 
-        initStatic();
-        loadDataFromApi();
-    </script>
+    document.getElementById("searchBtn").addEventListener("click", () => {
+        if (currentView === "stock") { renderStockTable(); buildStockCharts(); }
+        else if (currentView === "purchase") { renderPurchaseTable(); buildPurchaseCharts(); }
+        else { renderSalesTable(); buildSalesCharts(); }
+    });
+
+    function initStatic() {
+        const el = document.getElementById("dateBadge");
+        const d = new Date();
+        el.textContent = d.toLocaleString("en-GB", { day: "2-digit", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" });
+        renderSystemStatus();
+    }
+
+    initStatic();
+    loadDataFromApi();
+</script>
 </body>
-
 </html>
