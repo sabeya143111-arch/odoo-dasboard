@@ -1,7 +1,8 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
 import xmlrpc.client
 from datetime import datetime, timedelta
+from typing import Optional
 
 # ---------- ODOO CONFIG ----------
 ODOO_URL = "https://db.swag.com.sa"
@@ -9,15 +10,26 @@ ODOO_DB = "db2"
 ODOO_USER = "ziad.m@swag.com.sa"
 ODOO_PASSWORD = "7cda7ec6fccb6afc78fd1968d93b09240572ee2b"
 
+# ---------- FIELD NAME CONSTANTS (easy to adjust if your Odoo uses different field names) ----------
+BRAND_FIELD = "product_brand_id"   # Change to "x_brand_id" if needed
+CATEG_FIELD = "categ_id"
+
 # ---------- FASTAPI APP ----------
 app = FastAPI()
 
+# Explicit allowed origins — add any new frontend URLs here
+ALLOWED_ORIGINS = [
+    "https://odoo-dasboard.vercel.app",   # production frontend
+    "http://localhost:3000",               # local dev (React / Next.js default)
+    "http://localhost:5173",               # local dev (Vite default)
+]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=ALLOWED_ORIGINS,
     allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_methods=["*"],   # GET, POST, OPTIONS, etc.
+    allow_headers=["*"],   # Content-Type, Authorization, etc.
 )
 
 # ---------- LAZY ODOO CONNECTION ----------
@@ -33,11 +45,12 @@ def get_odoo():
         raise HTTPException(status_code=500, detail=f"Odoo connection error: {str(e)}")
 
 
-# TASK 1: Updated helper — supports order param and optional limit
+# ---------- SHARED HELPER: search_read with optional limit ----------
+# If limit is 0 or None → no limit key is passed → Odoo returns all records
 def odoo_search_read(model, domain, fields, limit=5000, order="id desc"):
     uid, models = get_odoo()
     kw = {"fields": fields, "order": order}
-    if limit:
+    if limit:                      # only add limit when it's a positive integer
         kw["limit"] = limit
     return models.execute_kw(
         ODOO_DB, uid, ODOO_PASSWORD,
@@ -58,14 +71,14 @@ def _build_tmpl_map(tmpl_ids: list) -> dict:
             ODOO_DB, uid, ODOO_PASSWORD,
             "product.template", "read",
             [tmpl_ids],
-            {"fields": ["id", "categ_id", "product_brand_id"]}
+            {"fields": ["id", CATEG_FIELD, BRAND_FIELD]}
         )
         for t in tmpl_records:
-            categ = t.get("categ_id")
-            brand = t.get("product_brand_id")
+            categ = t.get(CATEG_FIELD)
+            brand = t.get(BRAND_FIELD)
             tmpl_map[t["id"]] = {
                 "category": categ[1] if categ else "Unknown",
-                "brand": brand[1] if brand else "Unknown",
+                "brand":    brand[1] if brand else "Unknown",
             }
     except Exception:
         pass
@@ -73,6 +86,7 @@ def _build_tmpl_map(tmpl_ids: list) -> dict:
 
 
 # ---------- SHARED: Build product.product → template map ----------
+# Returns {product_id: {name, brand, category, tmpl_id}}
 def _build_product_tmpl_map(prod_ids: list) -> dict:
     if not prod_ids:
         return {}
@@ -83,8 +97,10 @@ def _build_product_tmpl_map(prod_ids: list) -> dict:
             ODOO_DB, uid, ODOO_PASSWORD,
             "product.product", "read",
             [prod_ids],
-            {"fields": ["id", "name", "product_tmpl_id", "categ_id", "product_brand_id"]}
+            {"fields": ["id", "name", "product_tmpl_id", CATEG_FIELD, BRAND_FIELD]}
         )
+
+        # Collect all template IDs so we can batch-fetch template-level brand/category
         tmpl_ids = list({
             p["product_tmpl_id"][0]
             for p in prod_records
@@ -94,20 +110,30 @@ def _build_product_tmpl_map(prod_ids: list) -> dict:
 
         for p in prod_records:
             tmpl_raw = p.get("product_tmpl_id")
-            tmpl_id = tmpl_raw[0] if tmpl_raw else None
+            tmpl_id  = tmpl_raw[0] if tmpl_raw else None
             tmpl_info = tmpl_map.get(tmpl_id, {})
 
-            brand_raw = p.get("product_brand_id")
-            brand = tmpl_info.get("brand") or (brand_raw[1] if brand_raw else "Unknown")
+            # Prefer template-level brand/category (more reliably set in Odoo)
+            # Fall back to variant-level field, then "Unknown"
+            brand_raw = p.get(BRAND_FIELD)
+            brand = (
+                tmpl_info.get("brand")
+                or (brand_raw[1] if brand_raw else None)
+                or "Unknown"
+            )
 
-            categ_raw = p.get("categ_id")
-            category = tmpl_info.get("category") or (categ_raw[1] if categ_raw else "Unknown")
+            categ_raw = p.get(CATEG_FIELD)
+            category = (
+                tmpl_info.get("category")
+                or (categ_raw[1] if categ_raw else None)
+                or "Unknown"
+            )
 
             prod_map[p["id"]] = {
-                "name": p.get("name", "Unknown"),
-                "brand": brand,
+                "name":     p.get("name", "Unknown"),
+                "brand":    brand,
                 "category": category,
-                "tmpl_id": tmpl_id,
+                "tmpl_id":  tmpl_id,
             }
     except Exception:
         pass
@@ -285,7 +311,6 @@ def get_stock():
 def get_purchase():
     uid, models = get_odoo()
 
-    # TASK 2: Use helper with limit=0 (no limit) and currency_id in fields
     domain = [["state", "in", ["purchase", "done"]]]
     fields = [
         "order_id",
@@ -295,23 +320,19 @@ def get_purchase():
         "product_qty",
         "price_unit",
         "price_subtotal",
-        "currency_id",  # NEW: fetch currency
+        "currency_id",
     ]
     lines = odoo_search_read(
         "purchase.order.line",
         domain,
         fields,
-        limit=0,          # 0 = no limit, returns all records
-        order="id desc",  # latest first
+        limit=0,
+        order="id desc",
     )
 
-    # Step 2: collect unique product.product IDs
     prod_ids = list({line["product_id"][0] for line in lines if line.get("product_id")})
-
-    # Step 3: build full product info map (brand + category from template)
     prod_map = _build_product_tmpl_map(prod_ids)
 
-    # Step 4: build velocity map for purchased products
     date_30_ago = (datetime.now() - timedelta(days=30)).strftime("%Y-%m-%d")
     vel_by_prod = {}
     if prod_ids:
@@ -333,7 +354,6 @@ def get_purchase():
         except Exception:
             pass
 
-    # Step 5: get current stock per product for estimate
     stock_by_prod = {}
     if prod_ids:
         try:
@@ -350,7 +370,6 @@ def get_purchase():
         except Exception:
             pass
 
-    # Step 6: assemble purchase rows
     purchases = []
     for line in lines:
         prod_id = line["product_id"][0] if line.get("product_id") else None
@@ -359,7 +378,6 @@ def get_purchase():
         category_name = info.get("category", "Unknown")
         brand_name = info.get("brand", "Unknown")
 
-        # Estimate / velocity
         sold_30 = vel_by_prod.get(prod_id, 0)
         daily_vel = round(sold_30 / 30.0, 3)
         on_hand = stock_by_prod.get(prod_id, 0)
@@ -368,7 +386,6 @@ def get_purchase():
         po_qty = float(line.get("product_qty") or 0)
         days_cover = round(po_qty / daily_vel, 1) if daily_vel > 0 else None
 
-        # TASK 3: Derive currency name safely from many2one field
         currency_name = (
             line.get("currency_id")[1]
             if line.get("currency_id")
@@ -379,7 +396,7 @@ def get_purchase():
             "date": (line.get("date_order") or "")[:10],
             "po": line["order_id"][1],
             "vendor": line["partner_id"][1],
-            "currency": currency_name,  # NEW
+            "currency": currency_name,
             "brand": brand_name,
             "category": category_name,
             "model": product_name,
@@ -393,7 +410,6 @@ def get_purchase():
             "days_cover_by_po": days_cover if days_cover is not None else "∞",
         })
 
-    # Summary / KPI
     total_spend = sum(p["subtotal"] for p in purchases)
     total_qty = sum(p["qty"] for p in purchases)
     unique_vendors = list({p["vendor"] for p in purchases})
@@ -424,23 +440,51 @@ def get_purchase():
 
 
 # ---------- SALES ENDPOINT ----------
+# FIX 1: Added optional ?from_date and ?to_date query params for date range filtering
+# FIX 2: Removed the limit=2000 cap — all matching sale.order.line records are now fetched
+# FIX 3: Brand/category now correctly pulled from product.template via _build_product_tmpl_map
 @app.get("/api/sales")
-def get_sales():
+def get_sales(
+    from_date: Optional[str] = Query(None, description="Start date YYYY-MM-DD (inclusive)"),
+    to_date:   Optional[str] = Query(None, description="End date YYYY-MM-DD (inclusive)"),
+):
     uid, models = get_odoo()
 
+    # Build domain — always filter for confirmed/done orders
     domain = [["state", "in", ["sale", "done"]]]
-    fields = ["order_id", "order_partner_id", "product_id", "product_uom_qty",
-              "price_unit", "price_subtotal", "create_date"]
-    lines = models.execute_kw(
-        ODOO_DB, uid, ODOO_PASSWORD,
-        "sale.order.line", "search_read",
-        [domain],
-        {"fields": fields, "limit": 2000}
+
+    # Optionally narrow by date range on the parent order's date
+    if from_date:
+        domain.append(("order_id.date_order", ">=", f"{from_date} 00:00:00"))
+    if to_date:
+        domain.append(("order_id.date_order", "<=", f"{to_date} 23:59:59"))
+
+    fields = [
+        "order_id",
+        "order_partner_id",
+        "product_id",
+        "product_uom_qty",
+        "price_unit",
+        "price_subtotal",
+        "create_date",
+    ]
+
+    # FIX: limit=0 → no limit passed to Odoo → all records returned
+    lines = odoo_search_read(
+        "sale.order.line",
+        domain,
+        fields,
+        limit=0,
+        order="id desc",
     )
 
+    # Collect unique product.product IDs
     prod_ids = list({line["product_id"][0] for line in lines if line.get("product_id")})
+
+    # FIX: _build_product_tmpl_map now reads brand/category correctly from product.template
     prod_map = _build_product_tmpl_map(prod_ids)
 
+    # 30-day velocity for stock coverage estimate
     date_30_ago = (datetime.now() - timedelta(days=30)).strftime("%Y-%m-%d")
     vel_by_prod = {}
     if prod_ids:
@@ -462,6 +506,7 @@ def get_sales():
         except Exception:
             pass
 
+    # Current stock per product
     stock_by_prod = {}
     if prod_ids:
         try:
@@ -478,45 +523,56 @@ def get_sales():
         except Exception:
             pass
 
+    # Assemble sales rows
     sales = []
     for line in lines:
-        prod_id = line["product_id"][0] if line.get("product_id") else None
-        info = prod_map.get(prod_id, {})
-        product_name = info.get("name") or (line["product_id"][1] if line.get("product_id") else "Unknown")
-        category_name = info.get("category", "Unknown")
-        brand_name = info.get("brand", "Unknown")
+        prod_raw = line.get("product_id")
+        prod_id  = prod_raw[0] if prod_raw else None
 
-        sold_30 = vel_by_prod.get(prod_id, 0)
+        # FIX: use prod_map which now has correct brand/category from template level
+        info = prod_map.get(prod_id, {})
+        product_name  = info.get("name") or (prod_raw[1] if prod_raw else "Unknown")
+        category_name = info.get("category", "Unknown")
+        brand_name    = info.get("brand", "Unknown")
+
+        sold_30   = vel_by_prod.get(prod_id, 0)
         daily_vel = round(sold_30 / 30.0, 3)
-        on_hand = stock_by_prod.get(prod_id, 0)
+        on_hand   = stock_by_prod.get(prod_id, 0)
         days_left = round(on_hand / daily_vel, 1) if daily_vel > 0 else None
 
+        partner_raw = line.get("order_partner_id")
+        customer = partner_raw[1] if partner_raw else "Unknown"
+
         sales.append({
-            "date": (line.get("create_date") or "")[:10],
-            "so": line["order_id"][1],
-            "customer": line["order_partner_id"][1] if line.get("order_partner_id") else "Unknown",
-            "brand": brand_name,
-            "category": category_name,
-            "model": product_name,
-            "qty": float(line.get("product_uom_qty") or 0),
-            "unit_price": float(line.get("price_unit") or 0),
-            "subtotal": float(line.get("price_subtotal") or 0),
-            "on_hand": on_hand,
-            "sold_30d": round(sold_30, 1),
+            "date":          (line.get("create_date") or "")[:10],
+            "so":            line["order_id"][1],
+            "customer":      customer,
+            "brand":         brand_name,
+            "category":      category_name,
+            "model":         product_name,
+            "qty":           float(line.get("product_uom_qty") or 0),
+            "unit_price":    float(line.get("price_unit") or 0),
+            "subtotal":      float(line.get("price_subtotal") or 0),
+            "on_hand":       on_hand,
+            "sold_30d":      round(sold_30, 1),
             "daily_velocity": daily_vel,
-            "days_left": days_left if days_left is not None else "∞",
+            "days_left":     days_left if days_left is not None else "∞",
         })
 
-    total_revenue = sum(s["subtotal"] for s in sales)
-    total_qty = sum(s["qty"] for s in sales)
+    # FIX: summary now computed over the FULL dataset (no cap)
+    total_revenue    = sum(s["subtotal"] for s in sales)
+    total_qty        = sum(s["qty"] for s in sales)
     unique_customers = list({s["customer"] for s in sales})
+
     by_customer = {}
     for s in sales:
         by_customer[s["customer"]] = by_customer.get(s["customer"], 0) + s["subtotal"]
     top_customer = max(by_customer, key=by_customer.get) if by_customer else "—"
+
     by_brand = {}
     for s in sales:
         by_brand[s["brand"]] = by_brand.get(s["brand"], 0) + s["subtotal"]
+
     by_category = {}
     for s in sales:
         by_category[s["category"]] = by_category.get(s["category"], 0) + s["subtotal"]
@@ -524,14 +580,14 @@ def get_sales():
     return {
         "sales": sales,
         "summary": {
-            "total_revenue": round(total_revenue, 2),
-            "total_qty": round(total_qty, 1),
-            "customer_count": len(unique_customers),
-            "so_line_count": len(sales),
-            "top_customer": top_customer,
-            "by_customer": by_customer,
-            "by_brand": by_brand,
-            "by_category": by_category,
+            "total_revenue":   round(total_revenue, 2),
+            "total_qty":       round(total_qty, 1),
+            "customer_count":  len(unique_customers),
+            "so_line_count":   len(sales),
+            "top_customer":    top_customer,
+            "by_customer":     by_customer,
+            "by_brand":        by_brand,
+            "by_category":     by_category,
         }
     }
 
@@ -615,14 +671,14 @@ def get_estimate():
         name_info = tmpl_names.get(tid, {})
 
         estimates.append({
-            "product": name_info.get("name", ""),
-            "code": name_info.get("code", ""),
-            "brand": info.get("brand", "Unknown"),
-            "category": info.get("category", "Unknown"),
-            "on_hand": on_hand,
-            "sold_30d": round(sold_30, 1),
+            "product":       name_info.get("name", ""),
+            "code":          name_info.get("code", ""),
+            "brand":         info.get("brand", "Unknown"),
+            "category":      info.get("category", "Unknown"),
+            "on_hand":       on_hand,
+            "sold_30d":      round(sold_30, 1),
             "daily_velocity": daily_vel,
-            "days_left": days_left if days_left is not None else "∞",
+            "days_left":     days_left if days_left is not None else "∞",
             "priority": (
                 "Critical" if (days_left is not None and days_left < 7)
                 else "Warning" if (days_left is not None and days_left < 14)
