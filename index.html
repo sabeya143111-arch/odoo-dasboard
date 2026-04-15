@@ -233,6 +233,8 @@
         .pill-warning { font-size: 0.7rem; padding: 0.16rem 0.5rem; border-radius: 999px; border: 1px solid rgba(245, 158, 11, 0.8); background: #fef3c7; color: #92400e; }
         .pill-ok { font-size: 0.7rem; padding: 0.16rem 0.5rem; border-radius: 999px; border: 1px solid rgba(34, 197, 94, 0.8); background: #dcfce7; color: #166534; }
         .pill-soft { font-size: 0.7rem; padding: 0.16rem 0.5rem; border-radius: 999px; border: 1px solid #e5e7eb; background: #f9fafb; color: var(--text-muted); }
+        /* Currency pill — neutral blue tint */
+        .pill-currency { font-size: 0.7rem; padding: 0.16rem 0.5rem; border-radius: 999px; border: 1px solid #bae6fd; background: #e0f2fe; color: #0369a1; font-weight: 600; }
 
         .mini-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.6rem; margin-top: 0.35rem; }
         .mini-card { border-radius: 12px; background: var(--mini-card-bg); border: 1px solid var(--border-subtle); padding: 0.6rem 0.65rem; font-size: 0.72rem; }
@@ -524,6 +526,12 @@
         return `<span class="pill-ok">🟢 ${d}d left</span>`;
     }
 
+    // ── Currency pill helper ──
+    function currencyPill(currency) {
+        const cur = currency || "SAR";
+        return `<span class="pill-currency">${cur}</span>`;
+    }
+
     function setDateBadge() {
         const el = document.getElementById("dateBadge");
         const d = new Date();
@@ -572,11 +580,16 @@
     function renderKpisPurchase() {
         const summary = mockPurchase.summary || {};
         const rows = mockPurchase.purchases || [];
+
+        // Count distinct currencies used across PO lines
+        const currencies = new Set(rows.map(r => r.currency || "SAR"));
+        const currencyList = [...currencies].join(", ");
+
         renderKpiRow([
-            { label: "PO spend", value: "SAR " + (summary.total_spend || 0).toFixed(0), meta: "Period total" },
+            { label: "PO spend (orig. currency)", value: (summary.total_spend || 0).toFixed(0), meta: "Mixed currencies — see table" },
             { label: "Units bought", value: (summary.total_qty || 0).toLocaleString(), meta: "All PO lines" },
             { label: "Vendors", value: summary.vendor_count || 0, meta: "Active vendors" },
-            { label: "PO lines", value: summary.po_line_count || rows.length, meta: "Purchase orders" },
+            { label: "Currencies", value: currencyList || "SAR", meta: `${currencies.size} currency type(s)` },
         ]);
     }
 
@@ -653,7 +666,6 @@
                 <div class="mini-card"><div class="mini-label">Branches</div><div class="mini-value">${arr.length}</div><div class="mini-meta">Active in sample</div></div>`;
 
         } else {
-            // Reorder tab — with estimate columns
             headerRow.innerHTML = `
                 <th>Model</th><th>Product</th><th>Brand</th><th>On&nbsp;hand</th>
                 <th>Sold&nbsp;30d</th><th>Vel/day</th><th>Days&nbsp;left</th>
@@ -685,7 +697,7 @@
     }
 
     // ═══════════════════════════════════════════════════════
-    // PURCHASE TABLE — WITH ESTIMATE COLUMNS (same as stock)
+    // PURCHASE TABLE — TASK 4: Currency column added
     // ═══════════════════════════════════════════════════════
     function renderPurchaseTable() {
         const headerRow = document.getElementById("tableHeaderRow");
@@ -694,9 +706,9 @@
         const mini = document.getElementById("miniGrid");
         body.innerHTML = ""; mini.innerHTML = "";
 
-        // Headers now include estimate fields
+        // TASK 4: Added "Currency" column header after "Vendor"
         headerRow.innerHTML = `
-            <th>Date</th><th>PO</th><th>Vendor</th><th>Brand</th><th>Category</th>
+            <th>Date</th><th>PO</th><th>Vendor</th><th>Currency</th><th>Brand</th><th>Category</th>
             <th>Model</th><th>Qty</th><th>Subtotal</th>
             <th>On&nbsp;hand</th><th>Sold&nbsp;30d</th><th>Vel/day</th>
             <th>Days&nbsp;left</th><th>PO&nbsp;covers</th>`;
@@ -719,11 +731,12 @@
                 <td>${r.date}</td>
                 <td>${r.po}</td>
                 <td>${r.vendor}</td>
+                <td>${currencyPill(r.currency)}</td>
                 <td>${r.brand}</td>
                 <td>${r.category}</td>
                 <td>${r.model}</td>
                 <td>${r.qty}</td>
-                <td>SAR ${Number(r.subtotal || 0).toFixed(0)}</td>
+                <td>${r.currency || "SAR"} ${Number(r.subtotal || 0).toFixed(0)}</td>
                 <td>${r.on_hand ?? 0}</td>
                 <td>${r.sold_30d ?? 0}</td>
                 <td>${r.daily_velocity ?? 0}</td>
@@ -736,16 +749,20 @@
 
         info.textContent = `Loaded ${rows.length} SWAG purchase lines.`;
         const topVendor = Object.entries(byVendor).sort((a, b) => b[1] - a[1])[0] || ["–", 0];
+
+        // Count distinct currencies in this result set
+        const currencies = [...new Set(rows.map(r => r.currency || "SAR"))];
+
         mini.innerHTML = `
             <div class="mini-card">
                 <div class="mini-label">Total PO spend</div>
-                <div class="mini-value">SAR ${spend.toFixed(0)}</div>
-                <div class="mini-meta">Current selection</div>
+                <div class="mini-value">${spend.toFixed(0)}</div>
+                <div class="mini-meta">Mixed currencies — see Currency column</div>
             </div>
             <div class="mini-card">
                 <div class="mini-label">Top vendor</div>
                 <div class="mini-value">${topVendor[0]}</div>
-                <div class="mini-meta">Spend SAR ${Number(topVendor[1]).toFixed(0)}</div>
+                <div class="mini-meta">Spend ${Number(topVendor[1]).toFixed(0)}</div>
             </div>
             <div class="mini-card">
                 <div class="mini-label">Critical stock items</div>
@@ -753,14 +770,14 @@
                 <div class="mini-meta">Days left &lt; 7</div>
             </div>
             <div class="mini-card">
-                <div class="mini-label">Top vendor</div>
-                <div class="mini-value">${mockPurchase.summary?.top_vendor || "—"}</div>
-                <div class="mini-meta">By spend</div>
+                <div class="mini-label">Currencies in use</div>
+                <div class="mini-value">${currencies.join(", ") || "SAR"}</div>
+                <div class="mini-meta">${currencies.length} type(s) across POs</div>
             </div>`;
     }
 
     // ═══════════════════════════════════════════════════════
-    // SALES TABLE — WITH ESTIMATE COLUMNS (same as stock)
+    // SALES TABLE
     // ═══════════════════════════════════════════════════════
     function renderSalesTable() {
         const headerRow = document.getElementById("tableHeaderRow");
@@ -769,7 +786,6 @@
         const mini = document.getElementById("miniGrid");
         body.innerHTML = ""; mini.innerHTML = "";
 
-        // Headers now include estimate fields
         headerRow.innerHTML = `
             <th>Date</th><th>SO</th><th>Customer</th><th>Brand</th><th>Category</th>
             <th>Model</th><th>Qty</th><th>Subtotal</th>
@@ -888,7 +904,6 @@
             options: lightBarOptions()
         });
 
-        // Chart 4: Days left by brand (estimate chart)
         const daysByBrand = {};
         const countByBrand = {};
         (mockStock.total || []).forEach(r => {
@@ -913,7 +928,7 @@
     }
 
     // ═══════════════════════════════════════════════════════
-    // PURCHASE CHARTS — estimate-aware
+    // PURCHASE CHARTS
     // ═══════════════════════════════════════════════════════
     function buildPurchaseCharts() {
         destroyCharts();
@@ -937,7 +952,6 @@
             byVendor[vendor] = (byVendor[vendor] || 0) + Number(r.subtotal || 0);
             byCat[cat] = (byCat[cat] || 0) + Number(r.qty || 0);
             spendByDate[date] = (spendByDate[date] || 0) + Number(r.subtotal || 0);
-            // Estimate: days left per model (take first seen value)
             if (r.days_left !== "∞" && r.days_left != null && !daysByModel[model]) {
                 daysByModel[model] = parseFloat(r.days_left);
             }
@@ -964,7 +978,6 @@
             options: darkLineOptions()
         });
 
-        // Chart 4: Days left by model (estimate) — color-coded same as stock
         const modelDaysEntries = Object.entries(daysByModel).sort((a, b) => a[1] - b[1]).slice(0, 10);
         chart4 = new Chart(document.getElementById("chart4").getContext("2d"), {
             type: "bar",
@@ -982,7 +995,7 @@
     }
 
     // ═══════════════════════════════════════════════════════
-    // SALES CHARTS — estimate-aware
+    // SALES CHARTS
     // ═══════════════════════════════════════════════════════
     function buildSalesCharts() {
         destroyCharts();
@@ -996,13 +1009,12 @@
         document.getElementById("chart4Sub").textContent = "Days of stock remaining per model.";
 
         const rows = mockSales.sales || [];
-        const qtyByModel = {}, dailySales = {}, revByCustomer = {}, qtyByDate = {}, daysByModel = {};
+        const qtyByModel = {}, dailySales = {}, revByCustomer = {}, daysByModel = {};
 
         rows.forEach(r => {
             qtyByModel[r.model] = (qtyByModel[r.model] || 0) + Number(r.qty || 0);
             dailySales[r.date] = (dailySales[r.date] || 0) + Number(r.subtotal || 0);
             revByCustomer[r.customer] = (revByCustomer[r.customer] || 0) + Number(r.subtotal || 0);
-            qtyByDate[r.date] = (qtyByDate[r.date] || 0) + Number(r.qty || 0);
             if (r.days_left !== "∞" && r.days_left != null && !daysByModel[r.model]) {
                 daysByModel[r.model] = parseFloat(r.days_left);
             }
@@ -1016,10 +1028,9 @@
         });
 
         const dateLabels = Object.keys(dailySales).sort();
-        const revData = dateLabels.map(l => dailySales[l]);
         chart2 = new Chart(document.getElementById("chart2").getContext("2d"), {
             type: "line",
-            data: { labels: dateLabels, datasets: [{ label: "Revenue", data: revData, borderColor: "#22c55e", backgroundColor: "rgba(34,197,94,0.15)", tension: 0.3, fill: true, pointRadius: 3, pointBackgroundColor: "#22c55e" }] },
+            data: { labels: dateLabels, datasets: [{ label: "Revenue", data: dateLabels.map(l => dailySales[l]), borderColor: "#22c55e", backgroundColor: "rgba(34,197,94,0.15)", tension: 0.3, fill: true, pointRadius: 3, pointBackgroundColor: "#22c55e" }] },
             options: lightLineOptions()
         });
 
@@ -1030,7 +1041,6 @@
             options: lightDoughnutOptions()
         });
 
-        // Chart 4: Days left by model (estimate) — same logic as stock/purchase
         const modelDaysEntries = Object.entries(daysByModel).sort((a, b) => a[1] - b[1]).slice(0, 10);
         chart4 = new Chart(document.getElementById("chart4").getContext("2d"), {
             type: "bar",
@@ -1083,7 +1093,7 @@
                 heroTitle.textContent = "SWAG purchase analytics";
                 heroSub.textContent = "See how much you're buying, from whom, and days of coverage per PO.";
                 panelTitle.textContent = "Purchase detail";
-                panelSub.textContent = "PO data with stock estimates via SWAG backend.";
+                panelSub.textContent = "PO data with stock estimates and currency via SWAG backend.";
                 renderKpisPurchase();
                 renderPurchaseTable();
                 buildPurchaseCharts();
