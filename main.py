@@ -17,12 +17,19 @@ CATEG_FIELD = "categ_id"
 # ---------- FASTAPI APP ----------
 app = FastAPI()
 
+# Explicit allowed origins — add any new frontend URLs here
+ALLOWED_ORIGINS = [
+    "https://odoo-dasboard.vercel.app",   # production frontend
+    "http://localhost:3000",               # local dev (React / Next.js default)
+    "http://localhost:5173",               # local dev (Vite default)
+]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=ALLOWED_ORIGINS,
     allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_methods=["*"],   # GET, POST, OPTIONS, etc.
+    allow_headers=["*"],   # Content-Type, Authorization, etc.
 )
 
 # ---------- LAZY ODOO CONNECTION ----------
