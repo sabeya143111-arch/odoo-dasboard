@@ -5,11 +5,34 @@
   <title>SWAG Control Center</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600;700&display=swap">
+  <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
   <style>
-    :root {
+    
+:root {
+      --bg-main: #f5f7fb;
+      --bg-panel: #ffffff;
+      --bg-panel-2: #f8fafc;
+      --bg-hero: #eef6ff;
+      --border-subtle: #d9e2f0;
+      --border-glow: #93c5fd;
+      --accent: #0ea5e9;
+      --accent-2: #10b981;
+      --accent-3: #7c3aed;
+      --danger: #ef4444;
+      --warning: #f59e0b;
+      --text-main: #0f172a;
+      --text-muted: #475569;
+      --text-soft: #94a3b8;
+      --radius-lg: 16px;
+      --shadow-soft: 0 14px 40px rgba(15,23,42,0.10);
+      --glow-accent: 0 0 20px rgba(14,165,233,0.12);
+      --glow-green: 0 0 20px rgba(16,185,129,0.12);
+    }
+
+    [data-theme="dark"] {
       --bg-main: #0a0d14;
       --bg-panel: #111520;
       --bg-panel-2: #161b27;
@@ -29,740 +52,621 @@
       --glow-accent: 0 0 20px rgba(0,212,255,0.15);
       --glow-green: 0 0 20px rgba(0,255,157,0.15);
     }
-
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-
+    * { box-sizing: border-box; }
     body {
+      margin: 0;
       min-height: 100vh;
-      background: var(--bg-main);
-      background-image:
-        radial-gradient(ellipse at 10% 10%, rgba(0,212,255,0.06) 0, transparent 50%),
-        radial-gradient(ellipse at 90% 90%, rgba(0,255,157,0.05) 0, transparent 50%),
-        radial-gradient(ellipse at 50% 50%, rgba(124,58,237,0.04) 0, transparent 60%);
+      background:
+        radial-gradient(circle at 0% 0%, rgba(59,130,246,0.18) 0, transparent 45%),
+        radial-gradient(circle at 100% 100%, rgba(45,212,191,0.18) 0, transparent 45%),
+        var(--bg-main);
       color: var(--text-main);
-      font-family: "DM Sans", sans-serif;
+      font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
     }
-
-    /* Scanline overlay */
-    body::before {
-      content: '';
-      position: fixed;
-      inset: 0;
-      background: repeating-linear-gradient(
-        0deg,
-        transparent,
-        transparent 2px,
-        rgba(0,0,0,0.03) 2px,
-        rgba(0,0,0,0.03) 4px
-      );
-      pointer-events: none;
-      z-index: 9999;
-    }
-
     .app-shell {
       display: grid;
-      grid-template-columns: 240px minmax(0, 1fr);
+      grid-template-columns: 250px minmax(0, 1fr);
       min-height: 100vh;
     }
 
-    /* ── SIDEBAR ── */
     .sidebar {
-      background: #0c1019;
-      border-right: 1px solid var(--border-subtle);
-      padding: 1.2rem 1rem;
+      background: #ffffff;
+      border-right: 1px solid #e5e7eb;
+      padding: 1.1rem 1.25rem;
       display: flex;
       flex-direction: column;
-      gap: 1rem;
-      position: relative;
+      gap: 1.1rem;
     }
-
-    .sidebar::after {
-      content: '';
-      position: absolute;
-      top: 0; right: 0;
-      width: 1px; height: 100%;
-      background: linear-gradient(180deg, transparent, var(--accent), transparent);
-      opacity: 0.3;
-    }
-
     .brand {
       display: flex;
       align-items: center;
-      gap: 0.75rem;
-      padding: 0.25rem;
+      gap: 0.7rem;
     }
-
     .brand-mark {
-      width: 38px; height: 38px;
-      border-radius: 10px;
-      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      width: 36px;
+      height: 36px;
+      border-radius: 12px;
+      background: linear-gradient(135deg,#0ea5e9,#22c55e);
       display: flex;
       align-items: center;
       justify-content: center;
-      color: #000;
+      color: #f9fafb;
       font-weight: 700;
-      font-size: 1rem;
-      font-family: 'Space Mono', monospace;
-      box-shadow: 0 0 24px rgba(0,212,255,0.4), 0 0 48px rgba(0,212,255,0.15);
-      animation: brandPulse 3s ease-in-out infinite;
+      font-size: 0.9rem;
+      box-shadow: 0 0 18px rgba(59,130,246,0.35);
     }
-
-    @keyframes brandPulse {
-      0%, 100% { box-shadow: 0 0 24px rgba(0,212,255,0.4), 0 0 48px rgba(0,212,255,0.15); }
-      50% { box-shadow: 0 0 36px rgba(0,212,255,0.7), 0 0 72px rgba(0,212,255,0.25); }
+    .brand-text-main {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #111827;
     }
-
-    .brand-text-main { font-size: 0.9rem; font-weight: 700; color: var(--text-main); letter-spacing: 0.05em; }
-    .brand-text-sub { font-size: 0.65rem; color: var(--text-soft); letter-spacing: 0.08em; text-transform: uppercase; }
-
+    .brand-text-sub {
+      font-size: 0.72rem;
+      color: var(--text-soft);
+    }
     .sidebar-section-label {
-      font-size: 0.62rem;
-      letter-spacing: 0.2em;
+      margin-top: 0.6rem;
+      font-size: 0.7rem;
+      letter-spacing: 0.16em;
       text-transform: uppercase;
       color: var(--text-soft);
-      padding: 0 0.4rem;
-      margin-top: 0.5rem;
     }
-
-    .nav-list { display: flex; flex-direction: column; gap: 0.2rem; }
-
+    .nav-list {
+      margin-top: 0.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.15rem;
+    }
     .nav-item {
-      border-radius: 10px;
-      padding: 0.55rem 0.75rem;
+      border-radius: 0.75rem;
+      padding: 0.5rem 0.7rem;
       border: 1px solid transparent;
       background: transparent;
       color: var(--text-muted);
-      font-size: 0.78rem;
-      font-family: "DM Sans", sans-serif;
+      font-size: 0.8rem;
       display: flex;
       align-items: center;
       justify-content: space-between;
       cursor: pointer;
-      transition: all 0.2s ease;
+      transition: all 0.16s ease;
     }
-
-    .nav-item-main { display: inline-flex; align-items: center; gap: 0.5rem; }
-
+    .nav-item-main {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
     .nav-bullet {
-      width: 5px; height: 5px;
+      width: 6px;
+      height: 6px;
       border-radius: 999px;
-      background: var(--text-soft);
-      transition: all 0.2s;
+      background: #d1d5db;
     }
-
     .nav-item.active {
-      background: rgba(0,212,255,0.08);
-      border-color: rgba(0,212,255,0.25);
-      color: var(--accent);
-      box-shadow: 0 0 20px rgba(0,212,255,0.08);
+      background: #e0f2fe;
+      border-color: #0ea5e9;
+      color: #0f172a;
+      box-shadow: 0 10px 24px rgba(15,23,42,0.08);
     }
-
-    .nav-item.active .nav-bullet { background: var(--accent-2); box-shadow: 0 0 8px var(--accent-2); }
-
+    .nav-item.active .nav-bullet { background: #22c55e; }
     .nav-item:hover:not(.active) {
-      background: rgba(255,255,255,0.04);
-      border-color: var(--border-subtle);
-      color: var(--text-main);
+      background: #f3f4f6;
+      border-color: #e5e7eb;
+      color: #111827;
     }
-
     .nav-meta-pill {
-      font-size: 0.62rem;
-      padding: 0.15rem 0.45rem;
+      font-size: 0.7rem;
+      padding: 0.18rem 0.55rem;
       border-radius: 999px;
-      border: 1px solid var(--border-subtle);
-      background: rgba(255,255,255,0.03);
+      border: 1px solid #e5e7eb;
+      background: #f9fafb;
       color: var(--text-soft);
-      font-family: 'Space Mono', monospace;
     }
 
-    .nav-item.active .nav-meta-pill {
-      border-color: rgba(0,212,255,0.3);
-      color: var(--accent);
-    }
-
-    /* Sidebar snapshots */
     .sidebar-graph-card {
-      padding: 0.65rem 0.75rem;
+      margin-top: 0.6rem;
+      padding: 0.6rem 0.7rem;
       border-radius: 12px;
-      background: var(--bg-panel-2);
-      border: 1px solid var(--border-subtle);
+      background: #f9fafb;
+      border: 1px solid #e5e7eb;
+      box-shadow: 0 6px 14px rgba(15,23,42,0.04);
       font-size: 0.72rem;
-      position: relative;
-      overflow: hidden;
-      transition: border-color 0.2s;
     }
-
-    .sidebar-graph-card:hover { border-color: rgba(0,212,255,0.2); }
-
-    .sidebar-graph-card::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0; right: 0;
-      height: 1px;
-      background: linear-gradient(90deg, transparent, rgba(0,212,255,0.4), transparent);
+    .sgc-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.74rem;
+      color: #111827;
     }
-
-    .sgc-header { display: flex; justify-content: space-between; align-items: center; }
-    .sgc-header span:first-child { color: var(--text-muted); font-size: 0.7rem; }
-    .sgc-value { font-weight: 700; color: var(--accent-2); font-family: 'Space Mono', monospace; font-size: 0.75rem; }
-    .sgc-danger { color: var(--danger) !important; }
-    .sgc-sub { font-size: 0.65rem; color: var(--text-soft); margin-top: 0.15rem; }
-
+    .sgc-value {
+      font-weight: 600;
+      color: #16a34a;
+    }
+    .sgc-danger { color: #dc2626; }
+    .sgc-sub {
+      font-size: 0.7rem;
+      color: #9ca3af;
+      margin-top: 0.1rem;
+    }
     .sgc-bar-row {
       display: flex;
       gap: 4px;
-      margin-top: 0.5rem;
+      margin-top: 0.45rem;
       align-items: flex-end;
-      height: 30px;
     }
-
     .sgc-bar {
-      flex: 1;
-      border-radius: 3px 3px 0 0;
-      background: rgba(0,212,255,0.15);
-      transition: height 0.5s ease;
-      animation: barGrow 1s ease-out forwards;
+      width: 6px;
+      border-radius: 999px 999px 0 0;
+      background: #bfdbfe;
     }
+    .sgc-bar-1 { height: 18px; }
+    .sgc-bar-2 { height: 26px; background:#60a5fa; }
+    .sgc-bar-3 { height: 14px; }
+    .sgc-bar-4 { height: 28px; background:#0ea5e9; }
+    .sgc-bar-5 { height: 20px; }
+    .sgc-bar-6 { height: 24px; background:#22c55e; }
 
-    @keyframes barGrow {
-      from { transform: scaleY(0); transform-origin: bottom; }
-      to { transform: scaleY(1); transform-origin: bottom; }
+    .sgc-pill-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.3rem;
+      margin-top: 0.5rem;
     }
-
-    .sgc-bar-1 { height: 40%; }
-    .sgc-bar-2 { height: 65%; background: rgba(0,212,255,0.4); animation-delay: 0.1s; }
-    .sgc-bar-3 { height: 30%; animation-delay: 0.15s; }
-    .sgc-bar-4 { height: 80%; background: rgba(0,212,255,0.6); animation-delay: 0.2s; }
-    .sgc-bar-5 { height: 55%; animation-delay: 0.25s; }
-    .sgc-bar-6 { height: 75%; background: rgba(0,255,157,0.5); animation-delay: 0.3s; }
-
-    .sgc-pill-row { display: flex; flex-wrap: wrap; gap: 0.3rem; margin-top: 0.5rem; }
-
     .sgc-pill {
-      padding: 0.15rem 0.45rem;
+      padding: 0.18rem 0.5rem;
       border-radius: 999px;
-      border: 1px solid var(--border-subtle);
-      background: rgba(255,255,255,0.03);
-      font-size: 0.65rem;
-      color: var(--text-muted);
+      border: 1px solid #e5e7eb;
+      background: #ffffff;
+      font-size: 0.7rem;
+      color: #6b7280;
     }
-
     .sgc-pill-critical {
-      border-color: rgba(255,77,109,0.4);
-      background: rgba(255,77,109,0.1);
-      color: var(--danger);
+      border-color: #fecaca;
+      background: #fee2e2;
+      color: #b91c1c;
     }
-
     .sgc-gauge {
       margin-top: 0.5rem;
       width: 100%;
-      height: 5px;
+      height: 8px;
       border-radius: 999px;
-      background: rgba(255,255,255,0.08);
+      background: #e5e7eb;
       overflow: hidden;
     }
-
     .sgc-gauge-fill {
-      width: 0%;
+      width: 72%;
       height: 100%;
-      background: linear-gradient(90deg, var(--accent-2), var(--accent));
-      border-radius: 999px;
-      transition: width 1.5s cubic-bezier(0.4, 0, 0.2, 1);
-      box-shadow: 0 0 8px var(--accent);
+      background: linear-gradient(90deg,#22c55e,#0ea5e9);
     }
 
     .sidebar-foot-card {
       margin-top: auto;
-      padding: 0.75rem;
-      border-radius: 12px;
-      background: rgba(0,212,255,0.05);
-      border: 1px solid rgba(0,212,255,0.15);
-      font-size: 0.7rem;
+      padding: 0.7rem 0.75rem;
+      border-radius: 14px;
+      background: #eff6ff;
+      border: 1px solid #dbeafe;
+      font-size: 0.74rem;
       color: var(--text-muted);
     }
+    .sidebar-foot-title {
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: #0f172a;
+      margin-bottom: 0.25rem;
+    }
 
-    .sidebar-foot-title { font-size: 0.75rem; font-weight: 600; color: var(--accent); margin-bottom: 0.25rem; }
-
-    /* ── MAIN ── */
     .main {
       display: flex;
       flex-direction: column;
-      padding: 1.2rem 1.5rem;
+      padding: 1.1rem 1.6rem;
       gap: 1rem;
     }
-
     .topbar {
       display: flex;
       justify-content: space-between;
       align-items: center;
+      margin-bottom: 0.3rem;
     }
-
     .topbar-title {
-      font-size: 0.65rem;
-      letter-spacing: 0.2em;
+      font-size: 0.78rem;
+      letter-spacing: 0.15em;
       text-transform: uppercase;
       color: var(--text-soft);
-      font-family: 'Space Mono', monospace;
     }
-
-    .topbar-right { display: flex; align-items: center; gap: 0.6rem; }
-
+    .topbar-right {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-size: 0.75rem;
+      color: var(--text-soft);
+    }
     .topbar-badge {
-      font-size: 0.65rem;
-      padding: 0.2rem 0.6rem;
-      border-radius: 6px;
-      border: 1px solid var(--border-subtle);
-      background: var(--bg-panel);
-      color: var(--text-muted);
-      font-family: 'Space Mono', monospace;
+      padding: 0.18rem 0.55rem;
+      border-radius: 999px;
+      border: 1px solid #e5e7eb;
+      background: #f9fafb;
     }
-
     .user-pill {
       display: inline-flex;
       align-items: center;
       gap: 0.4rem;
-      padding: 0.2rem 0.6rem;
+      padding: 0.2rem 0.55rem;
       border-radius: 999px;
-      border: 1px solid var(--border-subtle);
-      background: var(--bg-panel);
-      font-size: 0.72rem;
-      color: var(--text-muted);
+      border: 1px solid #e5e7eb;
+      background: #ffffff;
     }
-
     .user-initial {
-      width: 22px; height: 22px;
+      width: 22px;
+      height: 22px;
       border-radius: 999px;
-      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      background: linear-gradient(135deg,#0ea5e9,#22c55e);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 0.7rem;
-      font-weight: 700;
-      color: #000;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: #ffffff;
     }
 
-    /* ── HERO ── */
     .hero {
-      padding: 1.2rem 1.4rem;
+      padding: 1.1rem 1.3rem;
       border-radius: 18px;
       background: var(--bg-hero);
-      border: 1px solid var(--border-subtle);
+      border: 1px solid #dbeafe;
       display: flex;
       justify-content: space-between;
       gap: 1rem;
-      position: relative;
-      overflow: hidden;
       box-shadow: var(--shadow-soft);
+      position: relative;
     }
-
-    .hero::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0; right: 0;
-      height: 1px;
-      background: linear-gradient(90deg, transparent, var(--accent), var(--accent-2), transparent);
-      opacity: 0.6;
+    .hero-left {
+      max-width: 60%;
     }
-
-    .hero::after {
-      content: '';
-      position: absolute;
-      top: -60px; right: -60px;
-      width: 200px; height: 200px;
-      border-radius: 999px;
-      background: radial-gradient(circle, rgba(0,212,255,0.08) 0, transparent 70%);
-      pointer-events: none;
-    }
-
-    .hero-left { max-width: 55%; position: relative; z-index: 1; }
-
     .hero-heading {
       font-size: 1.1rem;
       font-weight: 700;
-      color: var(--text-main);
-      letter-spacing: -0.01em;
+      color: #0f172a;
     }
-
-    .hero-sub { margin-top: 0.3rem; font-size: 0.78rem; color: var(--text-muted); }
-
-    .hero-tags { display: flex; flex-wrap: wrap; gap: 0.35rem; margin-top: 0.65rem; }
-
+    .hero-sub {
+      margin-top: 0.25rem;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+    .hero-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem;
+      margin-top: 0.6rem;
+    }
     .hero-tag {
-      font-size: 0.65rem;
-      padding: 0.2rem 0.55rem;
-      border-radius: 6px;
-      border: 1px solid rgba(0,212,255,0.2);
-      background: rgba(0,212,255,0.06);
-      color: var(--accent);
-      font-family: 'Space Mono', monospace;
+      font-size: 0.68rem;
+      padding: 0.22rem 0.55rem;
+      border-radius: 999px;
+      border: 1px solid #dbeafe;
+      background: #eff6ff;
+      color: #1d4ed8;
     }
-
-    .hero-right { text-align: right; min-width: 200px; position: relative; z-index: 1; }
-
+    .hero-right {
+      text-align: right;
+      min-width: 210px;
+    }
     .hero-status {
       display: inline-flex;
       align-items: center;
       gap: 0.35rem;
-      padding: 0.3rem 0.65rem;
+      padding: 0.3rem 0.6rem;
       border-radius: 999px;
-      background: rgba(0,255,157,0.08);
-      border: 1px solid rgba(0,255,157,0.25);
-      font-size: 0.68rem;
-      color: var(--accent-2);
+      background: #ecfdf3;
+      border: 1px solid #bbf7d0;
+      font-size: 0.7rem;
+      color: #166534;
     }
-
     .hero-dot {
-      width: 7px; height: 7px;
+      width: 8px;
+      height: 8px;
       border-radius: 999px;
-      background: var(--accent-2);
-      box-shadow: 0 0 8px var(--accent-2);
-      animation: dotPulse 2s ease-in-out infinite;
+      background: #22c55e;
     }
-
-    @keyframes dotPulse {
-      0%, 100% { opacity: 1; box-shadow: 0 0 8px var(--accent-2); }
-      50% { opacity: 0.5; box-shadow: 0 0 16px var(--accent-2); }
-    }
-
     .hero-metrics {
-      margin-top: 0.75rem;
+      margin-top: 0.7rem;
       display: flex;
-      gap: 1rem;
+      gap: 0.9rem;
       justify-content: flex-end;
-      font-size: 0.72rem;
-      color: var(--text-muted);
+      font-size: 0.75rem;
+      color: var(--text-soft);
     }
-
-    .hero-metric-value { font-size: 1rem; font-weight: 700; color: var(--text-main); font-family: 'Space Mono', monospace; }
+    .hero-metric-value {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: #0f172a;
+    }
 
     .hero-center-title {
       position: absolute;
-      left: 50%; top: 50%;
+      left: 50%;
+      top: 50%;
       transform: translate(-50%, -50%);
       pointer-events: none;
-      font-size: 1.6rem;
-      letter-spacing: 0.35em;
+      font-size: 1.5rem;
+      letter-spacing: 0.30em;
       text-transform: uppercase;
+      color: rgba(15,23,42,0.55);
       font-weight: 900;
-      font-family: 'Space Mono', monospace;
-      background: linear-gradient(135deg, var(--accent), var(--accent-2));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      opacity: 0.12;
+      text-shadow: 0 0 22px rgba(15,23,42,0.35);
+      animation: pulseTitle 2.8s ease-in-out infinite;
       white-space: nowrap;
-      animation: heroGlow 3s ease-in-out infinite;
+    }
+    @keyframes pulseTitle {
+      0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.7; }
+      50% { transform: translate(-50%, -50%) scale(1.06); opacity: 1; }
     }
 
-    @keyframes heroGlow {
-      0%, 100% { opacity: 0.12; letter-spacing: 0.35em; }
-      50% { opacity: 0.22; letter-spacing: 0.38em; }
-    }
-
-    /* ── KPI ── */
     .kpi-row {
       display: grid;
       grid-template-columns: repeat(4, minmax(0,1fr));
       gap: 0.75rem;
+      margin-top: 0.1rem;
     }
-
     .kpi-card {
       border-radius: var(--radius-lg);
-      background: var(--bg-panel);
-      border: 1px solid var(--border-subtle);
-      padding: 0.9rem 1rem;
+      background: #ffffff;
+      border: 1px solid #e5e7eb;
+      padding: 0.8rem 0.9rem;
       box-shadow: var(--shadow-soft);
-      position: relative;
-      overflow: hidden;
-      transition: border-color 0.2s, transform 0.2s;
-      animation: kpiReveal 0.5s ease-out both;
     }
-
-    .kpi-card:nth-child(1) { animation-delay: 0.05s; }
-    .kpi-card:nth-child(2) { animation-delay: 0.1s; }
-    .kpi-card:nth-child(3) { animation-delay: 0.15s; }
-    .kpi-card:nth-child(4) { animation-delay: 0.2s; }
-
-    @keyframes kpiReveal {
-      from { opacity: 0; transform: translateY(16px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    .kpi-card::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0; right: 0;
-      height: 2px;
-      background: linear-gradient(90deg, var(--accent), var(--accent-2));
-      opacity: 0;
-      transition: opacity 0.2s;
-    }
-
-    .kpi-card:hover { border-color: rgba(0,212,255,0.25); transform: translateY(-2px); }
-    .kpi-card:hover::before { opacity: 1; }
-
     .kpi-label {
-      font-size: 0.62rem;
+      font-size: 0.68rem;
       text-transform: uppercase;
-      letter-spacing: 0.14em;
+      letter-spacing: 0.12em;
       color: var(--text-soft);
     }
-
     .kpi-value {
-      margin-top: 0.4rem;
-      font-size: 1.2rem;
+      margin-top: 0.35rem;
+      font-size: 1.15rem;
       font-weight: 700;
-      color: var(--text-main);
-      font-family: 'Space Mono', monospace;
+      color: #0f172a;
+    }
+    .kpi-meta {
+      margin-top: 0.12rem;
+      font-size: 0.72rem;
+      color: var(--text-muted);
     }
 
-    .kpi-meta { margin-top: 0.15rem; font-size: 0.68rem; color: var(--text-muted); }
-
-    /* ── CHARTS ── */
     .charts-grid {
       display: grid;
       grid-template-columns: repeat(2, minmax(0,1fr));
-      gap: 0.85rem;
+      gap: 0.9rem;
+      margin-top: 0.5rem;
     }
-
     .chart-panel {
       border-radius: var(--radius-lg);
-      background: var(--bg-panel);
-      border: 1px solid var(--border-subtle);
-      padding: 0.9rem 1rem;
+      background: #ffffff;
+      border: 1px solid #e5e7eb;
+      padding: 0.8rem 0.9rem;
       box-shadow: var(--shadow-soft);
-      min-height: 215px;
-      transition: border-color 0.2s;
+      min-height: 210px;
+    }
+    .chart-title {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #0f172a;
+      margin-bottom: 0.2rem;
+    }
+    .chart-subtitle {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      margin-bottom: 0.4rem;
+    }
+    .chart-wrapper {
       position: relative;
-      overflow: hidden;
+      width: 100%;
+      height: 160px;
     }
 
-    .chart-panel::before {
-      content: '';
-      position: absolute;
-      bottom: 0; left: 0; right: 0;
-      height: 1px;
-      background: linear-gradient(90deg, transparent, rgba(0,212,255,0.2), transparent);
-    }
-
-    .chart-panel:hover { border-color: rgba(0,212,255,0.2); }
-
-    .chart-title { font-size: 0.82rem; font-weight: 600; color: var(--text-main); }
-    .chart-subtitle { font-size: 0.68rem; color: var(--text-muted); margin-bottom: 0.4rem; margin-top: 0.1rem; }
-
-    .chart-wrapper { position: relative; width: 100%; height: 155px; }
-
-    /* ── CONTENT GRID ── */
     .content-grid {
       display: grid;
-      grid-template-columns: minmax(0, 1.65fr) minmax(0, 1.1fr);
-      gap: 0.85rem;
+      grid-template-columns: minmax(0, 1.6fr) minmax(0, 1.1fr);
+      gap: 0.9rem;
+      margin-top: 0.7rem;
     }
-
     .panel {
       border-radius: var(--radius-lg);
-      background: var(--bg-panel);
-      border: 1px solid var(--border-subtle);
-      padding: 0.9rem 1rem;
+      background: #ffffff;
+      border: 1px solid #e5e7eb;
+      padding: 0.85rem 1rem;
       box-shadow: var(--shadow-soft);
     }
-
     .panel-header {
       display: flex;
       justify-content: space-between;
-      align-items: flex-start;
-      margin-bottom: 0.65rem;
+      align-items: center;
+      margin-bottom: 0.6rem;
     }
-
-    .panel-title-main { font-size: 0.88rem; font-weight: 600; color: var(--text-main); }
-    .panel-title-sub { font-size: 0.7rem; color: var(--text-muted); margin-top: 0.1rem; }
+    .panel-title-main {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #0f172a;
+    }
+    .panel-title-sub {
+      font-size: 0.74rem;
+      color: var(--text-muted);
+      margin-top: 0.15rem;
+    }
 
     .view-tabs {
       display: inline-flex;
       border-radius: 999px;
-      background: rgba(255,255,255,0.04);
-      border: 1px solid var(--border-subtle);
-      padding: 0.12rem;
-      gap: 0.08rem;
+      background: #f9fafb;
+      border: 1px solid #e5e7eb;
+      padding: 0.14rem;
+      gap: 0.1rem;
     }
-
     .view-tab-btn {
       border-radius: 999px;
       border: none;
-      padding: 0.22rem 0.75rem;
-      font-size: 0.68rem;
+      padding: 0.22rem 0.8rem;
+      font-size: 0.72rem;
       background: transparent;
-      color: var(--text-muted);
+      color: var(--text-soft);
       cursor: pointer;
-      font-family: "DM Sans", sans-serif;
-      transition: all 0.2s;
     }
-
     .view-tab-btn.active {
-      background: var(--accent);
-      color: #000;
-      font-weight: 600;
-      box-shadow: 0 0 16px rgba(0,212,255,0.5);
+      background: #0ea5e9;
+      color: #ffffff;
+      box-shadow: 0 8px 20px rgba(14,165,233,0.6);
     }
-
-    .view-tab-btn:hover:not(.active) { color: var(--text-main); }
 
     .filters {
       display: flex;
       flex-wrap: wrap;
       gap: 0.5rem;
-      margin-bottom: 0.5rem;
+      margin-bottom: 0.45rem;
+      margin-top: 0.1rem;
       font-size: 0.78rem;
     }
-
     .input {
-      min-width: 175px;
-      background: rgba(255,255,255,0.04);
-      border-radius: 8px;
-      border: 1px solid var(--border-subtle);
+      min-width: 180px;
+      background: #f9fafb;
+      border-radius: 10px;
+      border: 1px solid #d1d5db;
       color: var(--text-main);
-      font-size: 0.75rem;
-      padding: 0.35rem 0.75rem;
+      font-size: 0.78rem;
+      padding: 0.32rem 0.7rem;
       outline: none;
-      transition: border-color 0.2s;
-      font-family: "DM Sans", sans-serif;
     }
-
-    .input:focus { border-color: rgba(0,212,255,0.4); }
-    .input::placeholder { color: var(--text-soft); }
-
+    .input::placeholder {
+      color: var(--text-soft);
+    }
     .checkbox-group {
       display: inline-flex;
       align-items: center;
-      gap: 0.3rem;
+      gap: 0.25rem;
       color: var(--text-muted);
-      font-size: 0.72rem;
-    }
-
-    input[type="checkbox"] { accent-color: var(--accent); }
-
-    .button-primary {
-      border-radius: 8px;
-      border: 1px solid rgba(0,212,255,0.3);
-      background: rgba(0,212,255,0.1);
-      color: var(--accent);
-      padding: 0.35rem 0.9rem;
       font-size: 0.75rem;
-      cursor: pointer;
-      font-family: "DM Sans", sans-serif;
-      transition: all 0.2s;
     }
-
-    .button-primary:hover {
-      background: rgba(0,212,255,0.2);
-      border-color: var(--accent);
-      box-shadow: 0 0 16px rgba(0,212,255,0.3);
-    }
-
-    .info-text { font-size: 0.68rem; color: var(--text-soft); margin-bottom: 0.4rem; font-family: 'Space Mono', monospace; }
-
-    /* TABLE */
-    .table-wrap {
-      max-height: 255px;
-      overflow: auto;
+    .button-primary {
       border-radius: 10px;
-      border: 1px solid var(--border-subtle);
+      border: none;
+      background: linear-gradient(135deg,#0ea5e9,#2563eb);
+      color: white;
+      padding: 0.35rem 0.9rem;
+      font-size: 0.78rem;
+      cursor: pointer;
+      box-shadow: 0 10px 24px rgba(37,99,235,0.45);
+    }
+    .button-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 14px 30px rgba(37,99,235,0.65);
+    }
+    .info-text {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      margin-bottom: 0.35rem;
     }
 
-    .table-wrap::-webkit-scrollbar { width: 4px; height: 4px; }
-    .table-wrap::-webkit-scrollbar-track { background: transparent; }
-    .table-wrap::-webkit-scrollbar-thumb { background: rgba(0,212,255,0.2); border-radius: 999px; }
-
-    table { width: 100%; border-collapse: collapse; font-size: 0.73rem; }
-
-    th, td { padding: 0.45rem 0.6rem; border-bottom: 1px solid var(--border-subtle); }
-
+    .table-wrap {
+      max-height: 260px;
+      overflow: auto;
+      border-radius: 12px;
+      border: 1px solid #e5e7eb;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.75rem;
+    }
+    th, td {
+      padding: 0.48rem 0.55rem;
+      border-bottom: 1px solid #e5e7eb;
+    }
     th {
-      background: rgba(255,255,255,0.03);
+      background: #f9fafb;
       text-align: left;
-      font-size: 0.62rem;
-      letter-spacing: 0.12em;
+      font-size: 0.7rem;
+      letter-spacing: 0.08em;
       text-transform: uppercase;
       color: var(--text-soft);
       position: sticky;
       top: 0;
       z-index: 1;
-      font-family: 'Space Mono', monospace;
     }
-
-    tbody tr { transition: background 0.15s; }
-    tbody tr:nth-child(even) td { background: rgba(255,255,255,0.015); }
-    tbody tr:hover td { background: rgba(0,212,255,0.05); }
-    td { color: var(--text-muted); }
-    td:first-child { color: var(--text-main); font-family: 'Space Mono', monospace; font-size: 0.68rem; }
-
+    tbody tr:nth-child(even) td {
+      background: #f9fafb;
+    }
+    tbody tr:hover td {
+      background: #eff6ff;
+    }
     .pill-danger {
-      font-size: 0.65rem;
-      padding: 0.14rem 0.5rem;
+      font-size: 0.7rem;
+      padding: 0.16rem 0.5rem;
       border-radius: 999px;
-      border: 1px solid rgba(255,77,109,0.35);
-      background: rgba(255,77,109,0.1);
-      color: var(--danger);
+      border: 1px solid rgba(220,38,38,0.8);
+      background: #fee2e2;
+      color: #b91c1c;
     }
-
     .pill-soft {
-      font-size: 0.65rem;
-      padding: 0.14rem 0.5rem;
+      font-size: 0.7rem;
+      padding: 0.16rem 0.5rem;
       border-radius: 999px;
-      border: 1px solid rgba(0,255,157,0.2);
-      background: rgba(0,255,157,0.06);
-      color: var(--accent-2);
+      border: 1px solid #e5e7eb;
+      background: #f9fafb;
+      color: var(--text-muted);
     }
 
-    /* MINI GRID */
     .mini-grid {
       display: grid;
-      grid-template-columns: repeat(2, minmax(0,1fr));
+      grid-template-columns: repeat(2,minmax(0,1fr));
       gap: 0.6rem;
-      margin-top: 0.4rem;
+      margin-top: 0.35rem;
     }
-
     .mini-card {
       border-radius: 12px;
-      background: var(--bg-panel-2);
-      border: 1px solid var(--border-subtle);
-      padding: 0.7rem 0.75rem;
+      background: #f9fafb;
+      border: 1px solid #e5e7eb;
+      padding: 0.6rem 0.65rem;
       font-size: 0.72rem;
-      transition: border-color 0.2s;
-      position: relative;
-      overflow: hidden;
+    }
+    .mini-label {
+      color: var(--text-soft);
+      font-size: 0.7rem;
+    }
+    .mini-value {
+      margin-top: 0.2rem;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #0f172a;
+    }
+    .mini-meta {
+      margin-top: 0.15rem;
+      font-size: 0.68rem;
+      color: var(--text-muted);
     }
 
-    .mini-card::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0; right: 0;
-      height: 1px;
-      background: linear-gradient(90deg, var(--accent), var(--accent-2));
-      opacity: 0;
-      transition: opacity 0.2s;
-    }
-
-    .mini-card:hover { border-color: rgba(0,212,255,0.2); }
-    .mini-card:hover::before { opacity: 0.6; }
-
-    .mini-label { color: var(--text-soft); font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.1em; }
-    .mini-value { margin-top: 0.3rem; font-size: 0.95rem; font-weight: 700; color: var(--text-main); font-family: 'Space Mono', monospace; }
-    .mini-meta { margin-top: 0.15rem; font-size: 0.65rem; color: var(--text-muted); }
-
-    /* Responsive */
     @media (max-width: 1040px) {
       .app-shell { grid-template-columns: 1fr; }
-      .sidebar { flex-direction: row; overflow-x: auto; }
-      .sidebar-section-label, .sidebar-foot-card { display: none; }
+      .sidebar {
+        flex-direction: row;
+        align-items: flex-start;
+        overflow-x: auto;
+      }
+      .sidebar-section-label,
+      .sidebar-foot-card { display: none; }
       .hero { flex-direction: column; }
       .hero-left { max-width: 100%; }
       .hero-right { text-align: left; }
-      .charts-grid, .content-grid { grid-template-columns: 1fr; }
-      .kpi-row { grid-template-columns: repeat(2, minmax(0,1fr)); }
+      .charts-grid,
+      .content-grid { grid-template-columns: 1fr; }
+      .kpi-row { grid-template-columns: repeat(2,minmax(0,1fr)); }
+      .hero-center-title {
+        position: static;
+        transform: none;
+        text-align: center;
+        margin-top: 0.8rem;
+      }
     }
-
-    @media (max-width: 640px) { .kpi-row { grid-template-columns: 1fr; } }
+    @media (max-width: 640px) {
+      .kpi-row { grid-template-columns: 1fr; }
+    }
   </style>
 </head>
 <body>
@@ -779,15 +683,24 @@
     <div class="sidebar-section-label">Workspaces</div>
     <div class="nav-list">
       <button class="nav-item active" data-view="stock">
-        <span class="nav-item-main"><span class="nav-bullet"></span><span>Stock Overview</span></span>
+        <span class="nav-item-main">
+          <span class="nav-bullet"></span>
+          <span>Stock Overview</span>
+        </span>
         <span class="nav-meta-pill">SWAG</span>
       </button>
       <button class="nav-item" data-view="purchase">
-        <span class="nav-item-main"><span class="nav-bullet"></span><span>Purchase Analytics</span></span>
+        <span class="nav-item-main">
+          <span class="nav-bullet"></span>
+          <span>Purchase Analytics</span>
+        </span>
         <span class="nav-meta-pill">PO</span>
       </button>
       <button class="nav-item" data-view="sales">
-        <span class="nav-item-main"><span class="nav-bullet"></span><span>Sales Analytics</span></span>
+        <span class="nav-item-main">
+          <span class="nav-bullet"></span>
+          <span>Sales Analytics</span>
+        </span>
         <span class="nav-meta-pill">SO</span>
       </button>
     </div>
@@ -835,16 +748,17 @@
     </div>
 
     <div class="sidebar-foot-card">
-      <div class="sidebar-foot-title">// SWAG connected</div>
+      <div class="sidebar-foot-title">SWAG connected</div>
       Dashboard wired to SWAG backend API.
     </div>
   </aside>
 
   <main class="main">
     <div class="topbar">
-      <div class="topbar-title">// Executive overview</div>
+      <div class="topbar-title">Executive overview</div>
       <div class="topbar-right">
         <span class="topbar-badge" id="dateBadge"></span>
+        <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">🌙</button>
         <div class="user-pill">
           <div class="user-initial">T</div>
           <span>Inventory Ops</span>
@@ -855,7 +769,9 @@
     <section class="hero">
       <div class="hero-left">
         <div class="hero-heading" id="heroTitle">SWAG stock overview</div>
-        <div class="hero-sub" id="heroSub">Live picture of SWAG inventory, purchase and sales for fast decisions.</div>
+        <div class="hero-sub" id="heroSub">
+          Live picture of SWAG inventory, purchase and sales for fast decisions.
+        </div>
         <div class="hero-tags">
           <span class="hero-tag">SWAG ERP</span>
           <span class="hero-tag">Inventory</span>
@@ -877,22 +793,30 @@
       <section class="chart-panel">
         <div class="chart-title" id="chart1Title">Category wise stock</div>
         <div class="chart-subtitle" id="chart1Sub">On-hand quantity by category.</div>
-        <div class="chart-wrapper"><canvas id="chart1"></canvas></div>
+        <div class="chart-wrapper">
+          <canvas id="chart1"></canvas>
+        </div>
       </section>
       <section class="chart-panel">
         <div class="chart-title" id="chart2Title">Brand share</div>
         <div class="chart-subtitle" id="chart2Sub">Stock distribution by brand.</div>
-        <div class="chart-wrapper"><canvas id="chart2"></canvas></div>
+        <div class="chart-wrapper">
+          <canvas id="chart2"></canvas>
+        </div>
       </section>
       <section class="chart-panel">
         <div class="chart-title" id="chart3Title">Branch coverage</div>
         <div class="chart-subtitle" id="chart3Sub">Total stock by branch.</div>
-        <div class="chart-wrapper"><canvas id="chart3"></canvas></div>
+        <div class="chart-wrapper">
+          <canvas id="chart3"></canvas>
+        </div>
       </section>
       <section class="chart-panel">
         <div class="chart-title" id="chart4Title">Sales trend</div>
         <div class="chart-subtitle" id="chart4Sub">Sales amount over days.</div>
-        <div class="chart-wrapper"><canvas id="chart4"></canvas></div>
+        <div class="chart-wrapper">
+          <canvas id="chart4"></canvas>
+        </div>
       </section>
     </section>
 
@@ -901,7 +825,9 @@
         <div class="panel-header">
           <div>
             <div class="panel-title-main" id="panelTitle">Product search and filters</div>
-            <div class="panel-title-sub" id="panelSub">Search SWAG products, low stock, and reorder suggestions.</div>
+            <div class="panel-title-sub" id="panelSub">
+              Search SWAG products, low stock, and reorder suggestions.
+            </div>
           </div>
           <div class="view-tabs" id="stockTabs">
             <button class="view-tab-btn active" data-tab="total">Total stock</button>
@@ -920,11 +846,15 @@
           <button class="button-primary" id="searchBtn">Run search</button>
         </div>
 
-        <div class="info-text" id="infoText">Data loaded from SWAG FastAPI backend.</div>
+        <div class="info-text" id="infoText">
+          Data loaded from SWAG FastAPI backend.
+        </div>
 
         <div class="table-wrap">
           <table>
-            <thead><tr id="tableHeaderRow"></tr></thead>
+            <thead>
+            <tr id="tableHeaderRow"></tr>
+            </thead>
             <tbody id="tableBody"></tbody>
           </table>
         </div>
@@ -945,18 +875,101 @@
 
 <script>
   const API_BASE = "https://odoo-dasboard-production.up.railway.app";
+  const root = document.documentElement;
+  let currentTheme = "dark";
+  root.setAttribute("data-theme", currentTheme);
 
-  // ── Chart.js global dark theme defaults ──
-  Chart.defaults.color = "#7a8599";
-  Chart.defaults.borderColor = "rgba(255,255,255,0.06)";
-  Chart.defaults.animation = {
-    duration: 1200,
-    easing: "easeOutQuart",
-  };
+  const themeToggle = document.getElementById("themeToggle");
+  themeToggle.textContent = "☀️";
 
-  // Dark palette
-  const PALETTE = ["#00d4ff","#00ff9d","#7c3aed","#ffb800","#ff4d6d","#3b82f6","#f97316"];
+  function toggleTheme() {
+    currentTheme = currentTheme === "dark" ? "light" : "dark";
+    root.setAttribute("data-theme", currentTheme);
+    themeToggle.textContent = currentTheme === "dark" ? "☀️" : "🌙";
+    refreshCurrentView();
+  }
+  themeToggle.addEventListener("click", toggleTheme);
 
+  function cssVar(name) {
+    return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+  }
+
+  function num(v) {
+    if (v === null || v === undefined || v === "") return 0;
+    const cleaned = String(v).replace(/[^0-9.-]/g, "");
+    const n = Number(cleaned);
+    return Number.isFinite(n) ? n : 0;
+  }
+
+  function pick(obj, keys, fallback = "") {
+    for (const key of keys) {
+      if (obj && obj[key] !== undefined && obj[key] !== null && obj[key] !== "") return obj[key];
+    }
+    return fallback;
+  }
+
+  function normalizeStockRow(r) {
+    return {
+      model: pick(r, ["model", "default_code", "sku"], "-"),
+      product: pick(r, ["product", "product_name", "name"], "-"),
+      brand: pick(r, ["brand", "brand_name"], "Unknown"),
+      category: pick(r, ["category", "categ", "category_name"], "Uncategorized"),
+      branch: pick(r, ["branch", "location", "warehouse", "branch_name"], "Main"),
+      on_hand: num(pick(r, ["on_hand", "onhand", "qty_available", "qty", "quantity"], 0)),
+      sale_price: num(pick(r, ["sale_price", "saleprice", "price", "list_price"], 0)),
+      suggest: num(pick(r, ["suggest", "suggest_qty", "reorder_qty"], 0)),
+      priority: pick(r, ["priority", "status"], "Low")
+    };
+  }
+
+  function normalizePurchaseRow(r) {
+    return {
+      date: pick(r, ["date", "order_date", "po_date"], "-"),
+      po: pick(r, ["po", "po_no", "order", "name"], "-"),
+      vendor: pick(r, ["vendor", "partner", "supplier"], "Unknown"),
+      category: pick(r, ["category", "categ", "category_name"], "Uncategorized"),
+      model: pick(r, ["model", "default_code", "sku"], "-"),
+      qty: num(pick(r, ["qty", "quantity", "product_qty"], 0)),
+      subtotal: num(pick(r, ["subtotal", "amount", "price_subtotal", "total"], 0))
+    };
+  }
+
+  function normalizeSalesRow(r) {
+    return {
+      date: pick(r, ["date", "order_date", "so_date"], "-"),
+      so: pick(r, ["so", "so_no", "order", "name"], "-"),
+      customer: pick(r, ["customer", "partner"], "Unknown"),
+      model: pick(r, ["model", "default_code", "sku"], "-"),
+      qty: num(pick(r, ["qty", "quantity", "product_uom_qty"], 0)),
+      subtotal: num(pick(r, ["subtotal", "amount", "price_subtotal", "total"], 0))
+    };
+  }
+
+  function normalizeStockData(stockRes) {
+    const total = Array.isArray(stockRes.total) ? stockRes.total.map(normalizeStockRow) : [];
+    const branch = Array.isArray(stockRes.branch) ? stockRes.branch.map(normalizeStockRow) : [];
+    let reorder = Array.isArray(stockRes.reorder) ? stockRes.reorder.map(normalizeStockRow) : [];
+    if (!reorder.length) {
+      reorder = total.filter(r => r.on_hand <= 5).map(r => ({ ...r, suggest: Math.max(10 - r.on_hand, 0), priority: r.on_hand === 0 ? "Critical" : "Low" }));
+    }
+    return { total, branch, reorder };
+  }
+
+  function aggregateBy(rows, key, valueKey) {
+    const map = {};
+    rows.forEach(r => {
+      const k = r[key] || "Unknown";
+      map[k] = (map[k] || 0) + num(r[valueKey]);
+    });
+    return map;
+  }
+
+  function sortEntries(obj, limit = null) {
+    const arr = Object.entries(obj).sort((a, b) => b[1] - a[1]);
+    return limit ? arr.slice(0, limit) : arr;
+  }
+
+  Chart.defaults.animation.duration = 700;
   let mockStock = { total: [], branch: [], reorder: [] };
   let mockPurchase = [];
   let mockSales = [];
@@ -977,18 +990,24 @@
         fetchJson(`${API_BASE}/api/purchase`),
         fetchJson(`${API_BASE}/api/sales`),
       ]);
-      mockStock = stockRes;
-      mockPurchase = purchaseRes.purchases;
-      mockSales = salesRes.sales;
-      initWithStock();
+      mockStock = normalizeStockData(stockRes || {});
+      mockPurchase = Array.isArray(purchaseRes.purchases) ? purchaseRes.purchases.map(normalizePurchaseRow) : [];
+      mockSales = Array.isArray(salesRes.sales) ? salesRes.sales.map(normalizeSalesRow) : [];
+      refreshCurrentView();
     } catch (err) {
       console.error("API load error:", err);
+      document.getElementById("infoText").textContent = "Data load failed. API fields ya response issue hai.";
     }
   }
 
+  function setDateBadge() {
+    document.getElementById("dateBadge").textContent = new Date().toLocaleString("en-GB", {
+      day: "2-digit", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit"
+    });
+  }
+
   function renderSystemStatus() {
-    const container = document.getElementById("systemStatus");
-    container.innerHTML = `<div><div class="hero-metric-value">SWAG</div><div>Online</div></div>`;
+    document.getElementById("systemStatus").innerHTML = `<div><div class="hero-metric-value">LIVE</div><div>${currentTheme.toUpperCase()} mode</div></div>`;
   }
 
   function renderKpiRow(kpis) {
@@ -997,64 +1016,64 @@
     kpis.forEach(k => {
       const div = document.createElement("div");
       div.className = "kpi-card";
-      div.innerHTML = `
-        <div class="kpi-label">${k.label}</div>
-        <div class="kpi-value">${k.value}</div>
-        <div class="kpi-meta">${k.meta}</div>
-      `;
+      div.innerHTML = `<div class="kpi-label">${k.label}</div><div class="kpi-value">${k.value}</div><div class="kpi-meta">${k.meta}</div>`;
       row.appendChild(div);
     });
   }
 
   function renderKpisStock() {
-    const total = mockStock.total || [];
-    let qty = 0, value = 0, zero = 0;
-    const models = new Set();
-    total.forEach(r => {
-      const q = Number(r.on_hand || 0);
-      const p = Number(r.sale_price || 0);
-      qty += q; value += q * p;
-      if (q === 0) zero++;
-      models.add(r.model);
-    });
+    const total = mockStock.total;
+    const qty = total.reduce((s, r) => s + r.on_hand, 0);
+    const value = total.reduce((s, r) => s + (r.on_hand * r.sale_price), 0);
+    const zero = total.filter(r => r.on_hand === 0).length;
+    const models = new Set(total.map(r => r.model)).size;
     renderKpiRow([
-      { label: "Total on hand",  value: qty,                     meta: "SWAG inventory" },
-      { label: "Stock value",    value: "SAR " + value.toFixed(0), meta: "Qty × price" },
-      { label: "Zero stock",     value: zero,                    meta: "Models at 0 qty" },
-      { label: "Unique models",  value: models.size,             meta: "In SWAG" },
+      { label: "Total on hand", value: qty.toLocaleString(), meta: "Live stock qty" },
+      { label: "Stock value", value: `SAR ${value.toLocaleString()}`, meta: "Qty × sale price" },
+      { label: "Zero stock", value: zero, meta: "Need urgent action" },
+      { label: "Unique models", value: models, meta: "Distinct SKUs" },
     ]);
-    document.getElementById("sidebarStockChange").textContent = "+12%";
+    document.getElementById("sidebarStockChange").textContent = total.length ? `${Math.min(99, Math.round((mockStock.reorder.length / total.length) * 100))}% risk` : "0%";
+    document.getElementById("sidebarReorderCount").textContent = `${mockStock.reorder.length} items`;
   }
 
   function renderKpisPurchase() {
-    const rows = mockPurchase || [];
-    let spend = 0, qty = 0;
-    const vendors = new Set();
-    rows.forEach(r => { spend += Number(r.subtotal || 0); qty += Number(r.qty || 0); vendors.add(r.vendor); });
+    const spend = mockPurchase.reduce((s, r) => s + r.subtotal, 0);
+    const qty = mockPurchase.reduce((s, r) => s + r.qty, 0);
+    const vendors = new Set(mockPurchase.map(r => r.vendor)).size;
     renderKpiRow([
-      { label: "PO spend",     value: "SAR " + spend.toFixed(0), meta: "Period total" },
-      { label: "Units bought", value: qty,                        meta: "All PO lines" },
-      { label: "Vendors",      value: vendors.size,               meta: "Active vendors" },
-      { label: "PO count",     value: rows.length,                meta: "Purchase orders" },
+      { label: "PO spend", value: `SAR ${spend.toLocaleString()}`, meta: "Purchase subtotal" },
+      { label: "Units bought", value: qty.toLocaleString(), meta: "All PO qty" },
+      { label: "Vendors", value: vendors, meta: "Active suppliers" },
+      { label: "PO lines", value: mockPurchase.length, meta: "Records fetched" },
     ]);
   }
 
   function renderKpisSales() {
-    const rows = mockSales || [];
-    let rev = 0, qty = 0;
-    const customers = new Set();
-    rows.forEach(r => { rev += Number(r.subtotal || 0); qty += Number(r.qty || 0); customers.add(r.customer); });
+    const rev = mockSales.reduce((s, r) => s + r.subtotal, 0);
+    const qty = mockSales.reduce((s, r) => s + r.qty, 0);
+    const customers = new Set(mockSales.map(r => r.customer)).size;
     renderKpiRow([
-      { label: "Revenue",    value: "SAR " + rev.toFixed(0), meta: "Selected period" },
-      { label: "Units sold", value: qty,                     meta: "All SO lines" },
-      { label: "Customers",  value: customers.size,          meta: "Unique customers" },
-      { label: "SO count",   value: rows.length,             meta: "Sales orders" },
+      { label: "Revenue", value: `SAR ${rev.toLocaleString()}`, meta: "Sales subtotal" },
+      { label: "Units sold", value: qty.toLocaleString(), meta: "All SO qty" },
+      { label: "Customers", value: customers, meta: "Unique buyers" },
+      { label: "SO lines", value: mockSales.length, meta: "Records fetched" },
     ]);
-    const sellPct = 72;
-    document.getElementById("sidebarSellThrough").textContent = sellPct + "%";
-    setTimeout(() => {
-      document.getElementById("sidebarGaugeFill").style.width = sellPct + "%";
-    }, 300);
+    const sellPct = mockStock.total.length ? Math.min(100, Math.round((qty / Math.max(mockStock.total.reduce((s, r) => s + r.on_hand, 0), 1)) * 100)) : 0;
+    document.getElementById("sidebarSellThrough").textContent = `${sellPct}%`;
+    document.getElementById("sidebarGaugeFill").style.width = `${sellPct}%`;
+  }
+
+  function applyStockFilter(rows) {
+    const modelText = document.getElementById("modelInput").value.trim().toLowerCase();
+    const lowStock = num(document.getElementById("lowStockInput").value || 0);
+    const exactMatch = document.getElementById("exactMatch").checked;
+    return rows.filter(r => {
+      const modelOk = !modelText || (exactMatch ? r.model.toLowerCase() === modelText : r.model.toLowerCase().includes(modelText));
+      if (currentStockTab === 'reorder') return modelOk;
+      if (currentStockTab === 'total') return modelOk && r.on_hand >= 0 && (lowStock ? true : true);
+      return modelOk;
+    });
   }
 
   function renderStockTable() {
@@ -1062,54 +1081,44 @@
     const body = document.getElementById("tableBody");
     const info = document.getElementById("infoText");
     const mini = document.getElementById("miniGrid");
-    body.innerHTML = ""; mini.innerHTML = "";
+    body.innerHTML = "";
+    mini.innerHTML = "";
 
     if (currentStockTab === "total") {
+      const rows = applyStockFilter(mockStock.total);
       headerRow.innerHTML = `<th>Model</th><th>Product</th><th>Brand</th><th>Category</th><th>On hand</th><th>Sale price</th><th>Status</th>`;
-      let zero = 0;
-      (mockStock.total || []).forEach(r => {
-        const q = Number(r.on_hand || 0);
-        if (q === 0) zero++;
+      const zero = rows.filter(r => r.on_hand === 0).length;
+      rows.forEach(r => {
         const tr = document.createElement("tr");
-        tr.innerHTML = `<td>${r.model}</td><td>${r.product}</td><td>${r.brand}</td><td>${r.category}</td><td>${q}</td><td>${r.sale_price}</td>
-          <td>${q === 0 ? '<span class="pill-danger">Out of stock</span>' : '<span class="pill-soft">Healthy</span>'}</td>`;
+        tr.innerHTML = `<td>${r.model}</td><td>${r.product}</td><td>${r.brand}</td><td>${r.category}</td><td>${r.on_hand}</td><td>${r.sale_price}</td><td>${r.on_hand === 0 ? '<span class="pill-danger">Out of stock</span>' : r.on_hand <= 5 ? '<span class="pill-danger">Low stock</span>' : '<span class="pill-soft">Healthy</span>'}</td>`;
         body.appendChild(tr);
       });
-      info.textContent = `> Loaded ${(mockStock.total || []).length} SWAG product rows.`;
-      mini.innerHTML = `
-        <div class="mini-card"><div class="mini-label">Zero-stock models</div><div class="mini-value">${zero}</div><div class="mini-meta">Need purchase / transfer</div></div>
-        <div class="mini-card"><div class="mini-label">Tracked models</div><div class="mini-value">${(mockStock.total || []).length}</div><div class="mini-meta">In current view</div></div>`;
-      document.getElementById("sidebarReorderCount").textContent = (mockStock.reorder || []).length + " items";
+      info.textContent = `Loaded ${rows.length} stock rows with normalized fields.`;
+      mini.innerHTML = `<div class="mini-card"><div class="mini-label">Zero-stock models</div><div class="mini-value">${zero}</div><div class="mini-meta">Need purchase / transfer</div></div><div class="mini-card"><div class="mini-label">Reorder candidates</div><div class="mini-value">${mockStock.reorder.length}</div><div class="mini-meta">Threshold based</div></div>`;
     } else if (currentStockTab === "branch") {
+      const rows = mockStock.branch;
       headerRow.innerHTML = `<th>Branch</th><th>Model</th><th>Brand</th><th>Category</th><th>On hand</th>`;
-      (mockStock.branch || []).forEach(r => {
+      rows.forEach(r => {
         const tr = document.createElement("tr");
         tr.innerHTML = `<td>${r.branch}</td><td>${r.model}</td><td>${r.brand}</td><td>${r.category}</td><td>${r.on_hand}</td>`;
         body.appendChild(tr);
       });
-      info.textContent = `> Loaded ${(mockStock.branch || []).length} SWAG branch rows.`;
-      const perBranch = {};
-      (mockStock.branch || []).forEach(r => { perBranch[r.branch] = (perBranch[r.branch] || 0) + Number(r.on_hand || 0); });
-      const arr = Object.entries(perBranch).sort((a,b)=>b[1]-a[1]);
-      const top = arr[0] || ["–", 0];
-      mini.innerHTML = `
-        <div class="mini-card"><div class="mini-label">Top branch</div><div class="mini-value">${top[0]}</div><div class="mini-meta">Qty ${top[1]}</div></div>
-        <div class="mini-card"><div class="mini-label">Branches</div><div class="mini-value">${arr.length}</div><div class="mini-meta">Active in sample</div></div>`;
+      const arr = sortEntries(aggregateBy(rows, 'branch', 'on_hand'));
+      const top = arr[0] || ['-', 0];
+      info.textContent = `Loaded ${rows.length} branch stock rows.`;
+      mini.innerHTML = `<div class="mini-card"><div class="mini-label">Top branch</div><div class="mini-value">${top[0]}</div><div class="mini-meta">Qty ${top[1]}</div></div><div class="mini-card"><div class="mini-label">Branches</div><div class="mini-value">${arr.length}</div><div class="mini-meta">Live mapped branches</div></div>`;
     } else {
+      const lowStock = num(document.getElementById("lowStockInput").value || 5);
+      const rows = mockStock.reorder.filter(r => r.on_hand <= lowStock || r.priority === 'Critical');
       headerRow.innerHTML = `<th>Model</th><th>Product</th><th>Brand</th><th>On hand</th><th>Suggest</th><th>Priority</th>`;
-      let crit = 0;
-      (mockStock.reorder || []).forEach(r => {
-        if (r.priority === "Critical") crit++;
+      const crit = rows.filter(r => r.priority === 'Critical').length;
+      rows.forEach(r => {
         const tr = document.createElement("tr");
-        tr.innerHTML = `<td>${r.model}</td><td>${r.product}</td><td>${r.brand}</td><td>${r.on_hand}</td><td>${r.suggest}</td>
-          <td>${r.priority === "Critical" ? '<span class="pill-danger">Critical</span>' : '<span class="pill-soft">'+r.priority+'</span>'}</td>`;
+        tr.innerHTML = `<td>${r.model}</td><td>${r.product}</td><td>${r.brand}</td><td>${r.on_hand}</td><td>${r.suggest}</td><td>${r.priority === 'Critical' ? '<span class="pill-danger">Critical</span>' : '<span class="pill-soft">'+r.priority+'</span>'}</td>`;
         body.appendChild(tr);
       });
-      info.textContent = `> Loaded ${(mockStock.reorder || []).length} reorder candidates.`;
-      mini.innerHTML = `
-        <div class="mini-card"><div class="mini-label">Items to reorder</div><div class="mini-value">${(mockStock.reorder || []).length}</div><div class="mini-meta">Based on current rule</div></div>
-        <div class="mini-card"><div class="mini-label">Critical priority</div><div class="mini-value">${crit}</div><div class="mini-meta">Immediate PO suggestion</div></div>`;
-      document.getElementById("sidebarReorderCount").textContent = (mockStock.reorder || []).length + " items";
+      info.textContent = `Loaded ${rows.length} reorder rows.`;
+      mini.innerHTML = `<div class="mini-card"><div class="mini-label">Items to reorder</div><div class="mini-value">${rows.length}</div><div class="mini-meta">Current threshold</div></div><div class="mini-card"><div class="mini-label">Critical priority</div><div class="mini-value">${crit}</div><div class="mini-meta">Immediate PO needed</div></div>`;
     }
   }
 
@@ -1119,21 +1128,17 @@
     const info = document.getElementById("infoText");
     const mini = document.getElementById("miniGrid");
     headerRow.innerHTML = `<th>Date</th><th>PO</th><th>Vendor</th><th>Category</th><th>Model</th><th>Qty</th><th>Subtotal</th>`;
-    body.innerHTML = ""; mini.innerHTML = "";
-    let spend = 0;
-    const byVendor = {};
-    (mockPurchase || []).forEach(r => {
-      spend += Number(r.subtotal || 0);
-      byVendor[r.vendor] = (byVendor[r.vendor] || 0) + Number(r.subtotal || 0);
+    body.innerHTML = "";
+    mini.innerHTML = "";
+    mockPurchase.forEach(r => {
       const tr = document.createElement("tr");
       tr.innerHTML = `<td>${r.date}</td><td>${r.po}</td><td>${r.vendor}</td><td>${r.category}</td><td>${r.model}</td><td>${r.qty}</td><td>${r.subtotal}</td>`;
       body.appendChild(tr);
     });
-    info.textContent = `> Loaded ${(mockPurchase || []).length} SWAG purchase lines.`;
-    const topVendor = Object.entries(byVendor).sort((a,b)=>b[1]-a[1])[0] || ["–", 0];
-    mini.innerHTML = `
-      <div class="mini-card"><div class="mini-label">Total PO spend</div><div class="mini-value">SAR ${spend.toFixed(0)}</div><div class="mini-meta">Current selection</div></div>
-      <div class="mini-card"><div class="mini-label">Top vendor</div><div class="mini-value">${topVendor[0]}</div><div class="mini-meta">Spend SAR ${topVendor[1].toFixed(0)}</div></div>`;
+    const spend = mockPurchase.reduce((s, r) => s + r.subtotal, 0);
+    const topVendor = sortEntries(aggregateBy(mockPurchase, 'vendor', 'subtotal'))[0] || ['-', 0];
+    info.textContent = `Loaded ${mockPurchase.length} purchase rows after normalization.`;
+    mini.innerHTML = `<div class="mini-card"><div class="mini-label">Total PO spend</div><div class="mini-value">SAR ${spend.toLocaleString()}</div><div class="mini-meta">Purchase amount</div></div><div class="mini-card"><div class="mini-label">Top vendor</div><div class="mini-value">${topVendor[0]}</div><div class="mini-meta">Spend SAR ${topVendor[1].toLocaleString()}</div></div>`;
   }
 
   function renderSalesTable() {
@@ -1142,18 +1147,16 @@
     const info = document.getElementById("infoText");
     const mini = document.getElementById("miniGrid");
     headerRow.innerHTML = `<th>Date</th><th>SO</th><th>Customer</th><th>Model</th><th>Qty</th><th>Subtotal</th>`;
-    body.innerHTML = ""; mini.innerHTML = "";
-    let rev = 0;
-    (mockSales || []).forEach(r => {
-      rev += Number(r.subtotal || 0);
+    body.innerHTML = "";
+    mini.innerHTML = "";
+    mockSales.forEach(r => {
       const tr = document.createElement("tr");
       tr.innerHTML = `<td>${r.date}</td><td>${r.so}</td><td>${r.customer}</td><td>${r.model}</td><td>${r.qty}</td><td>${r.subtotal}</td>`;
       body.appendChild(tr);
     });
-    info.textContent = `> Loaded ${(mockSales || []).length} SWAG sales lines.`;
-    mini.innerHTML = `
-      <div class="mini-card"><div class="mini-label">Revenue</div><div class="mini-value">SAR ${rev.toFixed(0)}</div><div class="mini-meta">Selected period</div></div>
-      <div class="mini-card"><div class="mini-label">Sales lines</div><div class="mini-value">${(mockSales || []).length}</div><div class="mini-meta">Across models</div></div>`;
+    const rev = mockSales.reduce((s, r) => s + r.subtotal, 0);
+    info.textContent = `Loaded ${mockSales.length} sales rows after normalization.`;
+    mini.innerHTML = `<div class="mini-card"><div class="mini-label">Revenue</div><div class="mini-value">SAR ${rev.toLocaleString()}</div><div class="mini-meta">Sales amount</div></div><div class="mini-card"><div class="mini-label">Customers</div><div class="mini-value">${new Set(mockSales.map(r => r.customer)).size}</div><div class="mini-meta">Distinct buyers</div></div>`;
   }
 
   function destroyCharts() {
@@ -1161,428 +1164,162 @@
     chart1 = chart2 = chart3 = chart4 = null;
   }
 
-  // ── DARK CHART OPTIONS ──
-  function darkScales() {
-    return {
-      x: { ticks: { color: "#4a5568", font: { size: 10, family: "'Space Mono', monospace" } }, grid: { color: "rgba(255,255,255,0.04)" } },
-      y: { ticks: { color: "#4a5568", font: { size: 10, family: "'Space Mono', monospace" } }, grid: { color: "rgba(255,255,255,0.04)" } }
-    };
-  }
-
-  function darkDoughnutOptions() {
+  function baseChartOptions() {
     return {
       responsive: true,
       maintainAspectRatio: false,
-      animation: {
-        animateRotate: true,
-        animateScale: true,
-        duration: 1400,
-        easing: "easeOutElastic",
-      },
       plugins: {
-        legend: {
-          position: "bottom",
-          labels: { color: "#7a8599", font: { size: 10, family: "'Space Mono', monospace" }, padding: 10 }
+        legend: { labels: { color: cssVar('--text-muted'), boxWidth: 12, font: { size: 10 } } },
+        tooltip: {
+          backgroundColor: cssVar('--bg-panel'),
+          titleColor: cssVar('--text-main'),
+          bodyColor: cssVar('--text-muted'),
+          borderColor: cssVar('--border-subtle'),
+          borderWidth: 1
         }
       },
-      cutout: "62%"
-    };
-  }
-
-  function darkBarOptions(stacked) {
-    return {
-      responsive: true,
-      maintainAspectRatio: false,
-      animation: {
-        duration: 1100,
-        easing: "easeOutBounce",
-        delay: (ctx) => ctx.dataIndex * 60,
-      },
-      plugins: { legend: { display: !!stacked, labels: { color: "#7a8599", font: { size: 10 } } } },
-      scales: darkScales()
-    };
-  }
-
-  function darkLineOptions() {
-    return {
-      responsive: true,
-      maintainAspectRatio: false,
-      animation: {
-        duration: 1400,
-        easing: "easeInOutSine",
-      },
-      plugins: { legend: { display: false } },
-      scales: darkScales()
+      scales: {
+        x: { ticks: { color: cssVar('--text-soft') }, grid: { color: 'rgba(128,128,128,0.08)' } },
+        y: { ticks: { color: cssVar('--text-soft') }, grid: { color: 'rgba(128,128,128,0.08)' } }
+      }
     };
   }
 
   function buildStockCharts() {
     destroyCharts();
+    document.getElementById('chart1Title').textContent = 'Stock by category';
+    document.getElementById('chart1Sub').textContent = 'Top categories by on hand quantity.';
+    document.getElementById('chart2Title').textContent = 'Brand mix';
+    document.getElementById('chart2Sub').textContent = 'Top brands share in total stock.';
+    document.getElementById('chart3Title').textContent = 'Branch stock';
+    document.getElementById('chart3Sub').textContent = 'Branch wise quantity comparison.';
+    document.getElementById('chart4Title').textContent = 'Low stock models';
+    document.getElementById('chart4Sub').textContent = 'Models needing replenishment.';
 
-    document.getElementById("chart1Title").textContent = "Category wise stock";
-    document.getElementById("chart1Sub").textContent = "On-hand quantity by category.";
-    document.getElementById("chart2Title").textContent = "Brand share";
-    document.getElementById("chart2Sub").textContent = "Stock distribution by brand.";
-    document.getElementById("chart3Title").textContent = "Branch coverage";
-    document.getElementById("chart3Sub").textContent = "Total stock by branch.";
-    document.getElementById("chart4Title").textContent = "Sales trend";
-    document.getElementById("chart4Sub").textContent = "Sales amount over days.";
+    const catEntries = sortEntries(aggregateBy(mockStock.total, 'category', 'on_hand'), 6);
+    chart1 = new Chart(document.getElementById('chart1'), { type: 'bar', data: { labels: catEntries.map(x => x[0]), datasets: [{ label: 'Qty', data: catEntries.map(x => x[1]), backgroundColor: cssVar('--accent') }] }, options: { ...baseChartOptions(), plugins: { ...baseChartOptions().plugins, legend: { display: false } } } });
 
-    // Chart 1 – Category bar
-    const totalsByCat = {};
-    (mockStock.total || []).forEach(r => {
-      totalsByCat[r.category] = (totalsByCat[r.category] || 0) + Number(r.on_hand || 0);
-    });
-    const catLabels = Object.keys(totalsByCat);
-    const catData = catLabels.map(l => totalsByCat[l]);
+    const brandEntries = sortEntries(aggregateBy(mockStock.total, 'brand', 'on_hand'), 6);
+    chart2 = new Chart(document.getElementById('chart2'), { type: 'doughnut', data: { labels: brandEntries.map(x => x[0]), datasets: [{ data: brandEntries.map(x => x[1]), backgroundColor: [cssVar('--accent'), cssVar('--accent-2'), cssVar('--accent-3'), '#f59e0b', '#ef4444', '#8b5cf6'] }] }, options: { ...baseChartOptions(), scales: undefined } });
 
-    chart1 = new Chart(document.getElementById("chart1").getContext("2d"), {
-      type: "bar",
-      data: {
-        labels: catLabels,
-        datasets: [{
-          label: "On hand",
-          data: catData,
-          backgroundColor: PALETTE.map(c => c + "99"),
-          borderColor: PALETTE,
-          borderWidth: 1,
-          borderRadius: 6,
-          maxBarThickness: 38,
-        }]
-      },
-      options: darkBarOptions(false)
-    });
+    const branchEntries = sortEntries(aggregateBy(mockStock.branch, 'branch', 'on_hand'), 8);
+    chart3 = new Chart(document.getElementById('chart3'), { type: 'bar', data: { labels: branchEntries.map(x => x[0]), datasets: [{ label: 'Qty', data: branchEntries.map(x => x[1]), backgroundColor: cssVar('--accent-2') }] }, options: { ...baseChartOptions(), plugins: { ...baseChartOptions().plugins, legend: { display: false } } } });
 
-    // Chart 2 – Brand doughnut
-    const totalsByBrand = {};
-    (mockStock.total || []).forEach(r => {
-      totalsByBrand[r.brand] = (totalsByBrand[r.brand] || 0) + Number(r.on_hand || 0);
-    });
-    const brandLabels = Object.keys(totalsByBrand);
-    const brandData = brandLabels.map(l => totalsByBrand[l]);
-
-    chart2 = new Chart(document.getElementById("chart2").getContext("2d"), {
-      type: "doughnut",
-      data: {
-        labels: brandLabels,
-        datasets: [{
-          data: brandData,
-          backgroundColor: PALETTE.map(c => c + "bb"),
-          borderColor: PALETTE,
-          borderWidth: 1,
-          hoverOffset: 12,
-        }]
-      },
-      options: darkDoughnutOptions()
-    });
-
-    // Chart 3 – Branch bar
-    const totalsByBranch = {};
-    (mockStock.branch || []).forEach(r => {
-      totalsByBranch[r.branch] = (totalsByBranch[r.branch] || 0) + Number(r.on_hand || 0);
-    });
-    const branchLabels = Object.keys(totalsByBranch);
-    const branchData = branchLabels.map(l => totalsByBranch[l]);
-
-    chart3 = new Chart(document.getElementById("chart3").getContext("2d"), {
-      type: "bar",
-      data: {
-        labels: branchLabels,
-        datasets: [{
-          label: "On hand",
-          data: branchData,
-          backgroundColor: "rgba(0,212,255,0.25)",
-          borderColor: "#00d4ff",
-          borderWidth: 1,
-          borderRadius: 6,
-          maxBarThickness: 38,
-        }]
-      },
-      options: darkBarOptions(false)
-    });
-
-    // Chart 4 – Sales line
-    const salesLabels = (mockSales || []).map(r => r.date);
-    const salesData = (mockSales || []).map(r => Number(r.subtotal || 0));
-
-    chart4 = new Chart(document.getElementById("chart4").getContext("2d"), {
-      type: "line",
-      data: {
-        labels: salesLabels,
-        datasets: [{
-          label: "Sales",
-          data: salesData,
-          borderColor: "#00ff9d",
-          backgroundColor: "rgba(0,255,157,0.07)",
-          tension: 0.4,
-          fill: true,
-          pointRadius: 4,
-          pointBackgroundColor: "#00ff9d",
-          pointBorderColor: "#0a0d14",
-          pointBorderWidth: 2,
-          pointHoverRadius: 6,
-        }]
-      },
-      options: darkLineOptions()
-    });
+    const lowRows = [...mockStock.reorder].sort((a,b) => a.on_hand - b.on_hand).slice(0, 8);
+    chart4 = new Chart(document.getElementById('chart4'), { type: 'line', data: { labels: lowRows.map(x => x.model), datasets: [{ label: 'On hand', data: lowRows.map(x => x.on_hand), borderColor: cssVar('--danger'), backgroundColor: 'rgba(239,68,68,0.15)', fill: true, tension: 0.35 }] }, options: { ...baseChartOptions(), plugins: { ...baseChartOptions().plugins, legend: { display: false } } } });
   }
 
   function buildPurchaseCharts() {
     destroyCharts();
+    document.getElementById('chart1Title').textContent = 'Top vendors';
+    document.getElementById('chart1Sub').textContent = 'Purchase subtotal by vendor.';
+    document.getElementById('chart2Title').textContent = 'Purchase category';
+    document.getElementById('chart2Sub').textContent = 'Quantity by category.';
+    document.getElementById('chart3Title').textContent = 'Daily purchase spend';
+    document.getElementById('chart3Sub').textContent = 'Date wise purchase amount.';
+    document.getElementById('chart4Title').textContent = 'Top PO models';
+    document.getElementById('chart4Sub').textContent = 'Most purchased models by qty.';
 
-    document.getElementById("chart1Title").textContent = "Vendor wise purchases";
-    document.getElementById("chart1Sub").textContent = "Total PO quantity by vendor.";
-    document.getElementById("chart2Title").textContent = "Purchase by category";
-    document.getElementById("chart2Sub").textContent = "Qty purchased per category.";
-    document.getElementById("chart3Title").textContent = "PO amount over time";
-    document.getElementById("chart3Sub").textContent = "Daily purchase value.";
-    document.getElementById("chart4Title").textContent = "PO mix (qty vs value)";
-    document.getElementById("chart4Sub").textContent = "Compare quantity and amount.";
+    const vendorEntries = sortEntries(aggregateBy(mockPurchase, 'vendor', 'subtotal'), 8);
+    chart1 = new Chart(document.getElementById('chart1'), { type: 'bar', data: { labels: vendorEntries.map(x => x[0]), datasets: [{ label: 'Amount', data: vendorEntries.map(x => x[1]), backgroundColor: cssVar('--accent') }] }, options: { ...baseChartOptions(), plugins: { ...baseChartOptions().plugins, legend: { display: false } } } });
 
-    const qtyByVendor = {};
-    (mockPurchase || []).forEach(r => { qtyByVendor[r.vendor] = (qtyByVendor[r.vendor] || 0) + Number(r.qty || 0); });
-    const vendorLabels = Object.keys(qtyByVendor);
+    const catEntries = sortEntries(aggregateBy(mockPurchase, 'category', 'qty'), 6);
+    chart2 = new Chart(document.getElementById('chart2'), { type: 'doughnut', data: { labels: catEntries.map(x => x[0]), datasets: [{ data: catEntries.map(x => x[1]), backgroundColor: [cssVar('--accent'), cssVar('--accent-2'), cssVar('--accent-3'), '#f59e0b', '#ef4444', '#8b5cf6'] }] }, options: { ...baseChartOptions(), scales: undefined } });
 
-    chart1 = new Chart(document.getElementById("chart1").getContext("2d"), {
-      type: "bar",
-      data: {
-        labels: vendorLabels,
-        datasets: [{
-          label: "Qty purchased",
-          data: vendorLabels.map(l => qtyByVendor[l]),
-          backgroundColor: PALETTE.map(c => c + "99"),
-          borderColor: PALETTE,
-          borderWidth: 1,
-          borderRadius: 6,
-          maxBarThickness: 38,
-        }]
-      },
-      options: darkBarOptions(false)
-    });
+    const dateEntries = sortEntries(aggregateBy(mockPurchase, 'date', 'subtotal'), 10).reverse();
+    chart3 = new Chart(document.getElementById('chart3'), { type: 'line', data: { labels: dateEntries.map(x => x[0]), datasets: [{ label: 'Amount', data: dateEntries.map(x => x[1]), borderColor: cssVar('--accent-2'), backgroundColor: 'rgba(16,185,129,0.12)', fill: true, tension: 0.35 }] }, options: { ...baseChartOptions(), plugins: { ...baseChartOptions().plugins, legend: { display: false } } } });
 
-    const qtyByCat = {};
-    (mockPurchase || []).forEach(r => { qtyByCat[r.category] = (qtyByCat[r.category] || 0) + Number(r.qty || 0); });
-    const catLabels = Object.keys(qtyByCat);
-
-    chart2 = new Chart(document.getElementById("chart2").getContext("2d"), {
-      type: "doughnut",
-      data: {
-        labels: catLabels,
-        datasets: [{
-          data: catLabels.map(l => qtyByCat[l]),
-          backgroundColor: PALETTE.map(c => c + "bb"),
-          borderColor: PALETTE,
-          borderWidth: 1,
-          hoverOffset: 12,
-        }]
-      },
-      options: darkDoughnutOptions()
-    });
-
-    const dailySpend = {};
-    (mockPurchase || []).forEach(r => { dailySpend[r.date] = (dailySpend[r.date] || 0) + Number(r.subtotal || 0); });
-    const poDateLabels = Object.keys(dailySpend);
-
-    chart3 = new Chart(document.getElementById("chart3").getContext("2d"), {
-      type: "line",
-      data: {
-        labels: poDateLabels,
-        datasets: [{
-          label: "PO amount",
-          data: poDateLabels.map(l => dailySpend[l]),
-          borderColor: "#00d4ff",
-          backgroundColor: "rgba(0,212,255,0.07)",
-          tension: 0.4,
-          fill: true,
-          pointRadius: 4,
-          pointBackgroundColor: "#00d4ff",
-          pointBorderColor: "#0a0d14",
-          pointBorderWidth: 2,
-          pointHoverRadius: 6,
-        }]
-      },
-      options: darkLineOptions()
-    });
-
-    const qtyByDate = {};
-    (mockPurchase || []).forEach(r => { qtyByDate[r.date] = (qtyByDate[r.date] || 0) + Number(r.qty || 0); });
-
-    chart4 = new Chart(document.getElementById("chart4").getContext("2d"), {
-      type: "bar",
-      data: {
-        labels: poDateLabels,
-        datasets: [
-          { label: "Qty", data: poDateLabels.map(l => qtyByDate[l]), backgroundColor: "rgba(0,255,157,0.5)", borderColor: "#00ff9d", borderWidth: 1, borderRadius: 5, maxBarThickness: 24 },
-          { label: "Amount", data: poDateLabels.map(l => dailySpend[l]), backgroundColor: "rgba(0,212,255,0.5)", borderColor: "#00d4ff", borderWidth: 1, borderRadius: 5, maxBarThickness: 24 }
-        ]
-      },
-      options: { ...darkBarOptions(true), plugins: { legend: { position: "bottom", labels: { color: "#7a8599", font: { size: 10 } } } } }
-    });
+    const modelEntries = sortEntries(aggregateBy(mockPurchase, 'model', 'qty'), 8);
+    chart4 = new Chart(document.getElementById('chart4'), { type: 'bar', data: { labels: modelEntries.map(x => x[0]), datasets: [{ label: 'Qty', data: modelEntries.map(x => x[1]), backgroundColor: cssVar('--warning') }] }, options: { ...baseChartOptions(), plugins: { ...baseChartOptions().plugins, legend: { display: false } } } });
   }
 
   function buildSalesCharts() {
     destroyCharts();
+    document.getElementById('chart1Title').textContent = 'Top selling models';
+    document.getElementById('chart1Sub').textContent = 'Units sold by model.';
+    document.getElementById('chart2Title').textContent = 'Daily sales';
+    document.getElementById('chart2Sub').textContent = 'Date wise revenue trend.';
+    document.getElementById('chart3Title').textContent = 'Customer revenue';
+    document.getElementById('chart3Sub').textContent = 'Top customers by sales amount.';
+    document.getElementById('chart4Title').textContent = 'Sales qty vs amount';
+    document.getElementById('chart4Sub').textContent = 'Daily qty and amount comparison.';
 
-    document.getElementById("chart1Title").textContent = "Top models by sales";
-    document.getElementById("chart1Sub").textContent = "Qty sold per model.";
-    document.getElementById("chart2Title").textContent = "Sales by day";
-    document.getElementById("chart2Sub").textContent = "Daily revenue line chart.";
-    document.getElementById("chart3Title").textContent = "Customer mix";
-    document.getElementById("chart3Sub").textContent = "Revenue by customer.";
-    document.getElementById("chart4Title").textContent = "Units vs amount";
-    document.getElementById("chart4Sub").textContent = "Compare sales quantity and value.";
+    const modelEntries = sortEntries(aggregateBy(mockSales, 'model', 'qty'), 8);
+    chart1 = new Chart(document.getElementById('chart1'), { type: 'bar', data: { labels: modelEntries.map(x => x[0]), datasets: [{ label: 'Qty', data: modelEntries.map(x => x[1]), backgroundColor: cssVar('--accent-3') }] }, options: { ...baseChartOptions(), plugins: { ...baseChartOptions().plugins, legend: { display: false } } } });
 
-    const qtyByModel = {};
-    (mockSales || []).forEach(r => { qtyByModel[r.model] = (qtyByModel[r.model] || 0) + Number(r.qty || 0); });
-    const modelLabels = Object.keys(qtyByModel);
+    const dateRevEntries = sortEntries(aggregateBy(mockSales, 'date', 'subtotal'), 10).reverse();
+    chart2 = new Chart(document.getElementById('chart2'), { type: 'line', data: { labels: dateRevEntries.map(x => x[0]), datasets: [{ label: 'Revenue', data: dateRevEntries.map(x => x[1]), borderColor: cssVar('--accent-2'), backgroundColor: 'rgba(16,185,129,0.12)', fill: true, tension: 0.35 }] }, options: { ...baseChartOptions(), plugins: { ...baseChartOptions().plugins, legend: { display: false } } } });
 
-    chart1 = new Chart(document.getElementById("chart1").getContext("2d"), {
-      type: "bar",
-      data: {
-        labels: modelLabels,
-        datasets: [{
-          label: "Qty sold",
-          data: modelLabels.map(l => qtyByModel[l]),
-          backgroundColor: PALETTE.map(c => c + "99"),
-          borderColor: PALETTE,
-          borderWidth: 1,
-          borderRadius: 6,
-          maxBarThickness: 38,
-        }]
-      },
-      options: darkBarOptions(false)
-    });
+    const customerEntries = sortEntries(aggregateBy(mockSales, 'customer', 'subtotal'), 6);
+    chart3 = new Chart(document.getElementById('chart3'), { type: 'doughnut', data: { labels: customerEntries.map(x => x[0]), datasets: [{ data: customerEntries.map(x => x[1]), backgroundColor: [cssVar('--accent'), cssVar('--accent-2'), cssVar('--accent-3'), '#f59e0b', '#ef4444', '#8b5cf6'] }] }, options: { ...baseChartOptions(), scales: undefined } });
 
-    const dailySales = {};
-    (mockSales || []).forEach(r => { dailySales[r.date] = (dailySales[r.date] || 0) + Number(r.subtotal || 0); });
-    const dateLabels = Object.keys(dailySales);
-    const revData = dateLabels.map(l => dailySales[l]);
-
-    chart2 = new Chart(document.getElementById("chart2").getContext("2d"), {
-      type: "line",
-      data: {
-        labels: dateLabels,
-        datasets: [{
-          label: "Revenue",
-          data: revData,
-          borderColor: "#00ff9d",
-          backgroundColor: "rgba(0,255,157,0.07)",
-          tension: 0.4,
-          fill: true,
-          pointRadius: 4,
-          pointBackgroundColor: "#00ff9d",
-          pointBorderColor: "#0a0d14",
-          pointBorderWidth: 2,
-          pointHoverRadius: 6,
-        }]
-      },
-      options: darkLineOptions()
-    });
-
-    const revByCustomer = {};
-    (mockSales || []).forEach(r => { revByCustomer[r.customer] = (revByCustomer[r.customer] || 0) + Number(r.subtotal || 0); });
-    const custLabels = Object.keys(revByCustomer);
-
-    chart3 = new Chart(document.getElementById("chart3").getContext("2d"), {
-      type: "doughnut",
-      data: {
-        labels: custLabels,
-        datasets: [{
-          data: custLabels.map(l => revByCustomer[l]),
-          backgroundColor: PALETTE.map(c => c + "bb"),
-          borderColor: PALETTE,
-          borderWidth: 1,
-          hoverOffset: 12,
-        }]
-      },
-      options: darkDoughnutOptions()
-    });
-
-    const qtyByDate = {};
-    (mockSales || []).forEach(r => { qtyByDate[r.date] = (qtyByDate[r.date] || 0) + Number(r.qty || 0); });
-    const qtyData = dateLabels.map(l => qtyByDate[l]);
-
-    chart4 = new Chart(document.getElementById("chart4").getContext("2d"), {
-      type: "bar",
-      data: {
-        labels: dateLabels,
-        datasets: [
-          { label: "Qty", data: qtyData, backgroundColor: "rgba(0,212,255,0.5)", borderColor: "#00d4ff", borderWidth: 1, borderRadius: 5, maxBarThickness: 24 },
-          { label: "Amount", data: revData, backgroundColor: "rgba(255,184,0,0.5)", borderColor: "#ffb800", borderWidth: 1, borderRadius: 5, maxBarThickness: 24 }
-        ]
-      },
-      options: { ...darkBarOptions(true), plugins: { legend: { position: "bottom", labels: { color: "#7a8599", font: { size: 10 } } } } }
-    });
+    const qtyByDate = aggregateBy(mockSales, 'date', 'qty');
+    const amountByDate = aggregateBy(mockSales, 'date', 'subtotal');
+    const dates = Object.keys(amountByDate).sort().slice(-10);
+    chart4 = new Chart(document.getElementById('chart4'), { type: 'bar', data: { labels: dates, datasets: [{ label: 'Qty', data: dates.map(d => qtyByDate[d] || 0), backgroundColor: cssVar('--accent') }, { label: 'Amount', data: dates.map(d => amountByDate[d] || 0), backgroundColor: cssVar('--warning') }] }, options: baseChartOptions() });
   }
 
-  function initWithStock() {
-    renderKpisStock();
-    renderStockTable();
-    buildStockCharts();
-    // Trigger gauge animation
-    setTimeout(() => {
-      document.getElementById("sidebarGaugeFill").style.width = "72%";
-    }, 500);
+  function refreshCurrentView() {
+    renderSystemStatus();
+    if (currentView === 'stock') {
+      document.getElementById('stockTabs').style.display = 'inline-flex';
+      document.getElementById('filterRow').style.display = 'flex';
+      document.getElementById('heroTitle').textContent = 'SWAG stock overview';
+      document.getElementById('heroSub').textContent = 'Live stock picture with better field mapping and usable charts.';
+      document.getElementById('panelTitle').textContent = 'Product search and filters';
+      document.getElementById('panelSub').textContent = 'Normalized stock data, reorder logic, branch view.';
+      renderKpisStock();
+      renderStockTable();
+      buildStockCharts();
+    } else if (currentView === 'purchase') {
+      document.getElementById('stockTabs').style.display = 'none';
+      document.getElementById('filterRow').style.display = 'none';
+      document.getElementById('heroTitle').textContent = 'SWAG purchase analytics';
+      document.getElementById('heroSub').textContent = 'Vendor, category and amount trends from cleaned PO data.';
+      document.getElementById('panelTitle').textContent = 'Purchase detail';
+      document.getElementById('panelSub').textContent = 'Normalized purchase rows from API.';
+      renderKpisPurchase();
+      renderPurchaseTable();
+      buildPurchaseCharts();
+    } else {
+      document.getElementById('stockTabs').style.display = 'none';
+      document.getElementById('filterRow').style.display = 'none';
+      document.getElementById('heroTitle').textContent = 'SWAG sales analytics';
+      document.getElementById('heroSub').textContent = 'Revenue, customers and models from corrected sales data.';
+      document.getElementById('panelTitle').textContent = 'Sales detail';
+      document.getElementById('panelSub').textContent = 'Normalized sales rows from API.';
+      renderKpisSales();
+      renderSalesTable();
+      buildSalesCharts();
+    }
   }
 
-  // ── NAV ──
-  document.querySelectorAll(".nav-item").forEach(btn => {
-    btn.addEventListener("click", () => {
-      document.querySelectorAll(".nav-item").forEach(b => b.classList.remove("active"));
-      btn.classList.add("active");
+  document.querySelectorAll('.nav-item').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
       currentView = btn.dataset.view;
-
-      const tabs = document.getElementById("stockTabs");
-      const filters = document.getElementById("filterRow");
-      const heroTitle = document.getElementById("heroTitle");
-      const heroSub = document.getElementById("heroSub");
-      const panelTitle = document.getElementById("panelTitle");
-      const panelSub = document.getElementById("panelSub");
-
-      if (currentView === "stock") {
-        tabs.style.display = "inline-flex"; filters.style.display = "flex";
-        heroTitle.textContent = "SWAG stock overview";
-        heroSub.textContent = "Live picture of SWAG inventory health and low stock.";
-        panelTitle.textContent = "Product search and filters";
-        panelSub.textContent = "Search SWAG models and review stock / reorder.";
-        renderKpisStock(); renderStockTable(); buildStockCharts();
-      } else if (currentView === "purchase") {
-        tabs.style.display = "none"; filters.style.display = "none";
-        heroTitle.textContent = "SWAG purchase analytics";
-        heroSub.textContent = "See how much you're buying, from whom, and in which categories.";
-        panelTitle.textContent = "Purchase detail";
-        panelSub.textContent = "PO data via SWAG backend.";
-        renderKpisPurchase(); renderPurchaseTable(); buildPurchaseCharts();
-      } else {
-        tabs.style.display = "none"; filters.style.display = "none";
-        heroTitle.textContent = "SWAG sales analytics";
-        heroSub.textContent = "Understand which models and customers drive revenue.";
-        panelTitle.textContent = "Sales detail";
-        panelSub.textContent = "SO data via SWAG backend.";
-        renderKpisSales(); renderSalesTable(); buildSalesCharts();
-      }
+      refreshCurrentView();
     });
   });
 
-  document.querySelectorAll(".view-tab-btn").forEach(btn => {
-    btn.addEventListener("click", () => {
-      document.querySelectorAll(".view-tab-btn").forEach(b => b.classList.remove("active"));
-      btn.classList.add("active");
+  document.querySelectorAll('.view-tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.view-tab-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
       currentStockTab = btn.dataset.tab;
-      if (currentView === "stock") renderStockTable();
+      renderStockTable();
     });
   });
 
-  document.getElementById("searchBtn").addEventListener("click", () => {
-    if (currentView === "stock") { renderStockTable(); buildStockCharts(); }
-    else if (currentView === "purchase") { renderPurchaseTable(); buildPurchaseCharts(); }
-    else { renderSalesTable(); buildSalesCharts(); }
+  document.getElementById('searchBtn').addEventListener('click', () => {
+    if (currentView === 'stock') {
+      renderStockTable();
+      buildStockCharts();
+    }
   });
 
-  // Init
-  const el = document.getElementById("dateBadge");
-  el.textContent = new Date().toLocaleString("en-GB", { day: "2-digit", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" });
-  renderSystemStatus();
+  setDateBadge();
   loadDataFromApi();
 </script>
 </body>
