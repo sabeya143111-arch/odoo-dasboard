@@ -27,7 +27,7 @@ ALLOWED_ORIGINS = [
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=ALLOWED_ORIGINS,   # testing ke liye ["*"] bhi kar sakte ho
+    allow_origins=ALLOWED_ORIGINS,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -432,7 +432,7 @@ def get_purchase():
     }
 
 
-# ---------- SALES ENDPOINT ----------
+# ---------- SALES ENDPOINT (with default last 90 days) ----------
 @app.get("/api/sales")
 def get_sales(
     from_date: Optional[str] = Query(None, description="Start date YYYY-MM-DD (inclusive)"),
@@ -440,12 +440,19 @@ def get_sales(
 ):
     uid, models = get_odoo()
 
+    # Default domain: confirmed/done orders
     domain = [["state", "in", ["sale", "done"]]]
 
-    if from_date:
-        domain.append(("order_id.date_order", ">=", f"{from_date} 00:00:00"))
-    if to_date:
-        domain.append(("order_id.date_order", "<=", f"{to_date} 23:59:59"))
+    # If user passes explicit dates, use those
+    if from_date or to_date:
+        if from_date:
+            domain.append(("order_id.date_order", ">=", f"{from_date} 00:00:00"))
+        if to_date:
+            domain.append(("order_id.date_order", "<=", f"{to_date} 23:59:59"))
+    else:
+        # Otherwise default to last 90 days
+        date_90_ago = (datetime.now() - timedelta(days=90)).strftime("%Y-%m-%d")
+        domain.append(("order_id.date_order", ">=", f"{date_90_ago} 00:00:00"))
 
     fields = [
         "order_id",
