@@ -10,26 +10,27 @@ ODOO_DB = "db2"
 ODOO_USER = "ziad.m@swag.com.sa"
 ODOO_PASSWORD = "7cda7ec6fccb6afc78fd1968d93b09240572ee2b"
 
-# ---------- FIELD NAME CONSTANTS (easy to adjust if your Odoo uses different field names) ----------
-BRAND_FIELD = "product_brand_id"   # Change to "x_brand_id" if needed
+# ---------- FIELD NAME CONSTANTS ----------
+BRAND_FIELD = "product_brand_id"
 CATEG_FIELD = "categ_id"
 
 # ---------- FASTAPI APP ----------
 app = FastAPI()
 
-# Explicit allowed origins — add any new frontend URLs here
+# Frontend origins (prod + preview + local)
 ALLOWED_ORIGINS = [
-    "https://odoo-dasboard.vercel.app",   # production frontend
-    "http://localhost:3000",               # local dev (React / Next.js default)
-    "http://localhost:5173",               # local dev (Vite default)
+    "https://odoo-dasboard.vercel.app",   # main prod
+    "https://odoo-dasboard-6zuaylfms-tariques-projects-74503042.vercel.app",  # current preview
+    "http://localhost:3000",             # local dev (Next/React)
+    "http://localhost:5173",             # local dev (Vite)
 ]
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=ALLOWED_ORIGINS,
+    allow_origins=ALLOWED_ORIGINS,   # testing ke liye ["*"] bhi kar sakte ho
     allow_credentials=True,
-    allow_methods=["*"],   # GET, POST, OPTIONS, etc.
-    allow_headers=["*"],   # Content-Type, Authorization, etc.
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 # ---------- LAZY ODOO CONNECTION ----------
@@ -45,12 +46,11 @@ def get_odoo():
         raise HTTPException(status_code=500, detail=f"Odoo connection error: {str(e)}")
 
 
-# ---------- SHARED HELPER: search_read with optional limit ----------
-# If limit is 0 or None → no limit key is passed → Odoo returns all records
+# ---------- SHARED HELPER ----------
 def odoo_search_read(model, domain, fields, limit=5000, order="id desc"):
     uid, models = get_odoo()
     kw = {"fields": fields, "order": order}
-    if limit:                      # only add limit when it's a positive integer
+    if limit:
         kw["limit"] = limit
     return models.execute_kw(
         ODOO_DB, uid, ODOO_PASSWORD,
@@ -60,7 +60,6 @@ def odoo_search_read(model, domain, fields, limit=5000, order="id desc"):
     )
 
 
-# ---------- SHARED: Build product template info map ----------
 def _build_tmpl_map(tmpl_ids: list) -> dict:
     if not tmpl_ids:
         return {}
@@ -85,8 +84,6 @@ def _build_tmpl_map(tmpl_ids: list) -> dict:
     return tmpl_map
 
 
-# ---------- SHARED: Build product.product → template map ----------
-# Returns {product_id: {name, brand, category, tmpl_id}}
 def _build_product_tmpl_map(prod_ids: list) -> dict:
     if not prod_ids:
         return {}
@@ -100,7 +97,6 @@ def _build_product_tmpl_map(prod_ids: list) -> dict:
             {"fields": ["id", "name", "product_tmpl_id", CATEG_FIELD, BRAND_FIELD]}
         )
 
-        # Collect all template IDs so we can batch-fetch template-level brand/category
         tmpl_ids = list({
             p["product_tmpl_id"][0]
             for p in prod_records
@@ -113,8 +109,6 @@ def _build_product_tmpl_map(prod_ids: list) -> dict:
             tmpl_id  = tmpl_raw[0] if tmpl_raw else None
             tmpl_info = tmpl_map.get(tmpl_id, {})
 
-            # Prefer template-level brand/category (more reliably set in Odoo)
-            # Fall back to variant-level field, then "Unknown"
             brand_raw = p.get(BRAND_FIELD)
             brand = (
                 tmpl_info.get("brand")
@@ -140,7 +134,6 @@ def _build_product_tmpl_map(prod_ids: list) -> dict:
     return prod_map
 
 
-# ---------- SHARED: 30-day sales velocity per product.template ----------
 def _build_velocity_map(var_ids: list, uid, models) -> dict:
     if not var_ids:
         return {}
@@ -440,9 +433,6 @@ def get_purchase():
 
 
 # ---------- SALES ENDPOINT ----------
-# FIX 1: Added optional ?from_date and ?to_date query params for date range filtering
-# FIX 2: Removed the limit=2000 cap — all matching sale.order.line records are now fetched
-# FIX 3: Brand/category now correctly pulled from product.template via _build_product_tmpl_map
 @app.get("/api/sales")
 def get_sales(
     from_date: Optional[str] = Query(None, description="Start date YYYY-MM-DD (inclusive)"),
@@ -450,10 +440,8 @@ def get_sales(
 ):
     uid, models = get_odoo()
 
-    # Build domain — always filter for confirmed/done orders
     domain = [["state", "in", ["sale", "done"]]]
 
-    # Optionally narrow by date range on the parent order's date
     if from_date:
         domain.append(("order_id.date_order", ">=", f"{from_date} 00:00:00"))
     if to_date:
@@ -469,7 +457,6 @@ def get_sales(
         "create_date",
     ]
 
-    # FIX: limit=0 → no limit passed to Odoo → all records returned
     lines = odoo_search_read(
         "sale.order.line",
         domain,
@@ -478,13 +465,9 @@ def get_sales(
         order="id desc",
     )
 
-    # Collect unique product.product IDs
     prod_ids = list({line["product_id"][0] for line in lines if line.get("product_id")})
-
-    # FIX: _build_product_tmpl_map now reads brand/category correctly from product.template
     prod_map = _build_product_tmpl_map(prod_ids)
 
-    # 30-day velocity for stock coverage estimate
     date_30_ago = (datetime.now() - timedelta(days=30)).strftime("%Y-%m-%d")
     vel_by_prod = {}
     if prod_ids:
@@ -506,7 +489,6 @@ def get_sales(
         except Exception:
             pass
 
-    # Current stock per product
     stock_by_prod = {}
     if prod_ids:
         try:
@@ -523,13 +505,11 @@ def get_sales(
         except Exception:
             pass
 
-    # Assemble sales rows
     sales = []
     for line in lines:
         prod_raw = line.get("product_id")
         prod_id  = prod_raw[0] if prod_raw else None
 
-        # FIX: use prod_map which now has correct brand/category from template level
         info = prod_map.get(prod_id, {})
         product_name  = info.get("name") or (prod_raw[1] if prod_raw else "Unknown")
         category_name = info.get("category", "Unknown")
@@ -559,7 +539,6 @@ def get_sales(
             "days_left":     days_left if days_left is not None else "∞",
         })
 
-    # FIX: summary now computed over the FULL dataset (no cap)
     total_revenue    = sum(s["subtotal"] for s in sales)
     total_qty        = sum(s["qty"] for s in sales)
     unique_customers = list({s["customer"] for s in sales})
@@ -592,7 +571,7 @@ def get_sales(
     }
 
 
-# ---------- ESTIMATE ENDPOINT (standalone) ----------
+# ---------- ESTIMATE ENDPOINT ----------
 @app.get("/api/estimate")
 def get_estimate():
     uid, models = get_odoo()
