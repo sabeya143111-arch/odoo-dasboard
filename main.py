@@ -1,6 +1,7 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 import xmlrpc.client
+from datetime import datetime, timedelta
 
 # ---------- ODOO CONFIG ----------
 ODOO_URL = "https://db.swag.com.sa"
@@ -42,6 +43,130 @@ def odoo_search_read(model, domain, fields, limit=2000):
     )
 
 
+# ---------- SHARED: Build product template info map ----------
+def _build_tmpl_map(tmpl_ids: list) -> dict:
+    """
+    Given a list of product.template IDs, return a dict:
+      { template_id -> { "brand": str, "category": str } }
+    """
+    if not tmpl_ids:
+        return {}
+    uid, models = get_odoo()
+    tmpl_map = {}
+    try:
+        tmpl_records = models.execute_kw(
+            ODOO_DB, uid, ODOO_PASSWORD,
+            "product.template", "read",
+            [tmpl_ids],
+            {"fields": ["id", "categ_id", "product_brand_id"]}
+        )
+        for t in tmpl_records:
+            categ = t.get("categ_id")
+            brand = t.get("product_brand_id")
+            tmpl_map[t["id"]] = {
+                "category": categ[1] if categ else "Unknown",
+                "brand": brand[1] if brand else "Unknown",
+            }
+    except Exception:
+        pass
+    return tmpl_map
+
+
+# ---------- SHARED: Build product.product → template map ----------
+def _build_product_tmpl_map(prod_ids: list) -> dict:
+    """
+    Given a list of product.product IDs, return a dict:
+      { product_id -> { "brand": str, "category": str, "name": str, "tmpl_id": int } }
+    Fetches via product.product then enriches with product.template brand/category.
+    """
+    if not prod_ids:
+        return {}
+    uid, models = get_odoo()
+    prod_map = {}
+    try:
+        prod_records = models.execute_kw(
+            ODOO_DB, uid, ODOO_PASSWORD,
+            "product.product", "read",
+            [prod_ids],
+            {"fields": ["id", "name", "product_tmpl_id", "categ_id", "product_brand_id"]}
+        )
+        # Collect template IDs for additional brand lookup
+        tmpl_ids = list({
+            p["product_tmpl_id"][0]
+            for p in prod_records
+            if p.get("product_tmpl_id")
+        })
+        tmpl_map = _build_tmpl_map(tmpl_ids)
+
+        for p in prod_records:
+            tmpl_raw = p.get("product_tmpl_id")
+            tmpl_id = tmpl_raw[0] if tmpl_raw else None
+            tmpl_info = tmpl_map.get(tmpl_id, {})
+
+            # Brand: prefer template brand, fall back to product brand
+            brand_raw = p.get("product_brand_id")
+            brand = tmpl_info.get("brand") or (brand_raw[1] if brand_raw else "Unknown")
+
+            # Category: prefer template category, fall back to product category
+            categ_raw = p.get("categ_id")
+            category = tmpl_info.get("category") or (categ_raw[1] if categ_raw else "Unknown")
+
+            prod_map[p["id"]] = {
+                "name": p.get("name", "Unknown"),
+                "brand": brand,
+                "category": category,
+                "tmpl_id": tmpl_id,
+            }
+    except Exception:
+        pass
+    return prod_map
+
+
+# ---------- SHARED: 30-day sales velocity per product.template ----------
+def _build_velocity_map(var_ids: list, uid, models) -> dict:
+    """
+    Returns { template_id -> total_qty_sold_last_30_days }
+    using sale.order.line.
+    """
+    if not var_ids:
+        return {}
+    date_30_ago = (datetime.now() - timedelta(days=30)).strftime("%Y-%m-%d")
+    vel_map = {}
+    try:
+        # We need variant→template mapping
+        variants = models.execute_kw(
+            ODOO_DB, uid, ODOO_PASSWORD,
+            "product.product", "read",
+            [var_ids],
+            {"fields": ["id", "product_tmpl_id"]}
+        )
+        var_to_tmpl = {}
+        for v in variants:
+            raw = v.get("product_tmpl_id")
+            tid = raw[0] if isinstance(raw, list) else raw
+            var_to_tmpl[v["id"]] = tid
+
+        so_lines = models.execute_kw(
+            ODOO_DB, uid, ODOO_PASSWORD,
+            "sale.order.line", "search_read",
+            [[
+                ("product_id", "in", var_ids),
+                ("order_id.date_order", ">=", f"{date_30_ago} 00:00:00"),
+                ("order_id.state", "in", ["sale", "done"]),
+            ]],
+            {"fields": ["product_id", "product_uom_qty"], "limit": 50000}
+        )
+        for sl in so_lines:
+            pid_raw = sl.get("product_id")
+            vid = pid_raw[0] if isinstance(pid_raw, list) else pid_raw
+            tid = var_to_tmpl.get(vid)
+            if tid:
+                vel_map[tid] = vel_map.get(tid, 0) + float(sl.get("product_uom_qty") or 0)
+    except Exception:
+        pass
+    return vel_map
+
+
 # ---------- HEALTH CHECK ----------
 @app.get("/")
 def root():
@@ -56,58 +181,102 @@ def health():
 # ---------- STOCK ENDPOINT ----------
 @app.get("/api/stock")
 def get_stock():
-    # Step 1: read stock quants (including product_tmpl_id for brand/category lookup)
-    fields = ["product_id", "product_tmpl_id", "location_id", "quantity", "reserved_quantity"]
-    quants = odoo_search_read("stock.quant", [["quantity", ">", 0]], fields, limit=2000)
+    uid, models = get_odoo()
 
-    # Step 2: collect unique template IDs for one batched read
+    # Step 1: read stock quants
+    fields = ["product_id", "product_tmpl_id", "location_id", "quantity", "reserved_quantity"]
+    quants = models.execute_kw(
+        ODOO_DB, uid, ODOO_PASSWORD,
+        "stock.quant", "search_read",
+        [[["quantity", ">", 0]]],
+        {"fields": fields, "limit": 2000}
+    )
+
+    # Step 2: collect unique template IDs
     tmpl_ids = list({q["product_tmpl_id"][0] for q in quants if q.get("product_tmpl_id")})
 
-    # Step 3: batched read from product.template
-    tmpl_map = {}  # template_id -> {"brand": str, "category": str}
-    if tmpl_ids:
-        uid, models = get_odoo()
-        try:
-            tmpl_records = models.execute_kw(
-                ODOO_DB, uid, ODOO_PASSWORD,
-                "product.template", "read",
-                [tmpl_ids],
-                {"fields": ["id", "categ_id", "product_brand_id"]}
-            )
-            for t in tmpl_records:
-                categ = t.get("categ_id")
-                brand = t.get("product_brand_id")
-                tmpl_map[t["id"]] = {
-                    "category": categ[1] if categ else "Unknown",
-                    "brand": brand[1] if brand else "Unknown",
-                }
-        except Exception:
-            pass  # fall back to Unknown if field doesn't exist on this Odoo instance
+    # Step 3: batch read template info
+    tmpl_map = _build_tmpl_map(tmpl_ids)
 
+    # Step 4: build velocity map using product variants
+    var_ids = list({q["product_id"][0] for q in quants if q.get("product_id")})
+    # Build variant→template map from quants directly (faster)
+    var_to_tmpl_quant = {}
+    for q in quants:
+        if q.get("product_id") and q.get("product_tmpl_id"):
+            var_to_tmpl_quant[q["product_id"][0]] = q["product_tmpl_id"][0]
+
+    # 30-day sales velocity
+    vel_map = {}  # tmpl_id -> qty sold in 30 days
+    if var_ids:
+        date_30_ago = (datetime.now() - timedelta(days=30)).strftime("%Y-%m-%d")
+        try:
+            so_lines = models.execute_kw(
+                ODOO_DB, uid, ODOO_PASSWORD,
+                "sale.order.line", "search_read",
+                [[
+                    ("product_id", "in", var_ids),
+                    ("order_id.date_order", ">=", f"{date_30_ago} 00:00:00"),
+                    ("order_id.state", "in", ["sale", "done"]),
+                ]],
+                {"fields": ["product_id", "product_uom_qty"], "limit": 50000}
+            )
+            for sl in so_lines:
+                pid_raw = sl.get("product_id")
+                vid = pid_raw[0] if isinstance(pid_raw, list) else pid_raw
+                tid = var_to_tmpl_quant.get(vid)
+                if tid:
+                    vel_map[tid] = vel_map.get(tid, 0) + float(sl.get("product_uom_qty") or 0)
+        except Exception:
+            pass
+
+    # Step 5: assemble result rows
     total = []
     branch = []
     reorder = []
 
+    # Aggregate by (tmpl_id, product_name) for total qty
+    tmpl_qty = {}
+    for q in quants:
+        tid = q["product_tmpl_id"][0] if q.get("product_tmpl_id") else None
+        if tid:
+            tmpl_qty[tid] = tmpl_qty.get(tid, 0) + float(q["quantity"] or 0)
+
+    # Build total rows per template
+    seen_tmpl = set()
     for q in quants:
         product_name = q["product_id"][1]
         product_id = q["product_id"][0]
         location_name = q["location_id"][1] if q["location_id"] else "Unknown"
-        qty = q["quantity"]
-
+        qty = float(q["quantity"] or 0)
         tmpl_id = q["product_tmpl_id"][0] if q.get("product_tmpl_id") else None
         info = tmpl_map.get(tmpl_id, {})
         brand_name = info.get("brand", "Unknown")
         category_name = info.get("category", "Unknown")
 
-        total.append({
-            "system": "SWAG",
-            "brand": brand_name,
-            "category": category_name,
-            "model": str(product_id),
-            "product": product_name,
-            "on_hand": qty,
-            "sale_price": 0,
-        })
+        # Velocity / estimate
+        sold_30 = vel_map.get(tmpl_id, 0) if tmpl_id else 0
+        daily_vel = round(sold_30 / 30.0, 3)
+        on_hand_total = tmpl_qty.get(tmpl_id, qty) if tmpl_id else qty
+        days_left = round(on_hand_total / daily_vel, 1) if daily_vel > 0 else None
+
+        # Total (one row per template to avoid duplicates)
+        if tmpl_id not in seen_tmpl:
+            seen_tmpl.add(tmpl_id)
+            total.append({
+                "system": "SWAG",
+                "brand": brand_name,
+                "category": category_name,
+                "model": str(product_id),
+                "product": product_name,
+                "on_hand": on_hand_total,
+                "sold_30d": round(sold_30, 1),
+                "daily_velocity": daily_vel,
+                "days_left": days_left if days_left is not None else "∞",
+                "sale_price": 0,
+            })
+
+        # Branch (one row per quant = per location)
         branch.append({
             "system": "SWAG",
             "branch": location_name,
@@ -116,16 +285,23 @@ def get_stock():
             "model": str(product_id),
             "on_hand": qty,
         })
-        if qty < 5:
+
+        # Reorder suggestions
+        if on_hand_total < 5:
+            priority = "Critical" if on_hand_total == 0 else "Low"
+            suggest = 20
             reorder.append({
                 "system": "SWAG",
                 "brand": brand_name,
                 "category": category_name,
                 "model": str(product_id),
                 "product": product_name,
-                "on_hand": qty,
-                "suggest": 20,
-                "priority": "Critical" if qty == 0 else "Low",
+                "on_hand": on_hand_total,
+                "sold_30d": round(sold_30, 1),
+                "daily_velocity": daily_vel,
+                "days_left": days_left if days_left is not None else "∞",
+                "suggest": suggest,
+                "priority": priority,
             })
 
     return {"total": total, "branch": branch, "reorder": reorder}
@@ -134,36 +310,66 @@ def get_stock():
 # ---------- PURCHASE ENDPOINT ----------
 @app.get("/api/purchase")
 def get_purchase():
-    # Step 1: read purchase order lines (approved POs only)
-    domain = [["state", "in", ["purchase", "done"]]]
-    fields = ["order_id", "date_order", "partner_id", "product_id", "product_qty", "price_subtotal"]
-    lines = odoo_search_read("purchase.order.line", domain, fields, limit=2000)
+    uid, models = get_odoo()
 
-    # Step 2: collect unique product IDs for one batched read
+    # Step 1: read approved purchase order lines
+    domain = [["state", "in", ["purchase", "done"]]]
+    fields = ["order_id", "date_order", "partner_id", "product_id", "product_qty",
+              "price_unit", "price_subtotal"]
+    lines = models.execute_kw(
+        ODOO_DB, uid, ODOO_PASSWORD,
+        "purchase.order.line", "search_read",
+        [domain],
+        {"fields": fields, "limit": 2000}
+    )
+
+    # Step 2: collect unique product.product IDs
     prod_ids = list({line["product_id"][0] for line in lines if line.get("product_id")})
 
-    # Step 3: batched read from product.product
-    prod_map = {}  # product_id -> {"brand": str, "category": str, "name": str}
-    if prod_ids:
-        uid, models = get_odoo()
-        try:
-            prod_records = models.execute_kw(
-                ODOO_DB, uid, ODOO_PASSWORD,
-                "product.product", "read",
-                [prod_ids],
-                {"fields": ["id", "name", "categ_id", "product_brand_id"]}
-            )
-            for p in prod_records:
-                categ = p.get("categ_id")
-                brand = p.get("product_brand_id")
-                prod_map[p["id"]] = {
-                    "name": p.get("name", "Unknown"),
-                    "category": categ[1] if categ else "Unknown",
-                    "brand": brand[1] if brand else "Unknown",
-                }
-        except Exception:
-            pass  # fall back gracefully if field missing
+    # Step 3: build full product info map (brand + category from template)
+    prod_map = _build_product_tmpl_map(prod_ids)
 
+    # Step 4: build velocity map for purchased products
+    #   We need variant ids for velocity lookup
+    date_30_ago = (datetime.now() - timedelta(days=30)).strftime("%Y-%m-%d")
+    vel_by_prod = {}  # product_id -> qty_sold_30d
+    if prod_ids:
+        try:
+            so_lines = models.execute_kw(
+                ODOO_DB, uid, ODOO_PASSWORD,
+                "sale.order.line", "search_read",
+                [[
+                    ("product_id", "in", prod_ids),
+                    ("order_id.date_order", ">=", f"{date_30_ago} 00:00:00"),
+                    ("order_id.state", "in", ["sale", "done"]),
+                ]],
+                {"fields": ["product_id", "product_uom_qty"], "limit": 50000}
+            )
+            for sl in so_lines:
+                pid_raw = sl.get("product_id")
+                pid = pid_raw[0] if isinstance(pid_raw, list) else pid_raw
+                vel_by_prod[pid] = vel_by_prod.get(pid, 0) + float(sl.get("product_uom_qty") or 0)
+        except Exception:
+            pass
+
+    # Step 5: get current stock per product for estimate
+    stock_by_prod = {}  # product_id -> on_hand
+    if prod_ids:
+        try:
+            quants = models.execute_kw(
+                ODOO_DB, uid, ODOO_PASSWORD,
+                "stock.quant", "search_read",
+                [[("product_id", "in", prod_ids), ("location_id.usage", "=", "internal")]],
+                {"fields": ["product_id", "quantity"], "limit": 50000}
+            )
+            for q in quants:
+                pid_raw = q.get("product_id")
+                pid = pid_raw[0] if isinstance(pid_raw, list) else pid_raw
+                stock_by_prod[pid] = stock_by_prod.get(pid, 0) + float(q.get("quantity") or 0)
+        except Exception:
+            pass
+
+    # Step 6: assemble purchase rows
     purchases = []
     for line in lines:
         prod_id = line["product_id"][0] if line.get("product_id") else None
@@ -172,6 +378,16 @@ def get_purchase():
         category_name = info.get("category", "Unknown")
         brand_name = info.get("brand", "Unknown")
 
+        # Estimate / velocity
+        sold_30 = vel_by_prod.get(prod_id, 0)
+        daily_vel = round(sold_30 / 30.0, 3)
+        on_hand = stock_by_prod.get(prod_id, 0)
+        days_left = round(on_hand / daily_vel, 1) if daily_vel > 0 else None
+
+        # Restock estimate: how many days will this purchase order cover?
+        po_qty = float(line.get("product_qty") or 0)
+        days_cover = round(po_qty / daily_vel, 1) if daily_vel > 0 else None
+
         purchases.append({
             "date": (line.get("date_order") or "")[:10],
             "po": line["order_id"][1],
@@ -179,27 +395,276 @@ def get_purchase():
             "brand": brand_name,
             "category": category_name,
             "model": product_name,
-            "qty": line["product_qty"],
-            "subtotal": line["price_subtotal"],
+            "qty": po_qty,
+            "unit_price": float(line.get("price_unit") or 0),
+            "subtotal": float(line.get("price_subtotal") or 0),
+            # Estimate fields (same logic as stock)
+            "on_hand": on_hand,
+            "sold_30d": round(sold_30, 1),
+            "daily_velocity": daily_vel,
+            "days_left": days_left if days_left is not None else "∞",
+            "days_cover_by_po": days_cover if days_cover is not None else "∞",
         })
 
-    return {"purchases": purchases}
+    # Summary / KPI for purchase analytics
+    total_spend = sum(p["subtotal"] for p in purchases)
+    total_qty = sum(p["qty"] for p in purchases)
+    unique_vendors = list({p["vendor"] for p in purchases})
+    by_vendor = {}
+    for p in purchases:
+        by_vendor[p["vendor"]] = by_vendor.get(p["vendor"], 0) + p["subtotal"]
+    top_vendor = max(by_vendor, key=by_vendor.get) if by_vendor else "—"
+    by_brand = {}
+    for p in purchases:
+        by_brand[p["brand"]] = by_brand.get(p["brand"], 0) + p["subtotal"]
+    by_category = {}
+    for p in purchases:
+        by_category[p["category"]] = by_category.get(p["category"], 0) + p["subtotal"]
+
+    return {
+        "purchases": purchases,
+        "summary": {
+            "total_spend": round(total_spend, 2),
+            "total_qty": round(total_qty, 1),
+            "vendor_count": len(unique_vendors),
+            "po_line_count": len(purchases),
+            "top_vendor": top_vendor,
+            "by_vendor": by_vendor,
+            "by_brand": by_brand,
+            "by_category": by_category,
+        }
+    }
 
 
 # ---------- SALES ENDPOINT ----------
 @app.get("/api/sales")
 def get_sales():
+    uid, models = get_odoo()
+
+    # Step 1: read confirmed/done sale order lines
     domain = [["state", "in", ["sale", "done"]]]
-    fields = ["order_id", "order_partner_id", "product_id", "product_uom_qty", "price_subtotal", "create_date"]
-    lines = odoo_search_read("sale.order.line", domain, fields, limit=2000)
+    fields = ["order_id", "order_partner_id", "product_id", "product_uom_qty",
+              "price_unit", "price_subtotal", "create_date"]
+    lines = models.execute_kw(
+        ODOO_DB, uid, ODOO_PASSWORD,
+        "sale.order.line", "search_read",
+        [domain],
+        {"fields": fields, "limit": 2000}
+    )
+
+    # Step 2: collect unique product.product IDs
+    prod_ids = list({line["product_id"][0] for line in lines if line.get("product_id")})
+
+    # Step 3: build full product info map (brand + category from template)
+    prod_map = _build_product_tmpl_map(prod_ids)
+
+    # Step 4: build 30-day velocity per product (how fast each is selling NOW)
+    date_30_ago = (datetime.now() - timedelta(days=30)).strftime("%Y-%m-%d")
+    vel_by_prod = {}
+    if prod_ids:
+        try:
+            so_vel_lines = models.execute_kw(
+                ODOO_DB, uid, ODOO_PASSWORD,
+                "sale.order.line", "search_read",
+                [[
+                    ("product_id", "in", prod_ids),
+                    ("order_id.date_order", ">=", f"{date_30_ago} 00:00:00"),
+                    ("order_id.state", "in", ["sale", "done"]),
+                ]],
+                {"fields": ["product_id", "product_uom_qty"], "limit": 50000}
+            )
+            for sl in so_vel_lines:
+                pid_raw = sl.get("product_id")
+                pid = pid_raw[0] if isinstance(pid_raw, list) else pid_raw
+                vel_by_prod[pid] = vel_by_prod.get(pid, 0) + float(sl.get("product_uom_qty") or 0)
+        except Exception:
+            pass
+
+    # Step 5: get current stock per product for days-left estimate
+    stock_by_prod = {}
+    if prod_ids:
+        try:
+            quants = models.execute_kw(
+                ODOO_DB, uid, ODOO_PASSWORD,
+                "stock.quant", "search_read",
+                [[("product_id", "in", prod_ids), ("location_id.usage", "=", "internal")]],
+                {"fields": ["product_id", "quantity"], "limit": 50000}
+            )
+            for q in quants:
+                pid_raw = q.get("product_id")
+                pid = pid_raw[0] if isinstance(pid_raw, list) else pid_raw
+                stock_by_prod[pid] = stock_by_prod.get(pid, 0) + float(q.get("quantity") or 0)
+        except Exception:
+            pass
+
+    # Step 6: assemble sales rows
     sales = []
     for line in lines:
+        prod_id = line["product_id"][0] if line.get("product_id") else None
+        info = prod_map.get(prod_id, {})
+        product_name = info.get("name") or (line["product_id"][1] if line.get("product_id") else "Unknown")
+        category_name = info.get("category", "Unknown")
+        brand_name = info.get("brand", "Unknown")
+
+        # Estimate / velocity
+        sold_30 = vel_by_prod.get(prod_id, 0)
+        daily_vel = round(sold_30 / 30.0, 3)
+        on_hand = stock_by_prod.get(prod_id, 0)
+        days_left = round(on_hand / daily_vel, 1) if daily_vel > 0 else None
+
         sales.append({
             "date": (line.get("create_date") or "")[:10],
             "so": line["order_id"][1],
-            "customer": line["order_partner_id"][1],
-            "model": line["product_id"][1],
-            "qty": line["product_uom_qty"],
-            "subtotal": line["price_subtotal"],
+            "customer": line["order_partner_id"][1] if line.get("order_partner_id") else "Unknown",
+            "brand": brand_name,
+            "category": category_name,
+            "model": product_name,
+            "qty": float(line.get("product_uom_qty") or 0),
+            "unit_price": float(line.get("price_unit") or 0),
+            "subtotal": float(line.get("price_subtotal") or 0),
+            # Estimate fields (same logic as stock)
+            "on_hand": on_hand,
+            "sold_30d": round(sold_30, 1),
+            "daily_velocity": daily_vel,
+            "days_left": days_left if days_left is not None else "∞",
         })
-    return {"sales": sales}
+
+    # Summary / KPI for sales analytics
+    total_revenue = sum(s["subtotal"] for s in sales)
+    total_qty = sum(s["qty"] for s in sales)
+    unique_customers = list({s["customer"] for s in sales})
+    by_customer = {}
+    for s in sales:
+        by_customer[s["customer"]] = by_customer.get(s["customer"], 0) + s["subtotal"]
+    top_customer = max(by_customer, key=by_customer.get) if by_customer else "—"
+    by_brand = {}
+    for s in sales:
+        by_brand[s["brand"]] = by_brand.get(s["brand"], 0) + s["subtotal"]
+    by_category = {}
+    for s in sales:
+        by_category[s["category"]] = by_category.get(s["category"], 0) + s["subtotal"]
+
+    return {
+        "sales": sales,
+        "summary": {
+            "total_revenue": round(total_revenue, 2),
+            "total_qty": round(total_qty, 1),
+            "customer_count": len(unique_customers),
+            "so_line_count": len(sales),
+            "top_customer": top_customer,
+            "by_customer": by_customer,
+            "by_brand": by_brand,
+            "by_category": by_category,
+        }
+    }
+
+
+# ---------- ESTIMATE ENDPOINT (standalone) ----------
+@app.get("/api/estimate")
+def get_estimate():
+    """
+    Returns velocity + days-left estimates for all products with stock.
+    Same logic as stock endpoint but focused purely on the estimate data.
+    """
+    uid, models = get_odoo()
+
+    # Get all stock quants
+    quants = models.execute_kw(
+        ODOO_DB, uid, ODOO_PASSWORD,
+        "stock.quant", "search_read",
+        [[["location_id.usage", "=", "internal"]]],
+        {"fields": ["product_id", "product_tmpl_id", "quantity"], "limit": 5000}
+    )
+
+    # Aggregate on_hand per template
+    tmpl_qty = {}
+    tmpl_to_var = {}
+    for q in quants:
+        if q.get("product_tmpl_id") and q.get("product_id"):
+            tid = q["product_tmpl_id"][0]
+            vid = q["product_id"][0]
+            tmpl_qty[tid] = tmpl_qty.get(tid, 0) + float(q["quantity"] or 0)
+            tmpl_to_var.setdefault(tid, []).append(vid)
+
+    var_ids = [q["product_id"][0] for q in quants if q.get("product_id")]
+    date_30_ago = (datetime.now() - timedelta(days=30)).strftime("%Y-%m-%d")
+
+    # 30d sales velocity by variant, aggregated to template
+    vel_map = {}
+    if var_ids:
+        try:
+            so_lines = models.execute_kw(
+                ODOO_DB, uid, ODOO_PASSWORD,
+                "sale.order.line", "search_read",
+                [[
+                    ("product_id", "in", var_ids),
+                    ("order_id.date_order", ">=", f"{date_30_ago} 00:00:00"),
+                    ("order_id.state", "in", ["sale", "done"]),
+                ]],
+                {"fields": ["product_id", "product_uom_qty"], "limit": 50000}
+            )
+            # Build variant->template from quants
+            v2t = {}
+            for q in quants:
+                if q.get("product_id") and q.get("product_tmpl_id"):
+                    v2t[q["product_id"][0]] = q["product_tmpl_id"][0]
+            for sl in so_lines:
+                pid_raw = sl.get("product_id")
+                vid = pid_raw[0] if isinstance(pid_raw, list) else pid_raw
+                tid = v2t.get(vid)
+                if tid:
+                    vel_map[tid] = vel_map.get(tid, 0) + float(sl.get("product_uom_qty") or 0)
+        except Exception:
+            pass
+
+    # Build template info
+    tmpl_ids = list(tmpl_qty.keys())
+    tmpl_map = _build_tmpl_map(tmpl_ids)
+
+    # Get product names
+    tmpl_names = {}
+    if tmpl_ids:
+        try:
+            tmpl_records = models.execute_kw(
+                ODOO_DB, uid, ODOO_PASSWORD,
+                "product.template", "read",
+                [tmpl_ids],
+                {"fields": ["id", "name", "default_code"]}
+            )
+            for t in tmpl_records:
+                tmpl_names[t["id"]] = {
+                    "name": t.get("name", ""),
+                    "code": t.get("default_code", ""),
+                }
+        except Exception:
+            pass
+
+    estimates = []
+    for tid, on_hand in tmpl_qty.items():
+        sold_30 = vel_map.get(tid, 0)
+        daily_vel = round(sold_30 / 30.0, 3)
+        days_left = round(on_hand / daily_vel, 1) if daily_vel > 0 else None
+        info = tmpl_map.get(tid, {})
+        name_info = tmpl_names.get(tid, {})
+
+        estimates.append({
+            "product": name_info.get("name", ""),
+            "code": name_info.get("code", ""),
+            "brand": info.get("brand", "Unknown"),
+            "category": info.get("category", "Unknown"),
+            "on_hand": on_hand,
+            "sold_30d": round(sold_30, 1),
+            "daily_velocity": daily_vel,
+            "days_left": days_left if days_left is not None else "∞",
+            "priority": (
+                "Critical" if (days_left is not None and days_left < 7)
+                else "Warning" if (days_left is not None and days_left < 14)
+                else "OK"
+            ),
+        })
+
+    estimates.sort(key=lambda x: (
+        float(x["days_left"]) if x["days_left"] != "∞" else 9999
+    ))
+
+    return {"estimates": estimates, "total": len(estimates)}
