@@ -11,10 +11,8 @@ ODOO_USER = "ziad.m@swag.com.sa"
 ODOO_PASSWORD = "7cda7ec6fccb6afc78fd1968d93b09240572ee2b"
 
 # ---------- FIELD NAME CONSTANTS ----------
-# Agar tumhare Odoo me brand ka field alag hai (e.g. x_brand_id),
-# to sirf yahan change karna:
-BRAND_FIELD = "product_brand_id"
-CATEG_FIELD = "categ_id"
+BRAND_FIELD = "brand_id"   # found via fields_get
+CATEG_FIELD = "categ_id"   # standard category
 
 # ---------- FASTAPI APP ----------
 app = FastAPI()
@@ -47,7 +45,7 @@ def get_odoo():
         raise HTTPException(status_code=500, detail=f"Odoo connection error: {str(e)}")
 
 
-# ---------- SHARED HELPER ----------
+# ---------- SHARED HELPERS ----------
 def odoo_search_read(model, domain, fields, limit=2000, order="id desc"):
     uid, models = get_odoo()
     kw = {"fields": fields, "order": order}
@@ -77,7 +75,6 @@ def _build_tmpl_map(tmpl_ids: list) -> dict:
             categ = t.get(CATEG_FIELD)
             brand = t.get(BRAND_FIELD)
             tmpl_map[t["id"]] = {
-                # yahan "Unknown" hata ke safe blank rakha
                 "category": categ[1] if categ else "",
                 "brand":    brand[1] if brand else "",
             }
@@ -175,7 +172,7 @@ def _build_velocity_map(var_ids: list, uid, models) -> dict:
     return vel_map
 
 
-# ---------- HEALTH CHECK ----------
+# ---------- HEALTH ----------
 @app.get("/")
 def root():
     return {"status": "SWAG Dashboard API running"}
@@ -186,7 +183,7 @@ def health():
     return {"status": "ok"}
 
 
-# ---------- STOCK ENDPOINT ----------
+# ---------- STOCK ----------
 @app.get("/api/stock")
 def get_stock():
     uid, models = get_odoo()
@@ -301,7 +298,7 @@ def get_stock():
     return {"total": total, "branch": branch, "reorder": reorder}
 
 
-# ---------- PURCHASE ENDPOINT ----------
+# ---------- PURCHASE ----------
 @app.get("/api/purchase")
 def get_purchase():
     uid, models = get_odoo()
@@ -414,10 +411,12 @@ def get_purchase():
     top_vendor = max(by_vendor, key=by_vendor.get) if by_vendor else "—"
     by_brand = {}
     for p in purchases:
-        by_brand[p["brand"]] = by_brand.get(p["brand"], 0) + p["subtotal"]
+        key = p["brand"] or "Unknown"
+        by_brand[key] = by_brand.get(key, 0) + p["subtotal"]
     by_category = {}
     for p in purchases:
-        by_category[p["category"]] = by_category.get(p["category"], 0) + p["subtotal"]
+        key = p["category"] or "Unknown"
+        by_category[key] = by_category.get(key, 0) + p["subtotal"]
 
     return {
         "purchases": purchases,
@@ -434,7 +433,7 @@ def get_purchase():
     }
 
 
-# ---------- SALES ENDPOINT ----------
+# ---------- SALES ----------
 @app.get("/api/sales")
 def get_sales(
     from_date: Optional[str] = Query(None, description="Start date YYYY-MM-DD (inclusive)"),
@@ -580,7 +579,7 @@ def get_sales(
     }
 
 
-# ---------- ESTIMATE ENDPOINT ----------
+# ---------- ESTIMATE ----------
 @app.get("/api/estimate")
 def get_estimate():
     uid, models = get_odoo()
