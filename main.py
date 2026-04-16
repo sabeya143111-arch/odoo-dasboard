@@ -8,7 +8,7 @@ from typing import Optional
 ODOO_URL = "https://db.swag.com.sa"
 ODOO_DB = "db2"
 ODOO_USER = "ziad.m@swag.com.sa"
-ODOO_PASSWORD = "7cda7ec6fccb6afc78fd1968d93b09240572ee2b"
+ODOO_PASSWORD = "65074b8e6afe49071f834c5e19b33034395f8cd5"
 
 # ---------- FIELD NAME CONSTANTS ----------
 BRAND_FIELD = "brand_id"   # found via fields_get
