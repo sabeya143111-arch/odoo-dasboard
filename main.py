@@ -47,7 +47,7 @@ def get_odoo():
 
 
 # ---------- SHARED HELPER ----------
-def odoo_search_read(model, domain, fields, limit=5000, order="id desc"):
+def odoo_search_read(model, domain, fields, limit=2000, order="id desc"):
     uid, models = get_odoo()
     kw = {"fields": fields, "order": order}
     if limit:
