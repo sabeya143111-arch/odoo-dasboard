@@ -175,7 +175,7 @@ def _build_velocity_map(var_ids: list, uid, models) -> dict:
 # ---------- HEALTH ----------
 @app.get("/")
 def root():
-    return {"status": "SWAG Dashboard API running"}
+    return {"status": "SWAG DASBAORD RUNNIG"}
 
 
 @app.get("/health")
@@ -353,7 +353,7 @@ def get_purchase():
                 ODOO_DB, uid, ODOO_PASSWORD,
                 "stock.quant", "search_read",
                 [[("product_id", "in", prod_ids), ("location_id.usage", "=", "internal")]],
-                {"fields": ["product_id", "quantity"], "limit": 50000}
+                {"fields": ["product_id", "quantity"], "limit": 2000}
             )
             for q in quants:
                 pid_raw = q.get("product_id")
@@ -413,10 +413,10 @@ def get_purchase():
     for p in purchases:
         key = p["brand"] or "Unknown"
         by_brand[key] = by_brand.get(key, 0) + p["subtotal"]
-    by_category = {}
+    by_ = {}
     for p in purchases:
-        key = p["category"] or "Unknown"
-        by_category[key] = by_category.get(key, 0) + p["subtotal"]
+        key = p[""] or "Unknown"
+        by_[key] = by_category.get(key, 0) + p["subtotal"]
 
     return {
         "purchases": purchases,
@@ -588,7 +588,7 @@ def get_estimate():
         ODOO_DB, uid, ODOO_PASSWORD,
         "stock.quant", "search_read",
         [[["location_id.usage", "=", "internal"]]],
-        {"fields": ["product_id", "product_tmpl_id", "quantity"], "limit": 5000}
+        {"fields": ["product_id", "product_tmpl_id", "quantity"], "limit": 2000}
     )
 
     tmpl_qty = {}
