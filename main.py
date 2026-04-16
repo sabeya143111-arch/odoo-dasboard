@@ -11,18 +11,19 @@ ODOO_USER = "ziad.m@swag.com.sa"
 ODOO_PASSWORD = "7cda7ec6fccb6afc78fd1968d93b09240572ee2b"
 
 # ---------- FIELD NAME CONSTANTS ----------
+# Agar tumhare Odoo me brand ka field alag hai (e.g. x_brand_id),
+# to sirf yahan change karna:
 BRAND_FIELD = "product_brand_id"
 CATEG_FIELD = "categ_id"
 
 # ---------- FASTAPI APP ----------
 app = FastAPI()
 
-# Frontend origins (prod + preview + local)
 ALLOWED_ORIGINS = [
-    "https://odoo-dasboard.vercel.app",   # main prod
-    "https://odoo-dasboard-6zuaylfms-tariques-projects-74503042.vercel.app",  # current preview
-    "http://localhost:3000",             # local dev (Next/React)
-    "http://localhost:5173",             # local dev (Vite)
+    "https://odoo-dasboard.vercel.app",
+    "https://odoo-dasboard-6zuaylfms-tariques-projects-74503042.vercel.app",
+    "http://localhost:3000",
+    "http://localhost:5173",
 ]
 
 app.add_middleware(
@@ -76,8 +77,9 @@ def _build_tmpl_map(tmpl_ids: list) -> dict:
             categ = t.get(CATEG_FIELD)
             brand = t.get(BRAND_FIELD)
             tmpl_map[t["id"]] = {
-                "category": categ[1] if categ else "Unknown",
-                "brand":    brand[1] if brand else "Unknown",
+                # yahan "Unknown" hata ke safe blank rakha
+                "category": categ[1] if categ else "",
+                "brand":    brand[1] if brand else "",
             }
     except Exception:
         pass
@@ -113,18 +115,18 @@ def _build_product_tmpl_map(prod_ids: list) -> dict:
             brand = (
                 tmpl_info.get("brand")
                 or (brand_raw[1] if brand_raw else None)
-                or "Unknown"
+                or ""
             )
 
             categ_raw = p.get(CATEG_FIELD)
             category = (
                 tmpl_info.get("category")
                 or (categ_raw[1] if categ_raw else None)
-                or "Unknown"
+                or ""
             )
 
             prod_map[p["id"]] = {
-                "name":     p.get("name", "Unknown"),
+                "name":     p.get("name", ""),
                 "brand":    brand,
                 "category": category,
                 "tmpl_id":  tmpl_id,
@@ -243,12 +245,12 @@ def get_stock():
     for q in quants:
         product_name = q["product_id"][1]
         product_id = q["product_id"][0]
-        location_name = q["location_id"][1] if q["location_id"] else "Unknown"
+        location_name = q["location_id"][1] if q["location_id"] else ""
         qty = float(q["quantity"] or 0)
         tmpl_id = q["product_tmpl_id"][0] if q.get("product_tmpl_id") else None
         info = tmpl_map.get(tmpl_id, {})
-        brand_name = info.get("brand", "Unknown")
-        category_name = info.get("category", "Unknown")
+        brand_name = info.get("brand") or ""
+        category_name = info.get("category") or ""
 
         sold_30 = vel_map.get(tmpl_id, 0) if tmpl_id else 0
         daily_vel = round(sold_30 / 30.0, 3)
@@ -367,9 +369,9 @@ def get_purchase():
     for line in lines:
         prod_id = line["product_id"][0] if line.get("product_id") else None
         info = prod_map.get(prod_id, {})
-        product_name = info.get("name") or (line["product_id"][1] if line.get("product_id") else "Unknown")
-        category_name = info.get("category", "Unknown")
-        brand_name = info.get("brand", "Unknown")
+        product_name = info.get("name") or (line["product_id"][1] if line.get("product_id") else "")
+        category_name = info.get("category") or ""
+        brand_name = info.get("brand") or ""
 
         sold_30 = vel_by_prod.get(prod_id, 0)
         daily_vel = round(sold_30 / 30.0, 3)
@@ -432,7 +434,7 @@ def get_purchase():
     }
 
 
-# ---------- SALES ENDPOINT (with default last 90 days) ----------
+# ---------- SALES ENDPOINT ----------
 @app.get("/api/sales")
 def get_sales(
     from_date: Optional[str] = Query(None, description="Start date YYYY-MM-DD (inclusive)"),
@@ -440,17 +442,14 @@ def get_sales(
 ):
     uid, models = get_odoo()
 
-    # Default domain: confirmed/done orders
     domain = [["state", "in", ["sale", "done"]]]
 
-    # If user passes explicit dates, use those
     if from_date or to_date:
         if from_date:
             domain.append(("order_id.date_order", ">=", f"{from_date} 00:00:00"))
         if to_date:
             domain.append(("order_id.date_order", "<=", f"{to_date} 23:59:59"))
     else:
-        # Otherwise default to last 90 days
         date_90_ago = (datetime.now() - timedelta(days=90)).strftime("%Y-%m-%d")
         domain.append(("order_id.date_order", ">=", f"{date_90_ago} 00:00:00"))
 
@@ -518,9 +517,9 @@ def get_sales(
         prod_id  = prod_raw[0] if prod_raw else None
 
         info = prod_map.get(prod_id, {})
-        product_name  = info.get("name") or (prod_raw[1] if prod_raw else "Unknown")
-        category_name = info.get("category", "Unknown")
-        brand_name    = info.get("brand", "Unknown")
+        product_name  = info.get("name") or (prod_raw[1] if prod_raw else "")
+        category_name = info.get("category") or ""
+        brand_name    = info.get("brand") or ""
 
         sold_30   = vel_by_prod.get(prod_id, 0)
         daily_vel = round(sold_30 / 30.0, 3)
@@ -528,7 +527,7 @@ def get_sales(
         days_left = round(on_hand / daily_vel, 1) if daily_vel > 0 else None
 
         partner_raw = line.get("order_partner_id")
-        customer = partner_raw[1] if partner_raw else "Unknown"
+        customer = partner_raw[1] if partner_raw else ""
 
         sales.append({
             "date":          (line.get("create_date") or "")[:10],
@@ -552,16 +551,19 @@ def get_sales(
 
     by_customer = {}
     for s in sales:
-        by_customer[s["customer"]] = by_customer.get(s["customer"], 0) + s["subtotal"]
+        key = s["customer"] or "Unknown"
+        by_customer[key] = by_customer.get(key, 0) + s["subtotal"]
     top_customer = max(by_customer, key=by_customer.get) if by_customer else "—"
 
     by_brand = {}
     for s in sales:
-        by_brand[s["brand"]] = by_brand.get(s["brand"], 0) + s["subtotal"]
+        key = s["brand"] or "Unknown"
+        by_brand[key] = by_brand.get(key, 0) + s["subtotal"]
 
     by_category = {}
     for s in sales:
-        by_category[s["category"]] = by_category.get(s["category"], 0) + s["subtotal"]
+        key = s["category"] or "Unknown"
+        by_category[key] = by_category.get(key, 0) + s["subtotal"]
 
     return {
         "sales": sales,
@@ -659,8 +661,8 @@ def get_estimate():
         estimates.append({
             "product":       name_info.get("name", ""),
             "code":          name_info.get("code", ""),
-            "brand":         info.get("brand", "Unknown"),
-            "category":      info.get("category", "Unknown"),
+            "brand":         info.get("brand") or "",
+            "category":      info.get("category") or "",
             "on_hand":       on_hand,
             "sold_30d":      round(sold_30, 1),
             "daily_velocity": daily_vel,
