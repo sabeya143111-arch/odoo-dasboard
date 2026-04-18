@@ -159,7 +159,7 @@ def _build_velocity_map(var_ids: list, uid, models) -> dict:
                 ("order_id.date_order", ">=", f"{date_30_ago} 00:00:00"),
                 ("order_id.state", "in", ["sale", "done"]),
             ]],
-            {"fields": ["product_id", "product_uom_qty"], "limit": 50000}
+            {"fields": ["product_id", "product_uom_qty"], "limit": 2000}
         )
         for sl in so_lines:
             pid_raw = sl.get("product_id")
