@@ -186,7 +186,7 @@ def health():
 # ---------- STOCK ----------
 @app.get("/api/stock")
 def get_stock():
-    uid, models = get_odoo()
+    uid, models = get_odo)
 
     fields = ["product_id", "product_tmpl_id", "location_id", "quantity", "reserved_quantity"]
     quants = models.execute_kw(
@@ -485,7 +485,7 @@ def get_sales(
                     ("order_id.date_order", ">=", f"{date_30_ago} 00:00:00"),
                     ("order_id.state", "in", ["sale", "done"]),
                 ]],
-                {"fields": ["product_id", "product_uom_qty"], "limit": 50000}
+                {"fields": ["product_id", "product_uom_qty"], "limit":2000}
             )
             for sl in so_vel_lines:
                 pid_raw = sl.get("product_id")
